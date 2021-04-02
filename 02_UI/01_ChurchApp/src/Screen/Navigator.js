@@ -5,7 +5,8 @@ import Styled from 'styled-components/native';
 
 //import Navigation modules
 import 'react-native-gesture-handler' //react-navigation 사용하기 위해 최상위에 필요한 모듈
-import {NavigationContainer} from '@react-navigation/native'; //Navigation 사용하려면 최상단에 컨테이너 컴포넌트 넣어줄것
+import {NavigationContainer, StackActions} from '@react-navigation/native'; //Navigation 사용하려면 최상단에 컨테이너 컴포넌트 넣어줄것
+
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Icon2 from 'react-native-vector-icons/FontAwesome5';
@@ -61,11 +62,11 @@ const BottomTabNavi = () => {
 }
 
 
-
 const Navigator = () => {
   return (
       <NavigationContainer>
           <BottomTabNavi />
+          {/* <MainNavi /> */}
           {/* <Text>Hello Navigator</Text> */}
       </NavigationContainer>
   );
