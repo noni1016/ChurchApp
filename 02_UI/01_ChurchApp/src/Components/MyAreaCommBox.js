@@ -1,6 +1,7 @@
-import React, {useLayoutEffect} from 'react';
+import React, {useEffect, useContext, useState} from 'react';
 import {Text, Button, Image} from 'react-native';
 import styled from 'styled-components/native';
+import {DomainContext} from '~/Context/Domain';
 
 const Container = styled.View`
     flex-direction: row;
@@ -55,7 +56,14 @@ const CommCategoryContent = styled.Text`
 
 const MyAreaCommBox = ({data}) => {
 
-    console.log(data.mainImg);
+    const domain = useContext(DomainContext);
+    console.log(`${domain}/${data.mainImg}`);
+
+    var [url, setUrl] = useState('');
+
+    useEffect(() => {
+        setUrl(`${domain}/${data.mainImg}`);
+    }, []);
 
     return (
         // <Text>Hello MyAreaCommBox~</Text>
@@ -63,15 +71,17 @@ const MyAreaCommBox = ({data}) => {
             <CommContentBox>
                 <CommTitle>[{data.area}]{data.name} ({data.numMember})</CommTitle>
                 <CommCategoryBox>
-                    {data.category.map((data, i) => (<CommCategoryContent>{data}</CommCategoryContent>))}
-                    
+                    {/* {data.category.map((data, i) => (<CommCategoryContent>{data}</CommCategoryContent>))} */}
+                    <CommCategoryContent>{data.category}</CommCategoryContent>
                 </CommCategoryBox>
                 <DataInfo>{data.desc}</DataInfo>
             </CommContentBox>
             <MainImgBox>
-                <Image source={data.mainImg} />
+                <Image style={{flex: 1, alignSelf: 'stretch'}} source={{uri: url}} />
             </MainImgBox>
         </Container>
+        // <Image style={{height:'100%',width:'100%'}} source={{uri: 'https://t1.daumcdn.net/cfile/tistory/9942214E5B5E76930B'}} />
+        // <Image style={{height:'100%',width:'100%'}} source={{uri: 'http://175.212.209.93:7009/ins.png'}} />
     );
   };
   
