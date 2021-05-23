@@ -12,7 +12,7 @@ const MyGroupContainer = styled.View`
 `;
 
 const Header = styled.View`
-    flex: 1;
+    height: 15%;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
@@ -21,10 +21,12 @@ const Header = styled.View`
 `;
 
 const Body = styled.View`
-    flex: 6;
+    height: 100%;
+    flex: 1;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    width: ${Dimensions.get('window').width}px;
     /* background-color: #00FF00; */
 `;
 
@@ -44,15 +46,30 @@ const Title = styled.Text`
     font-family: 'DoHyeon-Regular';
 `;
 
+const InidicatorContainer = styled.View`
+    height: 5%;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    /* background-color: #FF0000; */
+`;
 
-const GroupCardContainer = ({data}) => {
+const DataIndicator = styled.View`
+  width: 6px;
+  height: 6px;
+  border-radius: 4px;
+  margin: 1px;
+`;
+
+
+const GroupCardContainer = ({datas}) => {
 
     // console.log(data[0]);
     const [indicatorIndex, setIndicatorIndex] = useState(0);
-    const dataLength = data.length;
+    const dataLength = datas.length;
 
     useEffect(() => {
-        console.log(data.length);
+        console.log(datas.length);
     }, []);
     
 
@@ -62,8 +79,8 @@ const GroupCardContainer = ({data}) => {
                 <Title>내 모임</Title>
                 <ShowMore>></ShowMore>
             </Header>
-            <Body>
-                {/* <ScrollView
+            {/* <Body> */}
+                <ScrollView
                     horizontal={true}
                     pagingEnabled={true}
                     showsHorizontalScrollIndicator={false}
@@ -73,12 +90,28 @@ const GroupCardContainer = ({data}) => {
                             Math.round(event.nativeEvent.contentOffset.x / Dimensions.get('window').width)
                         );
                     }}>
-                        {data.map((group, index) => (
-                            <GroupCard data={group}></GroupCard>
+                        {datas.map((data, index) => (
+                            <Body>
+                                <GroupCard data={data}></GroupCard>
+                            </Body>
                         ))}
-                </ScrollView> */}
-                <GroupCard data={data[0]}></GroupCard>
-            </Body>
+                </ScrollView>
+                <InidicatorContainer>
+                    {dataLength > 1 &&
+                        datas.map((datas, index) => (
+                            <DataIndicator
+                                key={`data-${index}`}
+                                style={{
+                                    backgroundColor:
+                                        indicatorIndex >= index && indicatorIndex < index + 1
+                                            ? '#3769EF'
+                                            : '#D3D3D3',
+                                }}
+                            />
+                        ))}
+                </InidicatorContainer>
+                {/* <GroupCard data={data[0]}></GroupCard> */}
+            {/* </Body> */}
 
 
 

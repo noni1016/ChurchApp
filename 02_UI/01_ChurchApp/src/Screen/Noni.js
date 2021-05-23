@@ -67,7 +67,7 @@ const NoniMain = () => {
             {/* {myGroupDatas.map((card, number) => (
                 <GroupCard data={card} />
             )) } */}
-            <GroupCardContainer data={myGroupDatas}/>
+            <GroupCardContainer datas={myGroupDatas}/>
         </ScrollView>
     );
 

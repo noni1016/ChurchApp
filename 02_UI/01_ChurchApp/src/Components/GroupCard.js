@@ -73,18 +73,18 @@ const GroupCard = ({data}) => {
         console.log(`${domain}/${data.mainImg}`);
         setUrl(`${domain}/${data.mainImg}`);
         Image.getSize(url, (width, height) => {
-             console.log(width + ' - ' + height);
+            console.log(width + ' - ' + height);
             setImgWidth(width);
             setImgHeight(height);
-            setResizedHeight(Dimensions.get('window').width * 0.85 / width * height);
+            setResizedHeight(Dimensions.get('window').width * 0.9 / width * height);
         })
 
-    }, [data.mainImg]);
+    });
 
 
     return (
-        <Container width='85%'>
-            <Image style={{backgroundColor: '#FF0000', width: '100%', height: resizedHeight, resizeMode: 'contain'}} source={{uri: url}} />
+        <Container width='90%'>
+            <Image style={{backgroundColor: '#FF0000', width: '100%', height: resizedHeight, resizeMode: 'cover'}} source={{uri: url}} />
             <GroupTitleAndNumMem>
                 <GroupTitle>{data.name}</GroupTitle>
                 <GroupNumContainer>
