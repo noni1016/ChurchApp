@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { Text, Button, ScrollView, FlatList, Image } from 'react-native';
+import { Text, Button, ScrollView, FlatList, Image, View } from 'react-native';
 import styled from 'styled-components/native';
+import axios from 'axios';
 
 import {
     createStackNavigator,
@@ -8,7 +9,8 @@ import {
 } from '@react-navigation/stack';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
-import MyAreaCommBox from '~/Components/MyAreaCommBox';
+import GroupCard from '~/Components/GroupCard';
+import GroupCardContainer from '~/Components/GroupCardContainer';
 import {DomainContext, DomainContextProvider} from '~/Context/Domain';
 
 
@@ -21,13 +23,13 @@ const HeaderButtonsContainer = styled.View`
     width: 120px;
 `;
 
-const MyCommTitleBox = styled.View`
+const MyGroupTitleBox = styled.View`
     background-color: #fef5a9;
     height: 60px;
     justify-content: space-evenly;
 `;
 
-const MyCommTitle = styled.Text`
+const MyGroupTitle = styled.Text`
     font-size: 20px;
     margin-left: 20px;
 `;
@@ -40,48 +42,33 @@ const MyCommTitle = styled.Text`
 //     { id: 3, name: `377동 크리스천`, mainImg: require(`~/Assets/Images/377dong.png`), desc: `377동 크리스천님들 오세요 ㅎㅎ 우산없이 놀러가기 + 초막골 산책 + 가끔 같이 밥`, area: `군포`, category: [`기도나눔`, `산책`, `다과`], numMember: 4 },
 
 // ];
-var recommendCommDatas = [
+var recommendGroupDatas = [
     { id: 0, name: `베이킹 선교회`, mainImg: require(`~/Assets/Images/bakery.jpg`), desc: `떡을 나눠주신 예수님처럼, 취미로 만든 베이커리로 이웃에게 사랑을 전합니다.`, area: `의왕`, category: [`전도`, `요리`, `다과`], numMember: 5 },
     { id: 1, name: `안산민턴 (배드민턴)`, mainImg: require(`~/Assets/Images/badminton.png`), desc: `안산역 근처 배드민턴장에서 같이 클리어 10번 이상 랠리 가능하신분 모집합니다!`, area: `안산`, category: [`운동`, `배드민턴`, `작곡`], numMember: 11 }
 ];
-var data = { id: 1, name: `우쿨룰루랄라`, mainImg: require(`~/Assets/Images/ins.png`), desc: `우쿨렐레 연습 인증 / 우쿨렐레와 떠나는 찬양 여행`, area: `안양`, category: [`음악/악기`, `작곡`, `여행`], numMember: 10 };
+var data = { id: 0, name: `로딩중`, mainImg: `http://175.212.209.93:7009/http://175.212.209.93:7009/WinLockImages/a48b65589f2727feb93b12693ffeccb5d4aa1c0b6bbc1dff4d503ff28eba5a4c.jpg`, location: `수원시 영통구 매탄4동 10`, numMember: 10 };
 
 
 
 const NoniMain = () => {
 
     const domain = useContext(DomainContext);
-    var [myCommDatas, setMyCommDatas] = useState([]);
+    var [myGroupDatas, setMyGroupDatas] = useState([data]);
+    // var [loading, setLoading] = useState([]);
 
     useEffect(() => {
         console.log(domain);
-        fetch(domain + '/churmmunity/getMyCommDatas').then(res => res.json()).then(res => {setMyCommDatas(res); console.log(res)});
+        fetch(domain + '/churmmunity/getMyGroupDatas').then(res => res.json()).then(res => {setMyGroupDatas(res)});
         // fetch('http://175.212.209.93:7009/churmmunity/getMyCommDatas').then(res => res.json()).then(res => console.log(res));
         // fetch('/churmmunity/getMyCommDatas').then(res => res.json()).then(res => console.log(res));
     }, []);
 
     return (
         <ScrollView>
-            <FlatList
-                ListHeaderComponent={
-                    <MyCommTitleBox><MyCommTitle>내 지역 공동체</MyCommTitle></MyCommTitleBox>
-                }
-                data={myCommDatas}
-                keyExtractor={(item, id) => { return `myComm-${id}` }}
-                renderItem={({ item, index }) => (
-                    <MyAreaCommBox data={item}></MyAreaCommBox>
-                )}
-            />
-            {/* <FlatList
-                ListHeaderComponent={
-                    <MyCommTitleBox><MyCommTitle>추천 공동체</MyCommTitle></MyCommTitleBox>
-                }
-                data={recommendCommDatas}
-                keyExtractor={(item, id) => { return `myComm-${id}` }}
-                renderItem={({ item, index }) => (
-                    <MyAreaCommBox data={item}></MyAreaCommBox>
-                )}
-            /> */}
+            {/* {myGroupDatas.map((card, number) => (
+                <GroupCard data={card} />
+            )) } */}
+            <GroupCardContainer data={myGroupDatas}/>
         </ScrollView>
     );
 
