@@ -1,5 +1,5 @@
-import React from 'react';
-import { Text } from 'react-native';
+import React, {useState, useEffect} from 'react';
+import { Text, Dimensions, ScrollView, Image, NativeSyntheticEvent, NativeScrollEvent } from 'react-native';
 import styled from 'styled-components/native';
 
 import GroupCard from '~/Components/GroupCard';
@@ -47,7 +47,14 @@ const Title = styled.Text`
 
 const GroupCardContainer = ({data}) => {
 
-    console.log(data[0]);
+    // console.log(data[0]);
+    const [indicatorIndex, setIndicatorIndex] = useState(0);
+    const dataLength = data.length;
+
+    useEffect(() => {
+        console.log(data.length);
+    }, []);
+    
 
     return (
         <MyGroupContainer>
@@ -56,9 +63,27 @@ const GroupCardContainer = ({data}) => {
                 <ShowMore>></ShowMore>
             </Header>
             <Body>
+                {/* <ScrollView
+                    horizontal={true}
+                    pagingEnabled={true}
+                    showsHorizontalScrollIndicator={false}
+                    scrollEnabled={dataLength > 1}
+                    onScroll={(event) => {
+                        setIndicatorIndex(
+                            Math.round(event.nativeEvent.contentOffset.x / Dimensions.get('window').width)
+                        );
+                    }}>
+                        {data.map((group, index) => (
+                            <GroupCard data={group}></GroupCard>
+                        ))}
+                </ScrollView> */}
                 <GroupCard data={data[0]}></GroupCard>
             </Body>
+
+
+
         </MyGroupContainer>
+        
     );
 
 }
