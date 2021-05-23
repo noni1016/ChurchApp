@@ -17,7 +17,8 @@ const GroupTitleAndNumMem = styled.View`
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    /* background-color: #FF0000; */
+    /* background-color: #FF0000; */    
+    margin: 5px 0px 0px 0px; //상 우 하 좌
 `;
 
 const GroupTitle = styled.Text`
@@ -36,7 +37,7 @@ const GroupNumContainer = styled.View`
 
 const GroupNumMem = styled.Text`
     color: black;
-    font-size: 20px;
+    font-size: 15px;
     font-family: 'DoHyeon-Regular';
     text-align: right;
 `;
@@ -44,12 +45,13 @@ const GroupNumMem = styled.Text`
 const LocationContainer = styled.View`
     flex-direction: row;
     justify-content: flex-start;
-    /* background-color: #0000FF; */
+    margin: 3px 0px 0px 0px; //상 우 하 좌
+    /* background-color: #0000FF; */    
 `;
 
 const GroupLocation = styled.Text`
     color: black;
-    font-size: 20px;
+    font-size: 15px;
     font-family: 'DoHyeon-Regular';
     text-align: left;
 `;
@@ -86,12 +88,12 @@ const GroupCard = ({data}) => {
             <GroupTitleAndNumMem>
                 <GroupTitle>{data.name}</GroupTitle>
                 <GroupNumContainer>
-                    <IconM name="human-child" size={20} color="#000000" />
-                    <GroupNumMem>{data.numMember} 명</GroupNumMem>
+                    <IconM name="human-child" size={15} color="#000000" />
+                    <GroupNumMem>{data.numMember}</GroupNumMem>
                 </GroupNumContainer>
             </GroupTitleAndNumMem>
             <LocationContainer>
-                <IconE name="location-pin" size={20} color="#000000" />
+                <IconE name="location-pin" size={15} color="#000000" />
                 <GroupLocation>{data.location}</GroupLocation>
             </LocationContainer>
             
