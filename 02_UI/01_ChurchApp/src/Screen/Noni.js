@@ -45,29 +45,28 @@ var recommendGroupDatas = [
     { id: 0, name: `베이킹 선교회`, mainImg: require(`~/Assets/Images/bakery.jpg`), desc: `떡을 나눠주신 예수님처럼, 취미로 만든 베이커리로 이웃에게 사랑을 전합니다.`, area: `의왕`, category: [`전도`, `요리`, `다과`], numMember: 5 },
     { id: 1, name: `안산민턴 (배드민턴)`, mainImg: require(`~/Assets/Images/badminton.png`), desc: `안산역 근처 배드민턴장에서 같이 클리어 10번 이상 랠리 가능하신분 모집합니다!`, area: `안산`, category: [`운동`, `배드민턴`, `작곡`], numMember: 11 }
 ];
-var data = { id: 0, name: `로딩중`, mainImg: `WinLockImages/a48b65589f2727feb93b12693ffeccb5d4aa1c0b6bbc1dff4d503ff28eba5a4c.jpg`, location: `수원시 영통구 매탄4동 10`, numMember: 10 };
-
+var initMyGroupData = { id: 0, name: `로딩중`, mainImg: `WinLockImages/a48b65589f2727feb93b12693ffeccb5d4aa1c0b6bbc1dff4d503ff28eba5a4c.jpg`, location: `수원시 영통구 매탄4동 10`, numMember: 10 };
+var initMyLightData = { id: 0, name: `로딩중`, mainImg: `WinLockImages/a48b65589f2727feb93b12693ffeccb5d4aa1c0b6bbc1dff4d503ff28eba5a4c.jpg`, location: `로딩중`, time: `0000-00-00 00:00:00`, numMember: 0 };
 
 
 const NoniMain = () => {
 
     const domain = useContext(DomainContext);
-    var [myGroupDatas, setMyGroupDatas] = useState([data]);
+    var [myGroupDatas, setMyGroupDatas] = useState([initMyGroupData]);
+    var [myLightDatas, setMyLightDatas] = useState([initMyLightData]);
     // var [loading, setLoading] = useState([]);
 
     useEffect(() => {
         // console.log(domain);
         fetch(domain + '/churmmunity/getMyGroupDatas').then(res => res.json()).then(res => {setMyGroupDatas(res)});
-        // fetch('http://175.212.209.93:7009/churmmunity/getMyCommDatas').then(res => res.json()).then(res => console.log(res));
-        // fetch('/churmmunity/getMyCommDatas').then(res => res.json()).then(res => console.log(res));
+        fetch(domain + '/churmmunity/getMyLightDatas').then(res => res.json()).then(res => {setMyLightDatas(res)});
     }, []);
 
     return (
         <ScrollView>
-            {/* {myGroupDatas.map((card, number) => (
-                <GroupCard data={card} />
-            )) } */}
             <GroupCardContainer datas={myGroupDatas}/>
+            <GroupCardContainer datas={myLightDatas}/>
+            {/* <LightCardContainer datas={myLightDatas}/> */}
         </ScrollView>
     );
 

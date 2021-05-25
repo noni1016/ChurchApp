@@ -56,6 +56,14 @@ const GroupLocation = styled.Text`
     text-align: left;
 `;
 
+const MainImageContainer = styled.View`
+    flex-direction: row;
+    width: ${Dimensions.get('window').width * 0.9}px;
+    justify-content: center;
+    align-items: center;
+    /* background-color: #0000FF;     */
+`;
+
 
 const GroupCard = ({data}) => {
 
@@ -64,6 +72,8 @@ const GroupCard = ({data}) => {
     // const imageWidth = Dimensions.get('window').width * 0.8;
     var [imgWidth, setImgWidth] = useState();
     var [imgHeight, setImgHeight] = useState();
+    
+    var [resizedWidth, setResizedWidth] = useState(100);
     var [resizedHeight, setResizedHeight] = useState(100);
 
 
@@ -76,7 +86,16 @@ const GroupCard = ({data}) => {
             console.log(width + ' - ' + height);
             setImgWidth(width);
             setImgHeight(height);
-            setResizedHeight(Dimensions.get('window').width * 0.9 / width * height);
+            if(width > Dimensions.get('window').width * 0.9) {
+                setResizedWidth(Dimensions.get('window').width * 0.9);
+                setResizedHeight(Dimensions.get('window').width * 0.9 / width * height);
+            } else {
+                setResizedWidth(width);
+                setResizedHeight(height);
+            }
+
+            console.log(resizedWidth + ' - ' + resizedHeight);
+
         })
 
     });
@@ -84,7 +103,9 @@ const GroupCard = ({data}) => {
 
     return (
         <Container width='90%'>
-            <Image style={{backgroundColor: '#FF0000', width: '100%', height: resizedHeight, resizeMode: 'cover'}} source={{uri: url}} />
+            <MainImageContainer>
+                <Image style={{backgroundColor: '#FFFFFF', width: resizedWidth, height: resizedHeight, resizeMode: 'contain'}} source={{uri: url}} />
+            </MainImageContainer>
             <GroupTitleAndNumMem>
                 <GroupTitle>{data.name}</GroupTitle>
                 <GroupNumContainer>
