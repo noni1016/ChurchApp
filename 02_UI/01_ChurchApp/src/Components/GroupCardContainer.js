@@ -8,7 +8,7 @@ const MyGroupContainer = styled.View`
   flex-direction: column;
   height: 350px;
   background-color: #FFFFFF;
-  margin: 10px 0px 0px 0px; //상 우 하 좌
+  margin: 20px 0px 0px 0px; //상 우 하 좌
 `;
 
 const Header = styled.View`

@@ -8,8 +8,10 @@ import {
 } from '@react-navigation/stack';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
-import GroupCard from '~/Components/GroupCard';
 import GroupCardContainer from '~/Components/GroupCardContainer';
+import LightCardContainer from '~/Components/LightCardContainer';
+import RecGroupContainer from '~/Components/RecGroupContainer';
+import RecLightContainer from '~/Components/RecLightContainer';
 import {DomainContext, DomainContextProvider} from '~/Context/Domain';
 
 
@@ -22,17 +24,10 @@ const HeaderButtonsContainer = styled.View`
     width: 120px;
 `;
 
-const MyGroupTitleBox = styled.View`
-    background-color: #fef5a9;
-    height: 60px;
-    justify-content: space-evenly;
+const EmptyArea = styled.View`
+    height: 100px;
+    background-color: transparent;
 `;
-
-const MyGroupTitle = styled.Text`
-    font-size: 20px;
-    margin-left: 20px;
-`;
-
 
 // var myCommDatas = [
 //     { id: 0, name: `우쿨룰루랄라`, mainImg: require(`~/Assets/Images/ins.png`), desc: `우쿨렐레 연습 인증 / 우쿨렐레와 떠나는 찬양 여행`, area: `안양`, category: [`음악/악기`, `작곡`, `여행`], numMember: 10 },
@@ -46,7 +41,9 @@ var recommendGroupDatas = [
     { id: 1, name: `안산민턴 (배드민턴)`, mainImg: require(`~/Assets/Images/badminton.png`), desc: `안산역 근처 배드민턴장에서 같이 클리어 10번 이상 랠리 가능하신분 모집합니다!`, area: `안산`, category: [`운동`, `배드민턴`, `작곡`], numMember: 11 }
 ];
 var initMyGroupData = { id: 0, name: `로딩중`, mainImg: `WinLockImages/a48b65589f2727feb93b12693ffeccb5d4aa1c0b6bbc1dff4d503ff28eba5a4c.jpg`, location: `수원시 영통구 매탄4동 10`, numMember: 10 };
-var initMyLightData = { id: 0, name: `로딩중`, mainImg: `WinLockImages/a48b65589f2727feb93b12693ffeccb5d4aa1c0b6bbc1dff4d503ff28eba5a4c.jpg`, location: `로딩중`, time: `0000-00-00 00:00:00`, numMember: 0 };
+var initMyLightData = [{ id: 0, name: `로딩중`, mainImg: `WinLockImages/a48b65589f2727feb93b12693ffeccb5d4aa1c0b6bbc1dff4d503ff28eba5a4c.jpg`, location: `로딩중`, time: "0000-00-00 00:00:00", numMember: 0 },
+{ id: 1, name: `로딩중`, mainImg: `WinLockImages/a48b65589f2727feb93b12693ffeccb5d4aa1c0b6bbc1dff4d503ff28eba5a4c.jpg`, location: `로딩중`, time: "0000-00-00 00:00:00", numMember: 0 }
+];
 
 
 const NoniMain = () => {
@@ -54,26 +51,28 @@ const NoniMain = () => {
     const domain = useContext(DomainContext);
     var [myGroupDatas, setMyGroupDatas] = useState([initMyGroupData]);
     var [myLightDatas, setMyLightDatas] = useState([initMyLightData]);
+    var [recGroups, setRecGroups] = useState([initMyGroupData]);
+    var [recLights, setRecLights] = useState([initMyLightData]);
     // var [loading, setLoading] = useState([]);
 
     useEffect(() => {
         // console.log(domain);
         fetch(domain + '/churmmunity/getMyGroupDatas').then(res => res.json()).then(res => {setMyGroupDatas(res)});
         fetch(domain + '/churmmunity/getMyLightDatas').then(res => res.json()).then(res => {setMyLightDatas(res)});
+        fetch(domain + '/churmmunity/getRecGroupsOrderRand').then(res => res.json()).then(res => {setRecGroups(res)});
+        fetch(domain + '/churmmunity/getRecLightsOrderTime').then(res => res.json()).then(res => {setRecLights(res)});
     }, []);
 
     return (
         <ScrollView>
             <GroupCardContainer datas={myGroupDatas}/>
-            <GroupCardContainer datas={myLightDatas}/>
-            {/* <LightCardContainer datas={myLightDatas}/> */}
+            <LightCardContainer datas={myLightDatas}/>
+            <RecGroupContainer orgDatas={recGroups}/>
+            <RecLightContainer orgDatas={recLights}/>
+            <EmptyArea />
         </ScrollView>
     );
 
-    // return (
-    //         <Image style={{height:'100%',width:'100%'}} source={{uri: 'http://175.212.209.93:7009/ins.png'}} />
-        
-    // )
 
 };
 
