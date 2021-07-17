@@ -62,7 +62,7 @@ const DataIndicator = styled.View`
 `;
 
 
-const GroupCardContainer = ({datas}) => {
+const GroupCardContainer = ({datas, navigation}) => {
 
     // console.log(data[0]);
     const [indicatorIndex, setIndicatorIndex] = useState(0);
@@ -77,7 +77,10 @@ const GroupCardContainer = ({datas}) => {
         <MyGroupContainer>
             <Header>
                 <Title>내 모임</Title>
-                <ShowMore>></ShowMore>
+                <ShowMore
+                    onPress={() => {
+                        navigation.navigate('ShowMore');
+                    }}>></ShowMore>
             </Header>
             {/* <Body> */}
                 <ScrollView

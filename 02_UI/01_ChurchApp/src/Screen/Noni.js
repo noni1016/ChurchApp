@@ -12,7 +12,11 @@ import GroupCardContainer from '~/Components/GroupCardContainer';
 import LightCardContainer from '~/Components/LightCardContainer';
 import RecGroupContainer from '~/Components/RecGroupContainer';
 import RecLightContainer from '~/Components/RecLightContainer';
+import Default from '~/Screen/Default'
+import GroupLongScroll from '~/Screen/GroupLongScroll'
+
 import {DomainContext, DomainContextProvider} from '~/Context/Domain';
+import {DataContext, DataContextProvider} from '~/Context/Data';
 
 
 const Stack = createStackNavigator();
@@ -46,7 +50,7 @@ var initMyLightData = [{ id: 0, name: `로딩중`, mainImg: `WinLockImages/a48b6
 ];
 
 
-const NoniMain = () => {
+const NoniMain = ({navigation}) => {
 
     const domain = useContext(DomainContext);
     var [myGroupDatas, setMyGroupDatas] = useState([initMyGroupData]);
@@ -65,7 +69,7 @@ const NoniMain = () => {
 
     return (
         <ScrollView>
-            <GroupCardContainer datas={myGroupDatas}/>
+            <GroupCardContainer datas={myGroupDatas} navigation={navigation}/>
             <LightCardContainer datas={myLightDatas}/>
             <RecGroupContainer orgDatas={recGroups}/>
             <RecLightContainer orgDatas={recLights}/>
@@ -92,6 +96,16 @@ const NoniNavi = () => {
                     )
                 }}
             />
+            <Stack.Screen
+                name="ShowMore"
+                component={GroupLongScroll}
+                options={{
+                    headerShown: true,
+                    headerBackTitleVisible: false,
+                    title: '내 모임'
+                }}
+            />
+             
         </Stack.Navigator>
     )
 }
@@ -101,9 +115,11 @@ const Noni = () => {
 
     return (
         <DomainContextProvider>
-            <NoniNavi />
-            {/* <NoniMain /> */}
-            {/* <Image style={{height:'100%',width:'100%'}} source={{uri: 'http://175.212.209.93:7009/ins.png'}} /> */}
+            <DataContextProvider>
+                <NoniNavi />
+                {/* <NoniMain /> */}
+                {/* <Image style={{height:'100%',width:'100%'}} source={{uri: 'http://175.212.209.93:7009/ins.png'}} /> */}
+            </DataContextProvider>
         </DomainContextProvider>
     );
 };

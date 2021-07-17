@@ -80,7 +80,10 @@ const RecGroupContainer = ({orgDatas}) => {
         <MyGroupContainer>
             <Header>
                 <Title>오늘의 모임</Title>
-                <ShowMore>></ShowMore>
+                <ShowMore
+                    onPress={() => {
+                        NavigationPreloadManager.navigate('더보기');
+                    }}>></ShowMore>
             </Header>
             {/* <Body> */}
                 <ScrollView
