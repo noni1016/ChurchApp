@@ -7,7 +7,8 @@ var db_info = {
     user: 'sjaCoders',
     password: 'Matthew28:19', // 비밀번호
     //database: 'www' // 사용할 database 이름. web test 시 www 사용
-    database: 'churmmunity' // app test 시 churmmunity 사용 
+    database: 'churmmunity', // app test 시 churmmunity 사용 
+    timezone: "Asia/Seoul"
 }
 
 var conn = mysql.createConnection(db_info); // 연결 만들기
