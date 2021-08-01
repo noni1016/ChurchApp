@@ -61,10 +61,10 @@ const NoniMain = ({navigation}) => {
 
     useEffect(() => {
         // console.log(domain);
-        fetch(domain + '/churmmunity/getMyGroupDatas').then(res => res.json()).then(res => {setMyGroupDatas(res)});
-        fetch(domain + '/churmmunity/getMyLightDatas').then(res => res.json()).then(res => {setMyLightDatas(res)});
-        fetch(domain + '/churmmunity/getRecGroupsOrderRand').then(res => res.json()).then(res => {setRecGroups(res)});
-        fetch(domain + '/churmmunity/getRecLightsOrderTime').then(res => res.json()).then(res => {setRecLights(res)});
+        fetch(domain + '/churmmunity/GetMyGroupDatas').then(res => res.json()).then(res => {setMyGroupDatas(res)});
+        fetch(domain + '/churmmunity/GetMyLightDatas').then(res => res.json()).then(res => {setMyLightDatas(res)});
+        fetch(domain + '/churmmunity/GetRecGroupsOrderRand').then(res => res.json()).then(res => {setRecGroups(res)});
+        fetch(domain + '/churmmunity/GetRecLightsOrderTime').then(res => res.json()).then(res => {setRecLights(res)});
     }, []);
 
     return (
