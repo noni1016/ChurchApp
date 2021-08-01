@@ -7,8 +7,12 @@ var initLightData = [{ id: 0, name: `로딩중`, mainImg: `WinLockImages/a48b655
 ];
 
 const DataContext = createContext({
-    group: initGroupData,
-    light: initLightData,
+    myGroupDatas: initGroupData,
+    myLightDatas: initLightData,
+    recGroups: initGroupData,
+    recLights: initLightData,
+    showMoreMode: 0,
+    setShowMoreMode: () => {},
 });
 
 const DataContextProvider = ({children}) => {
@@ -19,6 +23,7 @@ const DataContextProvider = ({children}) => {
     var [myLightDatas, setMyLightDatas] = useState([initLightData]);
     var [recGroups, setRecGroups] = useState([initGroupData]);
     var [recLights, setRecLights] = useState([initLightData]);
+    var [showMoreMode, setShowMoreMode] = useState([initGroupData]);
 
     useEffect(() => {
         fetch(domain + '/churmmunity/getMyGroupDatas').then(res => res.json()).then(res => {setMyGroupDatas(res)});
@@ -28,7 +33,7 @@ const DataContextProvider = ({children}) => {
     }, []);
 
     return (
-        <DataContext.Provider value={{myGroupDatas, myLightDatas, recGroups, recLights}}>
+        <DataContext.Provider value={{myGroupDatas, myLightDatas, recGroups, recLights, showMoreMode, setShowMoreMode}}>
             {children}
         </DataContext.Provider>
     )

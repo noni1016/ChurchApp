@@ -71,7 +71,7 @@ const NoniMain = ({navigation}) => {
         <ScrollView>
             <GroupCardContainer datas={myGroupDatas} navigation={navigation}/>
             <LightCardContainer datas={myLightDatas}/>
-            <RecGroupContainer orgDatas={recGroups}/>
+            <RecGroupContainer orgDatas={recGroups} navigation={navigation}/>
             <RecLightContainer orgDatas={recLights}/>
             <EmptyArea />
         </ScrollView>

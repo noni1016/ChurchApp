@@ -1,6 +1,7 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import { Text, Dimensions, ScrollView, Image, NativeSyntheticEvent, NativeScrollEvent } from 'react-native';
 import styled from 'styled-components/native';
+import {DataContext} from '~/Context/Data';
 
 import GroupCard from '~/Components/GroupCard';
 
@@ -62,9 +63,9 @@ const DataIndicator = styled.View`
 `;
 
 
-const RecGroupContainer = ({orgDatas}) => {
+const RecGroupContainer = ({orgDatas, navigation}) => {
 
-    // console.log(data[0]);
+    const {setShowMoreMode} = useContext(DataContext);
     const [indicatorIndex, setIndicatorIndex] = useState(0);
 
     var datas = orgDatas.length > 8 ? orgDatas.slice(0,7) : orgDatas;
@@ -82,7 +83,8 @@ const RecGroupContainer = ({orgDatas}) => {
                 <Title>오늘의 모임</Title>
                 <ShowMore
                     onPress={() => {
-                        NavigationPreloadManager.navigate('더보기');
+                        setShowMoreMode(2);
+                        navigation.navigate('ShowMore');
                     }}>></ShowMore>
             </Header>
             {/* <Body> */}

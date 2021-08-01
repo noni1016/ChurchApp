@@ -1,8 +1,12 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import { Text, Dimensions, ScrollView, Image, NativeSyntheticEvent, NativeScrollEvent } from 'react-native';
 import styled from 'styled-components/native';
+import {DataContext} from '~/Context/Data';
 
 import GroupCard from '~/Components/GroupCard';
+
+var initGroupData = { id: 0, name: `꺄아아아`, mainImg: `WinLockImages/a48b65589f2727feb93b12693ffeccb5d4aa1c0b6bbc1dff4d503ff28eba5a4c.jpg`, location: `수원시 영통구 매탄4동 10`, numMember: 10 };
+
 
 const MyGroupContainer = styled.View`
   flex-direction: column;
@@ -64,6 +68,9 @@ const DataIndicator = styled.View`
 
 const GroupCardContainer = ({datas, navigation}) => {
 
+    // const DataContext = useContext(DataContext);
+    const {showMoreMode, setShowMoreMode} = useContext(DataContext);
+
     // console.log(data[0]);
     const [indicatorIndex, setIndicatorIndex] = useState(0);
     const dataLength = datas.length;
@@ -79,6 +86,7 @@ const GroupCardContainer = ({datas, navigation}) => {
                 <Title>내 모임</Title>
                 <ShowMore
                     onPress={() => {
+                        setShowMoreMode(0);
                         navigation.navigate('ShowMore');
                     }}>></ShowMore>
             </Header>
