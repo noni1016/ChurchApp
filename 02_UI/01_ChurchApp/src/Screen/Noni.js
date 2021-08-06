@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { Text, Button, ScrollView, FlatList, Image, View } from 'react-native';
 import styled from 'styled-components/native';
+import axios from 'axios';
 
 import {
     createStackNavigator,
@@ -58,10 +59,19 @@ const NoniMain = ({navigation}) => {
     var [recGroups, setRecGroups] = useState([initMyGroupData]);
     var [recLights, setRecLights] = useState([initMyLightData]);
     // var [loading, setLoading] = useState([]);
+    var data = {userId : 3}; // 로그인 기능 완성될때까지 임시 사용
 
     useEffect(() => {
         // console.log(domain);
-        fetch(domain + '/churmmunity/GetMyGroupDatas').then(res => res.json()).then(res => {setMyGroupDatas(res)});
+        fetch(domain + '/churmmunity/GetMyGroupDatas', {
+            method: 'POST',
+            body: JSON.stringify(data),
+            headers:{
+                Accept: 'application/json',
+                'Content-Type': 'application/json'
+            }
+        }).then(res => res.json()).then(res => {setMyGroupDatas(res)});
+        //fetch(domain + '/churmmunity/GetMyGroupDatas').then(res => res.json()).then(res=> {setMyGroupDatas(res)});
         fetch(domain + '/churmmunity/GetMyLightDatas').then(res => res.json()).then(res => {setMyLightDatas(res)});
         fetch(domain + '/churmmunity/GetRecGroupsOrderRand').then(res => res.json()).then(res => {setRecGroups(res)});
         fetch(domain + '/churmmunity/GetRecLightsOrderTime').then(res => res.json()).then(res => {setRecLights(res)});
