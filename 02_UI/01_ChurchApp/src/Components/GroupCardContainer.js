@@ -24,7 +24,7 @@ const Header = styled.View`
     /* background-color: #FF0000; */
 `;
 
-const Body = styled.View`
+const Body = styled.TouchableOpacity`
     height: 100%;
     flex: 1;
     flex-direction: column;
@@ -76,7 +76,7 @@ const GroupCardContainer = ({datas, navigation}) => {
     const dataLength = datas.length;
 
     useEffect(() => {
-        console.log(datas.length);
+        console.log(`Data Length : ${datas.length}`);
     }, []);
     
 
@@ -91,7 +91,7 @@ const GroupCardContainer = ({datas, navigation}) => {
                     }}>></ShowMore>
             </Header>
             {/* <Body> */}
-                <ScrollView
+                <ScrollView 
                     horizontal={true}
                     pagingEnabled={true}
                     showsHorizontalScrollIndicator={false}
@@ -102,8 +102,11 @@ const GroupCardContainer = ({datas, navigation}) => {
                         );
                     }}>
                         {datas.map((data, index) => (
-                            <Body>
-                                <GroupCard data={data}></GroupCard>
+                            <Body activeOpacity={1} onPress = {() => {alert(data.name);}}>
+                                <GroupCard 
+                                    data={data}
+                                
+                                ></GroupCard>
                             </Body>
                         ))}
                 </ScrollView>
