@@ -102,7 +102,10 @@ const GroupCardContainer = ({datas, navigation}) => {
                         );
                     }}>
                         {datas.map((data, index) => (
-                            <Body activeOpacity={1} onPress = {() => {alert(data.name);}}>
+                            <Body activeOpacity={1} onPress = {() => {
+                                // alert(data.name);
+                                navigation.navigate('GroupPage', {groupData : data});
+                                }}>
                                 <GroupCard 
                                     data={data}
                                 

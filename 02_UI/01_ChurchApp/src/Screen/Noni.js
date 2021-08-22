@@ -14,7 +14,8 @@ import LightCardContainer from '~/Components/LightCardContainer';
 import RecGroupContainer from '~/Components/RecGroupContainer';
 import RecLightContainer from '~/Components/RecLightContainer';
 import Default from '~/Screen/Default'
-import GroupLongScroll from '~/Screen/GroupLongScroll'
+import GroupLongScroll from '~/Screen/GroupLongScroll';
+import GroupPage from '~/Screen/GroupPage'
 
 import {DomainContext, DomainContextProvider} from '~/Context/Domain';
 import {DataContext, DataContextProvider} from '~/Context/Data';
@@ -113,6 +114,15 @@ const NoniNavi = () => {
                     headerShown: true,
                     headerBackTitleVisible: false,
                     title: '내 모임'
+                }}
+            />
+            <Stack.Screen
+                name="GroupPage"
+                component={GroupPage}
+                options={{
+                    headerShown: false,
+                    headerBackTitleVisible: false,
+                    title: '소모임 상세보기'
                 }}
             />
              
