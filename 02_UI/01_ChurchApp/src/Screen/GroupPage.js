@@ -81,8 +81,6 @@ const GroupPage = ({route}) => {
     }, [groupMember])
 
 
-
-
     return (
         <View>
             <Header>
@@ -105,7 +103,7 @@ const GroupPage = ({route}) => {
                         />
                     ))}
                 </TabContainer>
-                {tabIndex == 0 && <GroupPageHome data={data} groupMem={groupMember} isMember={isMember}/>}
+                {tabIndex == 0 && <GroupPageHome data={data} groupMem={groupMember} isMember={isMember} setMember={(value)=>setIsMember(value)}/>}
                 {tabIndex == 1 && <Text>게시글</Text>}
                 {tabIndex == 2 && <Text>사진</Text>}
                 <Text>{user.name}</Text>

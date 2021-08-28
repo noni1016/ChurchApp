@@ -2,6 +2,7 @@ import React, {useState, useEffect, useContext} from 'react';
 import { View, FlatList, Text, Dimensions, ScrollView, Image, NativeSyntheticEvent, NativeScrollEvent } from 'react-native';
 import styled from 'styled-components/native';
 import {DomainContext} from '~/Context/Domain';
+import {UserContext} from '~/Context/User';
 import GroupMemProfile from './GroupMemProfile';
 
 const Container = styled.View`
@@ -45,10 +46,13 @@ const NumGroupMemCont = styled.View`
 `;
 
 
-const GroupPageHome = ({data, groupMem, isMember}) => {
+const GroupPageHome = ({data, groupMem, isMember, setMember}) => {
 
-    const domain = useContext(DomainContext);
+    const domain = useContext(DomainContext);    
+    const user = useContext(UserContext);
     var [numGroupMem, setNumGroupMem] = useState(0);
+    var reqJoinExitData = {groupId: data.id, userId: user.id};
+
     var [button, setButton] = useState((<JoinBtn onPress={()=>{alert('가입하기')}}>
                     <JoinBtnText>가입하기</JoinBtnText>
                 </JoinBtn>));
@@ -60,11 +64,33 @@ const GroupPageHome = ({data, groupMem, isMember}) => {
     useEffect(() => {
         console.log('GroupDetailHome is Member: ', isMember);
         if (isMember) {
-            setButton((<JoinBtn onPress={()=>{alert('탈퇴하기')}}>
+            setButton((<JoinBtn onPress={()=>{
+                alert('탈퇴하기');
+                fetch(domain + '/churmmunity/ExitGroup', {
+                    method: 'POST',
+                    body: JSON.stringify(reqJoinExitData),
+                    headers:{
+                        Accept: 'application/json',
+                        'Content-Type': 'application/json'
+                    }
+                }).then(res => res.json()).then(res => {console.log(res);});
+                setMember(false);
+                }}>
                         <JoinBtnText>탈퇴하기</JoinBtnText>
                     </JoinBtn>));
         } else {
-            setButton((<JoinBtn onPress={()=>{alert('가입하기')}}>
+            setButton((<JoinBtn onPress={()=>{
+                alert('가입하기');
+                fetch(domain + '/churmmunity/JoinGroup', {
+                    method: 'POST',
+                    body: JSON.stringify(reqJoinExitData),
+                    headers:{
+                        Accept: 'application/json',
+                        'Content-Type': 'application/json'
+                    }
+                }).then(res => res.json()).then(res => {console.log(res);});
+                setMember(true);
+                }}>
                         <JoinBtnText>가입하기</JoinBtnText>
                     </JoinBtn>));
         }        
