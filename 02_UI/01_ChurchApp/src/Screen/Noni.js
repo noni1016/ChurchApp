@@ -19,6 +19,7 @@ import GroupPage from '~/Screen/GroupPage'
 
 import {DomainContext, DomainContextProvider} from '~/Context/Domain';
 import {DataContext, DataContextProvider} from '~/Context/Data';
+import {UserContext, UserContextProvider} from '~/Context/User';
 
 
 const Stack = createStackNavigator();
@@ -135,11 +136,13 @@ const Noni = () => {
 
     return (
         <DomainContextProvider>
-            <DataContextProvider>
-                <NoniNavi />
-                {/* <NoniMain /> */}
-                {/* <Image style={{height:'100%',width:'100%'}} source={{uri: 'http://175.212.209.93:7009/ins.png'}} /> */}
-            </DataContextProvider>
+            <UserContextProvider>
+                <DataContextProvider>
+                    <NoniNavi />
+                    {/* <NoniMain /> */}
+                    {/* <Image style={{height:'100%',width:'100%'}} source={{uri: 'http://175.212.209.93:7009/ins.png'}} /> */}
+                </DataContextProvider>
+            </UserContextProvider>
         </DomainContextProvider>
     );
 };

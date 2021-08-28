@@ -2,6 +2,7 @@ import React, {useState, useEffect, useContext} from 'react';
 import { View, FlatList, Text, Dimensions, ScrollView, Image, NativeSyntheticEvent, NativeScrollEvent } from 'react-native';
 import styled from 'styled-components/native';
 import {DomainContext} from '~/Context/Domain';
+import GroupMemProfile from './GroupMemProfile';
 
 const Container = styled.View`
     padding: 10px 10px 0px 10px; //상 우 하 좌
@@ -40,47 +41,53 @@ const NumGroupMemCont = styled.View`
     border-bottom-width: 1px;    
     border-top-width: 1px;
     padding: 3px 0px 3px 10px; //상 우 하 좌
+    //background-color: blue;
 `;
 
 
-const GroupDetailHome = ({data}) => {
+const GroupPageHome = ({data, groupMem, isMember}) => {
 
     const domain = useContext(DomainContext);
-
-    var [groupMember, setGroupMember] = useState([]);
     var [numGroupMem, setNumGroupMem] = useState(0);
-
-    var reqMemberData = {groupId: data.id};
-
-    useEffect(() => {
-        fetch(domain + '/churmmunity/GetGroupMembers', {
-            method: 'POST',
-            body: JSON.stringify(reqMemberData),
-            headers:{
-                Accept: 'application/json',
-                'Content-Type': 'application/json'
-            }
-        }).then(res => res.json()).then(res => {setGroupMember(res);});
-    }, [])
+    var [button, setButton] = useState((<JoinBtn onPress={()=>{alert('가입하기')}}>
+                    <JoinBtnText>가입하기</JoinBtnText>
+                </JoinBtn>));
 
     useEffect(() => {
-        setNumGroupMem(groupMember.length);
-    }, [groupMember])
+        setNumGroupMem(groupMem.length);
+    }, [groupMem])
+
+    useEffect(() => {
+        console.log('GroupDetailHome is Member: ', isMember);
+        if (isMember) {
+            setButton((<JoinBtn onPress={()=>{alert('탈퇴하기')}}>
+                        <JoinBtnText>탈퇴하기</JoinBtnText>
+                    </JoinBtn>));
+        } else {
+            setButton((<JoinBtn onPress={()=>{alert('가입하기')}}>
+                        <JoinBtnText>가입하기</JoinBtnText>
+                    </JoinBtn>));
+        }        
+    }, [isMember])
 
     return (
         <Container>
             <Title>{data.name}</Title>
             <Desc>{data.description}</Desc>
-            <JoinBtn onPress={()=>{alert('가입하기')}}>
-                <JoinBtnText>가입하기</JoinBtnText>
-            </JoinBtn>
+            {button}
             {/* {groupMember && <Text>{groupMember[0].name}</Text>} */}
             <NumGroupMemCont>
                 <Text fontSize={18}>멤버 {numGroupMem} 명</Text>
             </NumGroupMemCont>
+            {groupMem.map((member, index) => (
+                <GroupMemProfile member={member} />
+                // <Text>member {member.name}</Text>
+            ))}
+
+
 
         </Container>
     )
 }
 
-export default GroupDetailHome;
+export default GroupPageHome;
