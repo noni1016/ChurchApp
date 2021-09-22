@@ -42,7 +42,7 @@ const Semin = () => {
       const getProfile = async () => {
         const profile = await getKakaoProfile();
       
-        setResult2(JSON.stringify(profile));
+        setResult2(profile);
         // console.log(result);
       };
 
@@ -58,7 +58,7 @@ const Semin = () => {
             <Text>{result1}</Text>
         </Body>
         <Body2 onPress={() => getProfile()}>
-            <Text>{result2}</Text>
+            <Text>{result2.id}</Text>
         </Body2>
         <Body3 onPress={() => signOutWithKakao()}>
             <Text>{result3}</Text>
