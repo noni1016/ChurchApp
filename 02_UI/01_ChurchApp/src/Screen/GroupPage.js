@@ -59,7 +59,7 @@ const GroupPage = ({route}) => {
         })
     });    
 
-    useEffect(() => {
+    const GetGroupMember = () => {
         fetch(domain + '/churmmunity/GetGroupMembers', {
             method: 'POST',
             body: JSON.stringify(reqMemberData),
@@ -68,6 +68,24 @@ const GroupPage = ({route}) => {
                 'Content-Type': 'application/json'
             }
         }).then(res => res.json()).then(res => {setGroupMember(res);});
+    };
+
+    //DB Groups.numMember 저장 요청
+    const SetNumGroupMemberDB = () => {
+        let sendNumMemberData = {groupId: data.id, numMember: groupMember.length};
+        console.log('SetNumGroupMemberDB Called!')
+        fetch(domain + '/churmmunity/SetNumGroupMember', {
+            method: 'POST',
+            body: JSON.stringify(sendNumMemberData),
+            headers:{
+                Accept: 'application/json',
+                'Content-Type': 'application/json'
+            }
+        }).then(res => res.json()).then(res => console.log(res));
+    };
+
+    useEffect(() => {
+        GetGroupMember();
     }, [data])
 
     useEffect(() => {
@@ -79,6 +97,13 @@ const GroupPage = ({route}) => {
         })
         console.log('isMember: ',isMember);
     }, [groupMember])
+
+    const SetMember = (curUserIsMemOfThisGroup) => {
+        console.log('SetMember Called!')
+        setIsMember(curUserIsMemOfThisGroup);
+        GetGroupMember();
+        SetNumGroupMemberDB();
+    };
 
 
     return (
@@ -103,7 +128,7 @@ const GroupPage = ({route}) => {
                         />
                     ))}
                 </TabContainer>
-                {tabIndex == 0 && <GroupPageHome data={data} groupMem={groupMember} isMember={isMember} setMember={(value)=>setIsMember(value)}/>}
+                {tabIndex == 0 && <GroupPageHome data={data} groupMem={groupMember} isMember={isMember} setMember={(value)=>{SetMember(value)}}/>}
                 {tabIndex == 1 && <Text>게시글</Text>}
                 {tabIndex == 2 && <Text>사진</Text>}
                 <Text>{user.name}</Text>

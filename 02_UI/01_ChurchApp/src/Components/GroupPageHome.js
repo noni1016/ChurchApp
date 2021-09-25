@@ -73,7 +73,7 @@ const GroupPageHome = ({data, groupMem, isMember, setMember}) => {
                         Accept: 'application/json',
                         'Content-Type': 'application/json'
                     }
-                }).then(res => res.json()).then(res => {console.log(res);});
+                }).then(res => console.log(res));
                 setMember(false);
                 }}>
                         <JoinBtnText>탈퇴하기</JoinBtnText>
@@ -88,7 +88,7 @@ const GroupPageHome = ({data, groupMem, isMember, setMember}) => {
                         Accept: 'application/json',
                         'Content-Type': 'application/json'
                     }
-                }).then(res => res.json()).then(res => {console.log(res);});
+                }).then(res => {console.log(res);});
                 setMember(true);
                 }}>
                         <JoinBtnText>가입하기</JoinBtnText>

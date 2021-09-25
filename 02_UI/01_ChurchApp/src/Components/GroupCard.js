@@ -2,6 +2,7 @@ import React, {useEffect, useContext, useState} from 'react';
 import {Text, Button, Image, StyleSheet, Dimensions} from 'react-native';
 import styled from 'styled-components/native';
 import {DomainContext} from '~/Context/Domain';
+import { UserContext } from '~/Context/User';
 import IconE from 'react-native-vector-icons/Entypo';
 import IconM from 'react-native-vector-icons/MaterialCommunityIcons';
 
