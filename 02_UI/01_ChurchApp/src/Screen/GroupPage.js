@@ -2,6 +2,7 @@ import React, {useState, useEffect, useContext} from 'react';
 import { View, FlatList, Text, Dimensions, ScrollView, Image, NativeSyntheticEvent, NativeScrollEvent } from 'react-native';
 import styled from 'styled-components/native';
 import {DomainContext} from '~/Context/Domain';
+import {UserContext} from '~/Context/User';
 import Tab from '~/Components/Tab';
 import GroupPageHome from '~/Components/GroupPageHome';
 
@@ -28,6 +29,7 @@ const TabContainer = styled.SafeAreaView`
 
 const GroupPage = ({route}) => {
     const domain = useContext(DomainContext);
+    const user = useContext(UserContext);
     const data = route.params.groupData;
     const [tabIndex, setTabIndex] = useState(0);
     var [imgWidth, setImgWidth] = useState();
@@ -36,6 +38,11 @@ const GroupPage = ({route}) => {
     var [resizedHeight, setResizedHeight] = useState(100);
     var [url, setUrl] = useState('');
     var tabs = ['홈', '게시글', '사진'];
+
+    var [groupMember, setGroupMember] = useState([]);
+    var reqMemberData = {groupId: data.id};
+
+    var [isMember, setIsMember] = useState(false);
     
     useEffect(() => {
         setUrl(`${domain}/${data.mainImg}`);
@@ -50,7 +57,28 @@ const GroupPage = ({route}) => {
                 setResizedHeight(height);
             }
         })
-    });
+    });    
+
+    useEffect(() => {
+        fetch(domain + '/churmmunity/GetGroupMembers', {
+            method: 'POST',
+            body: JSON.stringify(reqMemberData),
+            headers:{
+                Accept: 'application/json',
+                'Content-Type': 'application/json'
+            }
+        }).then(res => res.json()).then(res => {setGroupMember(res);});
+    }, [data])
+
+    useEffect(() => {
+        // 이 그룹 멤버인지 찾기
+        groupMember.map((member, index) => {
+            if (member.id === user.id) {
+                setIsMember(true);
+            }
+        })
+        console.log('isMember: ',isMember);
+    }, [groupMember])
 
 
     return (
@@ -75,9 +103,10 @@ const GroupPage = ({route}) => {
                         />
                     ))}
                 </TabContainer>
-                {tabIndex == 0 && <GroupPageHome data={data}/>}
+                {tabIndex == 0 && <GroupPageHome data={data} groupMem={groupMember} isMember={isMember} setMember={(value)=>setIsMember(value)}/>}
                 {tabIndex == 1 && <Text>게시글</Text>}
                 {tabIndex == 2 && <Text>사진</Text>}
+                <Text>{user.name}</Text>
             </ScrollView>
         </View>
     )

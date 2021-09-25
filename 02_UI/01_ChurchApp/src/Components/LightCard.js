@@ -96,7 +96,7 @@ const GroupCard = ({data}) => {
     var [url, setUrl] = useState('');
 
     useEffect(() => {
-        console.log(`${domain}/${data.mainImg}`);
+        // console.log(`${domain}/${data.mainImg}`);
         setUrl(`${domain}/${data.mainImg}`);
         Image.getSize(url, (width, height) => {
             console.log(width + ' - ' + height);
@@ -110,7 +110,7 @@ const GroupCard = ({data}) => {
                 setResizedHeight(Dimensions.get('window').width * adjWidth);
             }
 
-            console.log(resizedWidth + ' - ' + resizedHeight);
+            // console.log(resizedWidth + ' - ' + resizedHeight);
 
         })
 

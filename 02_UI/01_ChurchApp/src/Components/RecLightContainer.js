@@ -70,7 +70,7 @@ const RecLightContainer = ({orgDatas}) => {
     var datas = orgDatas.length > 8 ? orgDatas.slice(0,7) : orgDatas;
 
     useEffect(() => {
-        console.log(datas.length);
+        // console.log(datas.length);
     }, []);
     
 
