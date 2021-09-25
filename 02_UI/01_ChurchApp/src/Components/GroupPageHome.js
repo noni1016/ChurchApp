@@ -66,7 +66,7 @@ const GroupPageHome = ({data, groupMem, isMember, setMember}) => {
         if (isMember) {
             setButton((<JoinBtn onPress={()=>{
                 alert('탈퇴하기');
-                fetch(domain + '/churmmunity/ExitGroup', {
+                fetch(domain + '/Churmmunity/ExitGroup', {
                     method: 'POST',
                     body: JSON.stringify(reqJoinExitData),
                     headers:{
@@ -81,7 +81,7 @@ const GroupPageHome = ({data, groupMem, isMember, setMember}) => {
         } else {
             setButton((<JoinBtn onPress={()=>{
                 alert('가입하기');
-                fetch(domain + '/churmmunity/JoinGroup', {
+                fetch(domain + '/Churmmunity/JoinGroup', {
                     method: 'POST',
                     body: JSON.stringify(reqJoinExitData),
                     headers:{

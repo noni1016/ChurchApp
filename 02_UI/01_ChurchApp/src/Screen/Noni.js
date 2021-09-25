@@ -65,7 +65,7 @@ const NoniMain = ({navigation}) => {
 
     useEffect(() => {
         // console.log(domain);
-        fetch(domain + '/churmmunity/GetMyGroupDatas', {
+        fetch(domain + '/Churmmunity/GetMyGroupDatas', {
             method: 'POST',
             body: JSON.stringify(data),
             headers:{
@@ -73,17 +73,28 @@ const NoniMain = ({navigation}) => {
                 'Content-Type': 'application/json'
             }
         }).then(res => res.json()).then(res => {setMyGroupDatas(res)});
-        //fetch(domain + '/churmmunity/GetMyGroupDatas').then(res => res.json()).then(res=> {setMyGroupDatas(res)});
-        fetch(domain + '/churmmunity/GetMyLightDatas').then(res => res.json()).then(res => {setMyLightDatas(res)});
-        fetch(domain + '/churmmunity/GetRecGroupsOrderRand').then(res => res.json()).then(res => {setRecGroups(res)});
-        fetch(domain + '/churmmunity/GetRecLightsOrderTime').then(res => res.json()).then(res => {setRecLights(res)});
+        //fetch(domain + '/Churmmunity/GetMyGroupDatas').then(res => res.json()).then(res=> {setMyGroupDatas(res)});
+        fetch(domain + '/Churmmunity/GetMyLightDatas').then(res => res.json()).then(res => {setMyLightDatas(res)});
+        fetch(domain + '/Churmmunity/GetRecGroupsOrderRand').then(res => res.json()).then(res => {setRecGroups(res)});
+        fetch(domain + '/Churmmunity/GetRecLightsOrderTime').then(res => res.json()).then(res => {setRecLights(res)});
     }, []);
+
+    useEffect(() => {
+        fetch(domain + '/Churmmunity/GetMyGroupDatas', {
+            method: 'POST',
+            body: JSON.stringify(data),
+            headers:{
+                Accept: 'application/json',
+                'Content-Type': 'application/json'
+            }
+        }).then(res => res.json()).then(res => {setMyGroupDatas(res)});
+    });
 
     return (
         <ScrollView>
-            <GroupCardContainer datas={myGroupDatas} navigation={navigation}/>
+            <GroupCardContainer title={'내 모임'} orgDatas={myGroupDatas} navigation={navigation}/>
             <LightCardContainer datas={myLightDatas}/>
-            <RecGroupContainer orgDatas={recGroups} navigation={navigation}/>
+            <GroupCardContainer title={'오늘의 모임'} orgDatas={recGroups} navigation={navigation}/>
             <RecLightContainer orgDatas={recLights}/>
             <EmptyArea />
         </ScrollView>

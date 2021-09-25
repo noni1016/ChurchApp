@@ -60,7 +60,7 @@ const GroupPage = ({route}) => {
     });    
 
     const GetGroupMember = () => {
-        fetch(domain + '/churmmunity/GetGroupMembers', {
+        fetch(domain + '/Churmmunity/GetGroupMembers', {
             method: 'POST',
             body: JSON.stringify(reqMemberData),
             headers:{
@@ -74,7 +74,7 @@ const GroupPage = ({route}) => {
     const SetNumGroupMemberDB = () => {
         let sendNumMemberData = {groupId: data.id, numMember: groupMember.length};
         console.log('SetNumGroupMemberDB Called!')
-        fetch(domain + '/churmmunity/SetNumGroupMember', {
+        fetch(domain + '/Churmmunity/SetNumGroupMember', {
             method: 'POST',
             body: JSON.stringify(sendNumMemberData),
             headers:{

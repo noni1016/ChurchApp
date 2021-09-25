@@ -66,13 +66,14 @@ const DataIndicator = styled.View`
 `;
 
 
-const GroupCardContainer = ({datas, navigation}) => {
+const GroupCardContainer = ({title, orgDatas, navigation}) => {
 
     // const DataContext = useContext(DataContext);
     const {showMoreMode, setShowMoreMode} = useContext(DataContext);
 
     // console.log(data[0]);
     const [indicatorIndex, setIndicatorIndex] = useState(0);
+    var datas = orgDatas.length > 8 ? orgDatas.slice(0,7) : orgDatas;
     const dataLength = datas.length;
 
     useEffect(() => {
@@ -83,7 +84,7 @@ const GroupCardContainer = ({datas, navigation}) => {
     return (
         <MyGroupContainer>
             <Header>
-                <Title>내 모임</Title>
+                <Title>{title}</Title>
                 <ShowMore
                     onPress={() => {
                         setShowMoreMode(0);
@@ -107,8 +108,7 @@ const GroupCardContainer = ({datas, navigation}) => {
                                 navigation.navigate('GroupPage', {groupData : data});
                                 }}>
                                 <GroupCard 
-                                    data={data}
-                                
+                                    data={data}                                
                                 ></GroupCard>
                             </Body>
                         ))}

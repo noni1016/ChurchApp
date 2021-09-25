@@ -26,10 +26,10 @@ const DataContextProvider = ({children}) => {
     var [showMoreMode, setShowMoreMode] = useState([initGroupData]);
 
     useEffect(() => {
-        fetch(domain + '/churmmunity/getMyGroupDatas').then(res => res.json()).then(res => {setMyGroupDatas(res)});
-        fetch(domain + '/churmmunity/getMyLightDatas').then(res => res.json()).then(res => {setMyLightDatas(res)});
-        fetch(domain + '/churmmunity/getRecGroupsOrderRand').then(res => res.json()).then(res => {setRecGroups(res)});
-        fetch(domain + '/churmmunity/getRecLightsOrderTime').then(res => res.json()).then(res => {setRecLights(res)});
+        fetch(domain + '/Churmmunity/getMyGroupDatas').then(res => res.json()).then(res => {setMyGroupDatas(res)});
+        fetch(domain + '/Churmmunity/getMyLightDatas').then(res => res.json()).then(res => {setMyLightDatas(res)});
+        fetch(domain + '/Churmmunity/getRecGroupsOrderRand').then(res => res.json()).then(res => {setRecGroups(res)});
+        fetch(domain + '/Churmmunity/getRecLightsOrderTime').then(res => res.json()).then(res => {setRecLights(res)});
     }, []);
 
     return (
