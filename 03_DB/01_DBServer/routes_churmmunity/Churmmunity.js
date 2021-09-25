@@ -18,7 +18,7 @@ router.post('/GetMyGroupDatas', (req, res) => {
     // let sql = 'SELECT * FROM myGroupDatas'; // myGroupDatas 테이블에서 모든 값을 가져옴
     // console.log('request on');
     // console.log(req.body);
-    let sql = `SELECT Groups.id, Groups.name, Groups.mainImg, Groups.location, Groups.numMember, Groups.description
+    let sql = `SELECT Groups.id, Groups.name, Groups.mainImg, Groups.location, Groups.description
     FROM Groups, GroupUser, User
     WHERE GroupUser.userId = ${req.body.userId}
         AND GroupUser.userId = User.id
@@ -47,6 +47,38 @@ router.post('/GetGroupMembers', (req, res) => {
             res.send(rows);
         } else {
             console.log('query error : ' + error);
+        }
+    });
+})
+
+router.post('/JoinGroup', (req, res) => {
+    let sql = `INSERT INTO GroupUser (groupId, userId, role) VALUES (${req.body.groupId}, ${req.body.userId}, 'user')`;
+    console.log(sql);
+    conn.query(sql, function (error, rows, fields) { // sql 쿼리 수행
+        if (!error) {
+            // console.log(rows);
+            console.log('query success')
+            res.send('success');
+        } else {
+            console.log('query error : ' + error);
+            res.send('fail' + error);
+        }
+    });
+})
+
+router.post('/ExitGroup', (req, res) => {
+    let sql = `DELETE FROM GroupUser 
+	            WHERE GroupUser.userId = ${req.body.userId}
+                    AND GroupUser.groupId = ${req.body.groupId}`;
+    console.log(sql);
+    conn.query(sql, function (error, rows, fields) { // sql 쿼리 수행
+        if (!error) {
+            // console.log(rows);
+            console.log('query success')
+            res.send('success');
+        } else {
+            console.log('query error : ' + error);
+            res.send('fail' + error);
         }
     });
 })
@@ -117,6 +149,22 @@ router.get('/GetRecLightsOrderTime', (req, res) => {
         }
     });
 });
+
+router.post('/SetNumGroupMember', (req, res) => {
+    console.log('SetNumGroupMember Called')
+    let sql = `UPDATE Groups SET numMember = ${req.body.numMember} WHERE Groups.id = ${req.body.groupId};`
+    console.log(sql);
+    conn.query(sql, function (error, rows, fields) { // sql 쿼리 수행
+        if (!error) {
+            // console.log(rows);
+            console.log('query success')
+            res.send(rows);
+        } else {
+            console.log('query error : ' + error);
+        }
+    });
+})
+
 
 
 module.exports = router;
