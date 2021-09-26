@@ -76,9 +76,9 @@ const GroupCardContainer = ({title, orgDatas, navigation}) => {
     var datas = orgDatas.length > 8 ? orgDatas.slice(0,7) : orgDatas;
     const dataLength = datas.length;
 
-    useEffect(() => {
-        console.log(`Data Length : ${datas.length}`);
-    }, []);
+    // useEffect(() => {
+    //     console.log(`Data Length : ${datas.length}`);
+    // }, []);
     
 
     return (
@@ -103,12 +103,12 @@ const GroupCardContainer = ({title, orgDatas, navigation}) => {
                         );
                     }}>
                         {datas.map((data, index) => (
-                            <Body activeOpacity={1} onPress = {() => {
+                            <Body activeOpacity={1} key={index} onPress = {() => {
                                 // alert(data.name);
                                 navigation.navigate('GroupPage', {groupData : data});
                                 }}>
                                 <GroupCard 
-                                    data={data}                                
+                                    data={data}                           
                                 ></GroupCard>
                             </Body>
                         ))}

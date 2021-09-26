@@ -25,12 +25,12 @@ const DataContextProvider = ({children}) => {
     var [recLights, setRecLights] = useState([initLightData]);
     var [showMoreMode, setShowMoreMode] = useState([initGroupData]);
 
-    useEffect(() => {
-        fetch(domain + '/Churmmunity/getMyGroupDatas').then(res => res.json()).then(res => {setMyGroupDatas(res)});
-        fetch(domain + '/Churmmunity/getMyLightDatas').then(res => res.json()).then(res => {setMyLightDatas(res)});
-        fetch(domain + '/Churmmunity/getRecGroupsOrderRand').then(res => res.json()).then(res => {setRecGroups(res)});
-        fetch(domain + '/Churmmunity/getRecLightsOrderTime').then(res => res.json()).then(res => {setRecLights(res)});
-    }, []);
+    // useEffect(() => {
+    //     fetch(domain + '/Churmmunity/getMyGroupDatas').then(res => res.json()).then(res => {setMyGroupDatas(res)});
+    //     fetch(domain + '/Churmmunity/getMyLightDatas').then(res => res.json()).then(res => {setMyLightDatas(res)});
+    //     fetch(domain + '/Churmmunity/getRecGroupsOrderRand').then(res => res.json()).then(res => {setRecGroups(res)});
+    //     fetch(domain + '/Churmmunity/getRecLightsOrderTime').then(res => res.json()).then(res => {setRecLights(res)});
+    // }, []);
 
     return (
         <DataContext.Provider value={{myGroupDatas, myLightDatas, recGroups, recLights, showMoreMode, setShowMoreMode}}>

@@ -73,10 +73,10 @@ const NoniMain = ({navigation}) => {
                 'Content-Type': 'application/json'
             }
         }).then(res => res.json()).then(res => {setMyGroupDatas(res)});
-        //fetch(domain + '/Churmmunity/GetMyGroupDatas').then(res => res.json()).then(res=> {setMyGroupDatas(res)});
-        fetch(domain + '/Churmmunity/GetMyLightDatas').then(res => res.json()).then(res => {setMyLightDatas(res)});
+        // fetch(domain + '/Churmmunity/GetMyGroupDatas').then(res => res.json()).then(res=> {setMyGroupDatas(res)});
+        // fetch(domain + '/Churmmunity/GetMyLightDatas').then(res => res.json()).then(res => {setMyLightDatas(res)});
         fetch(domain + '/Churmmunity/GetRecGroupsOrderRand').then(res => res.json()).then(res => {setRecGroups(res)});
-        fetch(domain + '/Churmmunity/GetRecLightsOrderTime').then(res => res.json()).then(res => {setRecLights(res)});
+        // fetch(domain + '/Churmmunity/GetRecLightsOrderTime').then(res => res.json()).then(res => {setRecLights(res)});
     }, []);
 
     useEffect(() => {
@@ -93,9 +93,9 @@ const NoniMain = ({navigation}) => {
     return (
         <ScrollView>
             <GroupCardContainer title={'내 모임'} orgDatas={myGroupDatas} navigation={navigation}/>
-            <LightCardContainer datas={myLightDatas}/>
+            {/* <LightCardContainer datas={myLightDatas}/> */}
             <GroupCardContainer title={'오늘의 모임'} orgDatas={recGroups} navigation={navigation}/>
-            <RecLightContainer orgDatas={recLights}/>
+            {/* <RecLightContainer orgDatas={recLights}/> */}
             <EmptyArea />
         </ScrollView>
     );

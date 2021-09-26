@@ -5,6 +5,7 @@ import {DomainContext} from '~/Context/Domain';
 import {UserContext} from '~/Context/User';
 import Tab from '~/Components/Tab';
 import GroupPageHome from '~/Components/GroupPageHome';
+import Feeds from '~/Components/Feed';
 
 const Header = styled.View`
     //height: 15%;
@@ -129,7 +130,7 @@ const GroupPage = ({route}) => {
                     ))}
                 </TabContainer>
                 {tabIndex == 0 && <GroupPageHome data={data} groupMem={groupMember} isMember={isMember} setMember={(value)=>{SetMember(value)}}/>}
-                {tabIndex == 1 && <Text>게시글</Text>}
+                {tabIndex == 1 && <Feeds/>}
                 {tabIndex == 2 && <Text>사진</Text>}
                 <Text>{user.name}</Text>
             </ScrollView>

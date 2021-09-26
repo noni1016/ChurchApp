@@ -83,21 +83,25 @@ const GroupCard = ({data}) => {
     useEffect(() => {
         // console.log(`${domain}/${data.mainImg}`);
         setUrl(`${domain}/${data.mainImg}`);
-        Image.getSize(url, (width, height) => {
-            // console.log(width + ' - ' + height);
-            setImgWidth(width);
-            setImgHeight(height);
-            if(width > Dimensions.get('window').width * 0.9) {
-                setResizedWidth(Dimensions.get('window').width * 0.9);
-                setResizedHeight(Dimensions.get('window').width * 0.9 / width * height);
-            } else {
-                setResizedWidth(width);
-                setResizedHeight(height);
-            }
+        if (domain && data.mainImg && url != '')
+        {
+            Image.getSize(url, (width, height) => {
+                // console.log(width + ' - ' + height);
+                setImgWidth(width);
+                setImgHeight(height);
+                if(width > Dimensions.get('window').width * 0.9) {
+                    setResizedWidth(Dimensions.get('window').width * 0.9);
+                    setResizedHeight(Dimensions.get('window').width * 0.9 / width * height);
+                } else {
+                    setResizedWidth(width);
+                    setResizedHeight(height);
+                }
+    
+                // console.log(resizedWidth + ' - ' + resizedHeight);
+    
+            })
+        }
 
-            // console.log(resizedWidth + ' - ' + resizedHeight);
-
-        })
 
     });
 
@@ -105,7 +109,7 @@ const GroupCard = ({data}) => {
     return (
         <Container width='90%'>
             <MainImageContainer>
-                <Image style={{backgroundColor: '#FFFFFF', width: resizedWidth, height: resizedHeight, resizeMode: 'contain'}} source={{uri: url}} />
+                <Image style={{backgroundColor: '#FFFFFF', width: resizedWidth, height: resizedHeight, resizeMode: 'contain'}} source={url ? {uri: url } : null} />
             </MainImageContainer>
             <GroupTitleAndNumMem>
                 <GroupTitle>{data.name}</GroupTitle>
