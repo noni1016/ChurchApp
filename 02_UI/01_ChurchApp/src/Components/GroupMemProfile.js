@@ -32,7 +32,7 @@ const GroupMemProfile = ({member}) => {
 
     return (
         <Container>
-            <Image style={{ backgroundColor: 'transparent', width: 70, height: 70, resizeMode: 'contain' }} source={{ uri: url }} />
+            <Image style={{ backgroundColor: 'transparent', width: 70, height: 70, resizeMode: 'contain' }} source={url ? {uri: url } : null} />
             <NameCont>
                 <Name>{member.name}</Name>
             </NameCont>
