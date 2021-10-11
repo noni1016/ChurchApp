@@ -39,6 +39,16 @@ const FeedImgContainer = Styled.View`
     width: ${Dimensions.get('window').width * 0.98}px;
 `;
 
+const FeedFooter = Styled.View`
+    flex-direction: column;
+    margin: 5px 0px 0px 0px; //상 우 하 좌
+    background-color: yellow;
+`;
+
+const FeedCommentContainer = Styled.View`
+    flex-direction: row;
+`;
+
 const tempFeedContent = {
     authorId: 3,
     location: '제주 말머리운하 근처',
@@ -46,7 +56,8 @@ const tempFeedContent = {
     contentImg: require(`~/Assets/Images/WinLockImages/0b8a46c6f6829edc4d7c56905d0fe76c3139cc2fc7d31a7f3aafefabb2af083a.jpg`),
     contentText: '날씨 좋다... \n그냥 좋다...',
     comments: [
-        {authorId: 5, time: '1분 전', text: '감성이 ㄷㄷㄷ'}
+        {authorId: 5, time: '1분 전', text: '감성이 ㄷㄷㄷ'},
+        {authorId: 6, time: '2분 전', text: '나도 나가야겠다'},
     ]
 }
 
@@ -117,6 +128,15 @@ const Feed = () => {
                 </FeedImgContainer>
                 <Text>{tempFeedContent.contentText}</Text>
             </FeedBody>
+
+            <FeedFooter>
+                <FeedCommentContainer>
+                    <Image style={{ backgroundColor: 'transparent', width: 25, height: 25, resizeMode: 'contain' }} source={feedAuthorImgUrl ? {uri: feedAuthorImgUrl } : null} />
+                
+
+                </FeedCommentContainer>
+
+            </FeedFooter>
             
 
         </FeedContainer>

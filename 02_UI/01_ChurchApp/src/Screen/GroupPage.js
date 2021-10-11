@@ -130,7 +130,7 @@ const GroupPage = ({route}) => {
                     ))}
                 </TabContainer>
                 {tabIndex == 0 && <GroupPageHome data={data} groupMem={groupMember} isMember={isMember} setMember={(value)=>{SetMember(value)}}/>}
-                {tabIndex == 1 && <Feeds/>}
+                {tabIndex == 1 && <Feeds groupId={data.id}/>}
                 {tabIndex == 2 && <Text>사진</Text>}
                 <Text>{user.name}</Text>
             </ScrollView>
