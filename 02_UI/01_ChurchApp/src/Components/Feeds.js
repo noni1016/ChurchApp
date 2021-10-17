@@ -8,7 +8,7 @@ const Temp = Styled.View`
     height: 300px;
 
 `;
-const Feeds = ({groupId}) => {
+const Feeds = ({groupId, navigation}) => {
     const domain = useContext(DomainContext);
     let [groupFeeds, SetGroupFeeds] = useState([]);
 
@@ -28,7 +28,7 @@ const Feeds = ({groupId}) => {
         // <Feed/>
         <View>
             {groupFeeds.map((feed, index) => (
-                <Feed feed={feed} key={index}/>
+                <Feed feed={feed} key={index} navigation={navigation}/>
             ))}
             <Temp />
         </View>

@@ -16,6 +16,7 @@ import RecLightContainer from '~/Components/RecLightContainer';
 import Default from '~/Screen/Default'
 import GroupLongScroll from '~/Screen/GroupLongScroll';
 import GroupPage from '~/Screen/GroupPage'
+import Comments from './Comments';
 
 import {DomainContext, DomainContextProvider} from '~/Context/Domain';
 import {DataContext, DataContextProvider} from '~/Context/Data';
@@ -135,6 +136,15 @@ const NoniNavi = () => {
                     headerShown: false,
                     headerBackTitleVisible: false,
                     title: '소모임 상세보기'
+                }}
+            />
+            <Stack.Screen
+                name="Comments"
+                component={Comments}
+                options={{
+                    headerShown: true,                    
+                    headerBackTitleVisible: false,
+                    title: '댓글'
                 }}
             />
              

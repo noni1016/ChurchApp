@@ -28,7 +28,7 @@ const TabContainer = styled.SafeAreaView`
   background-color: skyblue;
 `;
 
-const GroupPage = ({route}) => {
+const GroupPage = ({route, navigation}) => {
     const domain = useContext(DomainContext);
     const user = useContext(UserContext);
     const data = route.params.groupData;
@@ -130,7 +130,7 @@ const GroupPage = ({route}) => {
                     ))}
                 </TabContainer>
                 {tabIndex == 0 && <GroupPageHome data={data} groupMem={groupMember} isMember={isMember} setMember={(value)=>{SetMember(value)}}/>}
-                {tabIndex == 1 && <Feeds groupId={data.id}/>}
+                {tabIndex == 1 && <Feeds groupId={data.id} navigation={navigation}/>}
                 {tabIndex == 2 && <Text>사진</Text>}
                 <Text>{user.name}</Text>
             </ScrollView>
