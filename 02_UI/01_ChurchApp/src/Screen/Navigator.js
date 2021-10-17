@@ -16,6 +16,7 @@ import Default from './Default';
 import Churmmunity from './Churmmunity';
 import Noni from './Noni'; //practice page
 import Semin from './Semin'; //practice page
+import Profile from './Profile';
 
 const BottomTab = createBottomTabNavigator();
 
@@ -52,7 +53,7 @@ const BottomTabNavi = () => {
             />
             <BottomTab.Screen
                 name="Profile"
-                component={Default}
+                component={Profile}
                 options={{
                     tabBarIcon: ({ color }) => <Icon name="account-box" color={color} size={26} />
                 }}

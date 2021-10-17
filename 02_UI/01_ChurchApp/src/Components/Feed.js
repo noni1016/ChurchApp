@@ -47,6 +47,8 @@ const FeedFooter = Styled.View`
 
 const FeedCommentContainer = Styled.View`
     flex-direction: row;
+    justify-content: flex-start;
+    background-color: transparent;
 `;
 
 const tempFeedContent = {
@@ -62,16 +64,22 @@ const tempFeedContent = {
 }
 
 
-const Feed = () => {
+
+
+const Feed = ({feed}) => {
 
     const domain = useContext(DomainContext);
     let [feedAuthorData, setFeedAuthorData] = useState();
     let [feedAuthorImgUrl, setFeedAuthorImgUrl] = useState('');
+    let [feedImgUrl, setFeedImgUrl] = useState('');
+    let [feedComments, setFeedComments] = useState([]);
+    let [firstCommentAuthor, setFirstCommentAuthor] = useState([]);
     let [resizedWidth, setResizedWidth] = useState();
     let [resizedHeight, setResizedHeight] = useState();
 
     useEffect(() => {
-        let sendUserData = {userId: tempFeedContent.authorId};
+        // console.log(feed);
+        let sendUserData = {userId: feed.authorId};
         fetch(domain + '/Churmmunity/GetUserData', {
             method: 'POST',
             body: JSON.stringify(sendUserData),
@@ -90,9 +98,9 @@ const Feed = () => {
     }, [feedAuthorData]);
     
     useEffect(() => {
-        if (domain && feedAuthorImgUrl != '')
+        if (domain && feedImgUrl != '')
         {
-            Image.getSize(feedAuthorImgUrl, (width, height) => {
+            Image.getSize(feedImgUrl, (width, height) => {
                 // console.log(width + ' - ' + height);
                 // setImgWidth(width);
                 // setImgHeight(height);
@@ -105,6 +113,42 @@ const Feed = () => {
         }
     })
 
+    useEffect(() => {
+        if (feed.contentImg) {
+            // console.log(`${domain}/${feed.contentImg}`);
+            setFeedImgUrl(`${domain}/${feed.contentImg}`);
+        }
+    })
+
+    useEffect(() => {
+        let sendFeedData = {groupId: feed.groupId, feedId: feed.id};
+        fetch(domain + '/Churmmunity/GetFeedComments', {
+            method: 'POST',
+            body: JSON.stringify(sendFeedData),
+            headers:{
+                Accept: 'application/json',
+                'Content-Type': 'application/json'
+            }
+        }).then(res => res.json()).then(res => {setFeedComments(res);});
+        // console.log('FeedComment!!!!', feedComments.length);
+    }, [])
+
+    useEffect(() => {
+        if (feedComments.length > 0) {
+            let sendCommentUserData = {userId: feedComments[0].authorId};
+            fetch(domain + '/Churmmunity/GetCommentAuthorData', {
+                method: 'POST',
+                body: JSON.stringify(sendCommentUserData),
+                headers:{
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            }).then(res => res.json()).then(res => {console.log(res);setFirstCommentAuthor(res[0]);});
+            // console.log('FeedComment!!!!', feedComments.length);
+        }
+
+    }, [feedComments])
+
     return (
         <FeedContainer>
             <FeedHeader>
@@ -115,7 +159,7 @@ const Feed = () => {
                             {feedAuthorData.name}
                         </Text>}
                     <Text>
-                    {tempFeedContent.location} - {tempFeedContent.time}
+                    {feed.location} - {feed.time}
                     </Text>
                 </HeaderInfo>
                 <HeaderOptionBtnContainer>
@@ -124,16 +168,24 @@ const Feed = () => {
             </FeedHeader>
             <FeedBody>
                 <FeedImgContainer>
-                    <Image style={{ backgroundColor: 'transparent', width: resizedWidth, height: resizedHeight, resizeMode: 'contain' }} source={feedAuthorImgUrl ? {uri: feedAuthorImgUrl } : null} />
+                    <Image style={{ backgroundColor: 'transparent', width: resizedWidth, height: resizedHeight, resizeMode: 'contain' }} source={feedImgUrl ? {uri: feedImgUrl } : null} />
                 </FeedImgContainer>
-                <Text>{tempFeedContent.contentText}</Text>
+                <Text>{feed.contentText}</Text>
             </FeedBody>
 
             <FeedFooter>
                 <FeedCommentContainer>
                     <Image style={{ backgroundColor: 'transparent', width: 25, height: 25, resizeMode: 'contain' }} source={feedAuthorImgUrl ? {uri: feedAuthorImgUrl } : null} />
-                
-
+                    {feedComments.length > 1 ? 
+                    (<View>
+                        <Text>{firstCommentAuthor.name}</Text>
+                        <Text>{feedComments[0].text}</Text>
+                        <Text>더보기...</Text>
+                    </View>)
+                    :
+                    feedComments.length == 1 ?
+                    (<Text>{feedComments[0].text}</Text>)
+                    : null}
                 </FeedCommentContainer>
 
             </FeedFooter>
