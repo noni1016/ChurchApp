@@ -58,7 +58,7 @@ const GroupPage = ({route, navigation}) => {
                 setResizedHeight(height);
             }
         })
-    });    
+    }, []);    
 
     const GetGroupMember = () => {
         fetch(domain + '/Churmmunity/GetGroupMembers', {

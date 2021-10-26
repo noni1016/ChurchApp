@@ -57,6 +57,15 @@ const FeedCommentContainer = Styled.View`
     background-color: transparent;
 `;
 
+const Input = Styled.TextInput`
+    width: 90%;
+    height: 30px;
+    background-color: transparent;
+    padding: 0px 8px;
+    margin: 5px 0px 0px 10px; //상 우 하 좌
+    border-bottom-width: 1px;
+`;
+
 
 
 const Feed = ({feed, navigation}) => {
@@ -139,8 +148,11 @@ const Feed = ({feed, navigation}) => {
             }).then(res => res.json()).then(res => {setFirstCommentAuthor(res[0]);});
             // console.log('FeedComment!!!!', feedComments.length);
         }
-
     }, [feedComments])
+
+    const AddInput = (text) => {
+        
+    }
 
     return (
         <FeedContainer>
@@ -178,6 +190,16 @@ const Feed = ({feed, navigation}) => {
                         onPress={() => {navigation.navigate('Comments', {comments: feedComments, navigation: navigation});}}>
                             <Text style={{fontWeight: 'bold'}}>더보기...</Text>
                     </TouchableOpacity>) : null}
+                <Input 
+                    autoFocus={true}
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                    placeholder="댓글 추가"
+                    returnKeyType="done"
+                    onSubmitEditing={({nativeEvent}) => {
+                        alert(nativeEvent.text);
+                    }}
+                />
             </FeedFooter>
             
 
