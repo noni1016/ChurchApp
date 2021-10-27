@@ -2,6 +2,7 @@ import React, {useState, useEffect, useContext} from 'react';
 import { View, FlatList, Text, Dimensions, ScrollView, Image, TouchableOpacity} from 'react-native';
 import Styled from 'styled-components/native';
 import {DomainContext} from '~/Context/Domain';
+import { UserContext } from '~/Context/User';
 import Icon from 'react-native-vector-icons/Entypo';
 import Comments from '~/Screen/Comments';
 
@@ -59,11 +60,22 @@ const FeedCommentContainer = Styled.View`
 
 const Input = Styled.TextInput`
     width: 90%;
-    height: 30px;
+    height: 100%;
     background-color: transparent;
-    padding: 0px 8px;
-    margin: 5px 0px 0px 10px; //상 우 하 좌
+    padding: 0px;
+    /* margin: 5px 0px 0px 10px; //상 우 하 좌 */
     border-bottom-width: 1px;
+`;
+
+const CommentInputContainer = Styled.View`
+    flex-direction: row;
+    width: 100%;
+    height: 30px;
+    /* padding: 0px 8px;     */
+    margin: 0px;
+    justify-content: space-evenly;
+    align-items: center;
+    background-color: transparent;
 `;
 
 
@@ -71,6 +83,7 @@ const Input = Styled.TextInput`
 const Feed = ({feed, navigation}) => {
 
     const domain = useContext(DomainContext);
+    const user = useContext(UserContext);
     let [feedAuthorData, setFeedAuthorData] = useState();
     let [feedAuthorImgUrl, setFeedAuthorImgUrl] = useState('');
     let [feedImgUrl, setFeedImgUrl] = useState('');
@@ -78,6 +91,20 @@ const Feed = ({feed, navigation}) => {
     let [firstCommentAuthor, setFirstCommentAuthor] = useState([]);
     let [resizedWidth, setResizedWidth] = useState();
     let [resizedHeight, setResizedHeight] = useState();
+    let [commentInput, setCommentInput] = useState('');
+
+    const GetFeedComments = () => {
+        let sendFeedData = {groupId: feed.groupId, feedId: feed.id};
+        fetch(domain + '/Churmmunity/GetFeedComments', {
+            method: 'POST',
+            body: JSON.stringify(sendFeedData),
+            headers:{
+                Accept: 'application/json',
+                'Content-Type': 'application/json'
+            }
+        }).then(res => res.json()).then(res => {setFeedComments(res);});
+        // console.log('FeedComment!!!!', feedComments.length);
+    }
 
     useEffect(() => {
         // console.log(feed);
@@ -90,6 +117,7 @@ const Feed = ({feed, navigation}) => {
                 'Content-Type': 'application/json'
             }
         }).then(res => res.json()).then(res => setFeedAuthorData(res[0]));
+        GetFeedComments(); 
     }, [])
     
     useEffect(() => {
@@ -122,18 +150,6 @@ const Feed = ({feed, navigation}) => {
         }
     })
 
-    useEffect(() => {
-        let sendFeedData = {groupId: feed.groupId, feedId: feed.id};
-        fetch(domain + '/Churmmunity/GetFeedComments', {
-            method: 'POST',
-            body: JSON.stringify(sendFeedData),
-            headers:{
-                Accept: 'application/json',
-                'Content-Type': 'application/json'
-            }
-        }).then(res => res.json()).then(res => {setFeedComments(res);});
-        // console.log('FeedComment!!!!', feedComments.length);
-    }, [])
 
     useEffect(() => {
         if (feedComments.length > 0) {
@@ -151,7 +167,20 @@ const Feed = ({feed, navigation}) => {
     }, [feedComments])
 
     const AddInput = (text) => {
-        
+        let sendCommentData = {groupId: feed.groupId, feedId: feed.id, authorId: user.id, text: text};
+        fetch(domain + '/Churmmunity/FeedComments/', {
+            method: 'POST',
+            body: JSON.stringify(sendCommentData),            
+            headers:{
+                Accept: 'application/json', 'Content-Type': 'application/json'
+            }
+        })
+        setCommentInput('');
+        GetFeedComments();
+    }
+
+    const CommentTextHandler = (value) => {
+        setCommentInput(value);
     }
 
     return (
@@ -190,16 +219,21 @@ const Feed = ({feed, navigation}) => {
                         onPress={() => {navigation.navigate('Comments', {comments: feedComments, navigation: navigation});}}>
                             <Text style={{fontWeight: 'bold'}}>더보기...</Text>
                     </TouchableOpacity>) : null}
-                <Input 
-                    autoFocus={true}
-                    autoCapitalize="none"
-                    autoCorrect={false}
-                    placeholder="댓글 추가"
-                    returnKeyType="done"
-                    onSubmitEditing={({nativeEvent}) => {
-                        alert(nativeEvent.text);
-                    }}
-                />
+                <CommentInputContainer>
+                    <Image style={{ backgroundColor: 'transparent', width: 30, height: 30, resizeMode: 'contain', marginRight: 10}} source={user.photo? {uri: `${domain}/${user.photo}` } : null} />
+                    <Input 
+                        autoFocus={true}
+                        autoCapitalize="none"
+                        autoCorrect={false}
+                        placeholder="댓글 추가"
+                        returnKeyType="done"
+                        onChangeText={CommentTextHandler}
+                        value={commentInput}
+                        onSubmitEditing={({nativeEvent}) => {
+                            AddInput(nativeEvent.text);
+                        }}
+                    />
+                </CommentInputContainer>
             </FeedFooter>
             
 

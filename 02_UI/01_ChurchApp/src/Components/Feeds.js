@@ -22,7 +22,7 @@ const Feeds = ({groupId, navigation}) => {
                 'Content-Type': 'application/json'
             }
         }).then(res => res.json()).then(res => {SetGroupFeeds(res);});
-    },[])
+    })
 
     return (
         // <Feed/>
