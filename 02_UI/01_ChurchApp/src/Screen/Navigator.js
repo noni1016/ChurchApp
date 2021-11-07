@@ -13,6 +13,7 @@ import Icon2 from 'react-native-vector-icons/FontAwesome5';
 
 //import custom screens
 import Default from './Default';
+import Home from '~/Screen/Home';
 import Churmmunity from './Churmmunity';
 import Noni from './Noni'; //practice page
 import Semin from './Semin'; //practice page
@@ -25,7 +26,7 @@ const BottomTabNavi = () => {
         <BottomTab.Navigator>
             <BottomTab.Screen
                 name="Home"
-                component={Default}
+                component={Home}
                 options={{
                     tabBarIcon: ({color}) => <Icon name="home" color={color} size={26} />
                 }}

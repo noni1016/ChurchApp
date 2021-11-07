@@ -8,6 +8,8 @@ const Temp = Styled.View`
     height: 300px;
 
 `;
+
+
 const Feeds = ({groupId, navigation}) => {
     const domain = useContext(DomainContext);
     let [groupFeeds, SetGroupFeeds] = useState([]);
@@ -22,16 +24,15 @@ const Feeds = ({groupId, navigation}) => {
                 'Content-Type': 'application/json'
             }
         }).then(res => res.json()).then(res => {SetGroupFeeds(res);});
-    })
+    }, [groupId])
 
     return (
-        // <Feed/>
-        <View>
+        <>
             {groupFeeds.map((feed, index) => (
                 <Feed feed={feed} key={index} navigation={navigation}/>
             ))}
-            <Temp />
-        </View>
+            <Temp />            
+        </>
     )
 }
 

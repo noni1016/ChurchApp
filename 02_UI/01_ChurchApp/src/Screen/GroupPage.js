@@ -6,6 +6,7 @@ import {UserContext} from '~/Context/User';
 import Tab from '~/Components/Tab';
 import GroupPageHome from '~/Components/GroupPageHome';
 import Feeds from '~/Components/Feeds';
+import AddBtn from '~/Components/AddBtn';
 
 const Header = styled.View`
     //height: 15%;
@@ -47,6 +48,10 @@ const GroupPage = ({route, navigation}) => {
     
     useEffect(() => {
         setUrl(`${domain}/${data.mainImg}`);
+
+    }, []);    
+
+    useEffect(() => {
         Image.getSize(url, (width, height) => {
             setImgWidth(width);
             setImgHeight(height);
@@ -58,7 +63,7 @@ const GroupPage = ({route, navigation}) => {
                 setResizedHeight(height);
             }
         })
-    }, []);    
+    }, [url])
 
     const GetGroupMember = () => {
         fetch(domain + '/Churmmunity/GetGroupMembers', {
@@ -134,6 +139,7 @@ const GroupPage = ({route, navigation}) => {
                 {tabIndex == 2 && <Text>사진</Text>}
                 <Text>{user.name}</Text>
             </ScrollView>
+            {tabIndex == 1 && <AddBtn OnPressMethod={() => {alert('AddBtn Pressed!')}}/>}
         </View>
     )
 };
