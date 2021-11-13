@@ -8,7 +8,8 @@ const data = {id: 5};
 const Home = () => {
     return (
         <View>
-            <AddBtn OnPressMethod={() => {alert('AddBtn')}}/>
+            {/* <AddBtn OnPressMethod={() => {alert('AddBtn')}}/> */}
+            <Image source={require(`~/Assets/Images/bakery.jpg`)}/>
         </View>
     )
 }
