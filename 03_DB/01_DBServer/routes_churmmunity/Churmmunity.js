@@ -18,7 +18,7 @@ router.post('/GetMyGroupDatas', (req, res) => {
     // let sql = 'SELECT * FROM myGroupDatas'; // myGroupDatas 테이블에서 모든 값을 가져옴
     // console.log('request on');
     // console.log(req.body);
-    let sql = `SELECT Groups.id, Groups.name, Groups.mainImg, Groups.location, Groups.description
+    let sql = `SELECT Groups.id, Groups.name, Groups.mainImg, Groups.location, Groups.description, Groups.numMember
     FROM Groups, GroupUser, User
     WHERE GroupUser.userId = ${req.body.userId}
         AND GroupUser.userId = User.id
@@ -26,7 +26,7 @@ router.post('/GetMyGroupDatas', (req, res) => {
     conn.query(sql, function (error, rows, fields) { // sql 쿼리 수행
         if (!error) {
             // console.log(rows);
-            console.log('query success')
+            // console.log('query success')
             res.send(rows);
         } else {
             console.log('query error : ' + error);
@@ -43,7 +43,7 @@ router.post('/GetGroupMembers', (req, res) => {
     conn.query(sql, function (error, rows, fields) { // sql 쿼리 수행
         if (!error) {
             // console.log(rows);
-            console.log('query success')
+            // console.log('query success')
             res.send(rows);
         } else {
             console.log('query error : ' + error);
@@ -57,7 +57,7 @@ router.post('/JoinGroup', (req, res) => {
     conn.query(sql, function (error, rows, fields) { // sql 쿼리 수행
         if (!error) {
             // console.log(rows);
-            console.log('query success')
+            // console.log('query success')
             res.send('success');
         } else {
             console.log('query error : ' + error);
@@ -74,7 +74,7 @@ router.post('/ExitGroup', (req, res) => {
     conn.query(sql, function (error, rows, fields) { // sql 쿼리 수행
         if (!error) {
             // console.log(rows);
-            console.log('query success')
+            // console.log('query success')
             res.send('success');
         } else {
             console.log('query error : ' + error);
@@ -99,7 +99,7 @@ router.get('/GetRecGroups', (req, res) => {
     let sql = 'SELECT * FROM recGroups'; // recGroups 테이블에서 모든 값을 가져옴
     conn.query(sql, function (error, rows, fields) { // sql 쿼리 수행
         if (!error) {
-            console.log(rows);
+            // console.log(rows);
             res.send(rows);
         } else {
             console.log('query error : ' + error);
@@ -152,12 +152,12 @@ router.get('/GetRecLightsOrderTime', (req, res) => {
 
 router.post('/SetNumGroupMember', (req, res) => {
     console.log('SetNumGroupMember Called')
-    let sql = `UPDATE Groups SET numMember = ${req.body.numMember} WHERE Groups.id = ${req.body.groupId};`
+    let sql = `UPDATE Groups SET numMember = ${req.body.numMember} WHERE Groups.id = ${req.body.groupId}`;
     console.log(sql);
     conn.query(sql, function (error, rows, fields) { // sql 쿼리 수행
         if (!error) {
             // console.log(rows);
-            console.log('query success')
+            // console.log('query success')
             res.send(rows);
         } else {
             console.log('query error : ' + error);
@@ -165,6 +165,76 @@ router.post('/SetNumGroupMember', (req, res) => {
     });
 })
 
+// 그룹 게시판 관련
+router.post('/GetUserData', (req, res) => {
+    let sql = `SELECT * FROM User WHERE id = ${req.body.userId}`
+    console.log(sql);
+    conn.query(sql, function (error, rows, fields) { // sql 쿼리 수행
+        if (!error) {
+            console.log(rows);
+            // console.log('query success')
+            res.send(rows);
+        } else {
+            console.log('query error : ' + error);
+        }
+    });
+})
+
+router.post('/GetGroupFeeds', (req, res) => {
+    let sql = `SELECT * FROM Feed WHERE groupId = ${req.body.groupId} ORDER BY time DESC`
+    console.log(sql);
+    conn.query(sql, function (error, rows, fields) { // sql 쿼리 수행
+        if (!error) {
+            console.log(rows);
+            // console.log('query success')
+            res.send(rows);
+        } else {
+            console.log('query error : ' + error);
+        }
+    });
+})
+
+router.post('/GetFeedComments', (req, res) => {
+    let sql = `SELECT * FROM Comment WHERE groupId = ${req.body.groupId} AND feedId = ${req.body.feedId} ORDER BY time DESC`
+    console.log(sql);
+    conn.query(sql, function (error, rows, fields) { // sql 쿼리 수행
+        if (!error) {
+            console.log(rows);
+            // console.log('query success')
+            res.send(rows);
+        } else {
+            console.log('query error : ' + error);
+        }
+    });
+})
+
+router.post('/GetCommentAuthorData', (req, res) => {
+    let sql = `SELECT * FROM User WHERE id = ${req.body.userId}`
+    console.log(sql);
+    conn.query(sql, function (error, rows, fields) { // sql 쿼리 수행
+        if (!error) {
+            console.log(rows);
+            // console.log('query success')
+            res.send(rows);
+        } else {
+            console.log('query error : ' + error);
+        }
+    });
+})
+
+router.post('/FeedComments', (req, res) => {
+    let sql = `INSERT INTO Comment (groupId, feedId, authorId, text) VALUES (${req.body.groupId}, ${req.body.feedId}, ${req.body.authorId}, '${req.body.text}')`;
+    console.log(sql);
+    conn.query(sql, function (error, rows, fields) { // sql 쿼리 수행
+        if (!error) {
+            // console.log(rows);
+            // console.log('query success')
+            res.send(rows);
+        } else {
+            console.log('query error : ' + error);
+        }
+    });
+})
 
 
 module.exports = router;
