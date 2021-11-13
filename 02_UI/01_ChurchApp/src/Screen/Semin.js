@@ -1,5 +1,5 @@
-import React, {useState} from 'react';
-import {View, Text} from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {View, Text, Image} from 'react-native';
 import Styled from 'styled-components/native';
 import {
     KakaoOAuthToken,
@@ -10,60 +10,106 @@ import {
     unlink,
   } from '@react-native-seoul/kakao-login';
 
+const Screen = Styled.View`
+    flex-direction: column;
+    flex: 1;
+    align-items : center;
+    justify-content: center;
+`;
+
 const Body = Styled.TouchableOpacity`
-  height: 300px;
-  width: 300px;
-  background-color: #00FF00;
+
 `;
 
 const Body2 = Styled.TouchableOpacity`
-height: 300px;
-width: 300px;
+height: 100px;
+width: 200px;
 background-color: #0000FF;
 `
 
 const Body3 = Styled.TouchableOpacity`
-height: 300px;
-width: 300px;
+height: 100px;
+width: 100px;
 background-color: #FF0000;
 `
+
 const Semin = () => {
-    const [result1, setResult1] = useState('');
-    const [result2, setResult2] = useState('');
-    const [result3, setResult3] = useState('');
+    const [isLogin, setIsLogin] = useState('');
+    const [logInResult, setLogInResult] = useState(null);
+    const [authInfo, setAuthInfo] = useState(null);
+    const [logOutResult, setLogOutResult] = useState(null);
+
+    useEffect(() => {
+        var hasLogInResult = (logInResult != null);
+        if(hasLogInResult)
+        {
+            hasLogInResult = logInResult.refreshToken != null;
+        }
+
+        setIsLogin(hasLogInResult);
+    })
 
     const signInWithKakao = async () => {
         const token = await login();
-    
-        setResult1(JSON.stringify(token));
-        // console.log(result);
+        setLogInResult(token);
+
+        if(token!= null)
+        {
+             const profile = await getKakaoProfile();
+             var temp = profile;
+
+                    console.log(`profile : ${JSON.stringify(temp)}`);
+                    setAuthInfo(profile);
+        }
       };
 
       const getProfile = async () => {
-        const profile = await getKakaoProfile();
-      
-        setResult2(profile);
-        // console.log(result);
+        console.log("getProfile");
+        if(isLogin == true)
+        {
+            const profile = await getKakaoProfile();
+            console.log(`profile : ${profile}`);
+            setAuthInfo(profile);
+        }
+        else
+        {
+            setAuthInfo(null);
+        }
       };
 
       const signOutWithKakao = async() => {
         const message = await logout();
-      
-        setResult3(message);
+        setLogInResult(null);
+        setAuthInfo(null);
+        setLogOutResult(message);
       };
 
     return (
-      <View>
-        <Body onPress={() => signInWithKakao()}>
-            <Text>{result1}</Text>
+      <Screen>
+        <Body onPress={() =>
+        {
+            if(isLogin)
+            {
+                console.log("already log in");
+            }
+            else
+            {
+                signInWithKakao();
+            }
+        }}>
+            <Image source = {require(`~/Assets/Images/kakao_login_medium_narrow.png`)}/>
         </Body>
         <Body2 onPress={() => getProfile()}>
-            <Text>{result2.id}</Text>
+            {(logInResult != null && logInResult.scopes) && <Text>{logInResult.scopes[0]}</Text>}
+            {(authInfo == null && <Text>{"need auth info"}</Text>)}
+            {(authInfo != null && <Text>{authInfo.id}</Text>)}
         </Body2>
         <Body3 onPress={() => signOutWithKakao()}>
-            <Text>{result3}</Text>
+            {logInResult == null && <Text>{logOutResult}</Text>}
+            {logInResult != null && <Text>{"is log in state"}</Text>}
         </Body3>
-      </View>
+
+      </Screen>
         
     );
   };
