@@ -4,8 +4,7 @@ import Comment from '~/Components/Comment';
 
 
 const RenderItem = ({item}) => {
-  useEffect(() => {
-    
+  useEffect(() => {    
     console.log(`item: ${item.text}`);
   })
   return (
@@ -20,7 +19,7 @@ const Comments = ({route, navigation}) => {
 
   useEffect(() => {
     SetComments(route.params.comments);
-  }, [route])
+  })
 
     return (
       // <Text>Comments</Text>

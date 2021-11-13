@@ -48,7 +48,6 @@ const GroupPage = ({route, navigation}) => {
     
     useEffect(() => {
         setUrl(`${domain}/${data.mainImg}`);
-
     }, []);    
 
     useEffect(() => {
@@ -139,7 +138,7 @@ const GroupPage = ({route, navigation}) => {
                 {tabIndex == 2 && <Text>사진</Text>}
                 <Text>{user.name}</Text>
             </ScrollView>
-            {tabIndex == 1 && <AddBtn OnPressMethod={() => {alert('AddBtn Pressed!')}}/>}
+            {tabIndex == 1 && <AddBtn OnPressMethod={() => {navigation.navigate('AddFeed', {groupData: data, navigation: navigation});}}/>}
         </View>
     )
 };

@@ -126,7 +126,14 @@ const Feed = ({feed, navigation}) => {
             setFeedAuthorImgUrl(`${domain}/${feedAuthorData.photo}`);
         }
     }, [feedAuthorData]);
-    
+
+
+    useEffect(() => {
+        if (feed.contentImg) {
+            setFeedImgUrl(`${domain}/${feed.contentImg}`);
+        }
+    }, [feed])
+
     useEffect(() => {
         if (domain && feedImgUrl != '')
         {
@@ -140,15 +147,9 @@ const Feed = ({feed, navigation}) => {
                 // console.log(resizedWidth + ' - ' + resizedHeight);
     
             })
+            console.log('feedImgGetSize')
         }
-    })
-
-    useEffect(() => {
-        if (feed.contentImg) {
-            // console.log(`${domain}/${feed.contentImg}`);
-            setFeedImgUrl(`${domain}/${feed.contentImg}`);
-        }
-    })
+    }, [feedImgUrl])
 
 
     useEffect(() => {

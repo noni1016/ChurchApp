@@ -3,10 +3,12 @@ import { View, FlatList, Text, Dimensions, ScrollView, Image, NativeSyntheticEve
 import Styled from 'styled-components/native';
 import AddBtn from '~/Components/AddBtn'
 
+const data = {id: 5};
+
 const Home = () => {
     return (
         <View>
-            <AddBtn OnPressMethod={() => {alert('갸아아악')}}/>
+            <AddBtn OnPressMethod={() => {alert('AddBtn')}}/>
         </View>
     )
 }
