@@ -40,6 +40,8 @@ const Semin = () => {
     const [logOutResult, setLogOutResult] = useState(null);
 
     useEffect(() => {
+        getProfile();
+
         var hasLogInResult = (logInResult != null);
         if(hasLogInResult)
         {
@@ -64,17 +66,31 @@ const Semin = () => {
       };
 
       const getProfile = async () => {
-        console.log("getProfile");
-        if(isLogin == true)
-        {
+      console.log("getProfile");
+      try
+      {
             const profile = await getKakaoProfile();
             console.log(`profile : ${profile}`);
             setAuthInfo(profile);
+
+            //프로필 정보 가져온 후 계정 불러오기
+
+        if(isLogin == true)
+        {
+
+
         }
         else
         {
             setAuthInfo(null);
         }
+      }
+      catch(e)
+      {
+        //로그인페이지 노출
+        console.log(e);
+      }
+
       };
 
       const signOutWithKakao = async() => {
