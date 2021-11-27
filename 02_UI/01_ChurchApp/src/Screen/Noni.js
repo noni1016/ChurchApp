@@ -155,9 +155,9 @@ const NoniNavi = () => {
                     headerShown: true,
                     headerBackTitleVisible: false,
                     title: '새 게시물',
-                    headerRight: () => (
-                            <Icon name="send" size={26} onPress={() => alert('This is an send button!')} />
-                    )
+                    // headerRight: () => (
+                    //         <Icon name="send" size={26} onPress={() => alert('This is an send button!')} />
+                    // )
                 }}
              />
         </Stack.Navigator>

@@ -223,7 +223,7 @@ const Feed = ({feed, navigation}) => {
                 <CommentInputContainer>
                     <Image style={{ backgroundColor: 'transparent', width: 30, height: 30, resizeMode: 'contain', marginRight: 10}} source={user.photo? {uri: `${domain}/${user.photo}` } : null} />
                     <Input 
-                        autoFocus={true}
+                        autoFocus={false}
                         autoCapitalize="none"
                         autoCorrect={false}
                         placeholder="댓글 추가"
