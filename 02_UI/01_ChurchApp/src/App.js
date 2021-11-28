@@ -1,13 +1,16 @@
-import React from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import { Text } from 'react-native';
-import Navigator from './Screen/Navigator';
+import Main from './Screen/Main';
+import {UserAuthChecker, UserContextProvider} from '~/Context/User';
 
 const App = () => {
-  return (
-    <Navigator />
-    // <Text>Hello</Text>
+
+    return (
+        <UserContextProvider>
+                <Main />
+        </UserContextProvider>
+
+        // <Text>Hello</Text>
   );
 };
-
-
 export default App;

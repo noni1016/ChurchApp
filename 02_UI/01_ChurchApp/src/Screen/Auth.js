@@ -1,6 +1,8 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import {View, Text, Image} from 'react-native';
 import Styled from 'styled-components/native';
+import {UserAuthChecker, UserContextProvider} from '~/Context/User';
+
 import {
     KakaoOAuthToken,
     KakaoProfile,
@@ -17,7 +19,10 @@ const Screen = Styled.View`
     justify-content: center;
 `;
 
-const Body = Styled.TouchableOpacity`
+const AuthScreen = Styled.View`
+`;
+
+const KaKaoBtn = Styled.TouchableOpacity`
 
 `;
 
@@ -33,23 +38,25 @@ width: 100px;
 background-color: #FF0000;
 `
 
-const Semin = () => {
-    const [isLogin, setIsLogin] = useState('');
-    const [logInResult, setLogInResult] = useState(null);
-    const [authInfo, setAuthInfo] = useState(null);
+const AuthPage = () => {
+    const {authChecker, setAuthChecker} = useContext(UserAuthChecker);
+    const [isLogin, setIsLogin] = useState(''); //로그인 토큰이 있음
+    const [logInResult, setLogInResult] = useState(null); //토큰을 사용해 로그인 함
+    const [authInfo, setAuthInfo] = useState(null); //로그인 하여 가져온 계정정보
     const [logOutResult, setLogOutResult] = useState(null);
 
     useEffect(() => {
         getProfile();
 
+        console.log(`========== : ${authChecker}`);
         var hasLogInResult = (logInResult != null);
         if(hasLogInResult)
         {
             hasLogInResult = logInResult.refreshToken != null;
         }
-
         setIsLogin(hasLogInResult);
-    })
+
+    }, [])
 
     const signInWithKakao = async () => {
         const token = await login();
@@ -60,8 +67,9 @@ const Semin = () => {
              const profile = await getKakaoProfile();
              var temp = profile;
 
-                    console.log(`profile : ${JSON.stringify(temp)}`);
-                    setAuthInfo(profile);
+             console.log(`profilerrrrrrrrrrr : ${JSON.stringify(temp)}`);
+             setAuthInfo(profile);
+
         }
       };
 
@@ -74,20 +82,19 @@ const Semin = () => {
             setAuthInfo(profile);
 
             //프로필 정보 가져온 후 계정 불러오기
-
         if(isLogin == true)
         {
-
-
         }
         else
         {
             setAuthInfo(null);
         }
+        setAuthChecker(true);
       }
       catch(e)
       {
         //로그인페이지 노출
+        setAuthChecker(false);
         console.log(e);
       }
 
@@ -98,37 +105,36 @@ const Semin = () => {
         setLogInResult(null);
         setAuthInfo(null);
         setLogOutResult(message);
+        setAuthChecker(false);
+
       };
 
     return (
       <Screen>
-        <Body onPress={() =>
-        {
-            if(isLogin)
-            {
-                console.log("already log in");
-            }
-            else
-            {
-                signInWithKakao();
-            }
-        }}>
+        {authChecker == false && <AuthScreen>
+            <KaKaoBtn onPress={() =>
+                {
+                    if(isLogin)
+                    {
+                        console.log("already log in");
+                    }
+                    else
+                    {
+                        signInWithKakao();
+                    }
+                }}>
             <Image source = {require(`~/Assets/Images/kakao_login_medium_narrow.png`)}/>
-        </Body>
-        <Body2 onPress={() => getProfile()}>
-            {(logInResult != null && logInResult.scopes) && <Text>{logInResult.scopes[0]}</Text>}
-            {(authInfo == null && <Text>{"need auth info"}</Text>)}
-            {(authInfo != null && <Text>{authInfo.id}</Text>)}
-        </Body2>
-        <Body3 onPress={() => signOutWithKakao()}>
-            {logInResult == null && <Text>{logOutResult}</Text>}
-            {logInResult != null && <Text>{"is log in state"}</Text>}
-        </Body3>
+            </KaKaoBtn>
+         </AuthScreen>}
 
+            <Body3 onPress={() => signOutWithKakao()}>
+                        {logInResult == null && <Text>{logOutResult}</Text>}
+                        {logInResult != null && <Text>{"is log in state"}</Text>}
+                    </Body3>
       </Screen>
 
     );
   };
-  
-  
-  export default Semin;
+
+
+  export default AuthPage;
