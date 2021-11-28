@@ -6,6 +6,7 @@ import {UserContext} from '~/Context/User';
 import Tab from '~/Components/Tab';
 import GroupPageHome from '~/Components/GroupPageHome';
 import Feeds from '~/Components/Feeds';
+import AddBtn from '~/Components/AddBtn';
 
 const Header = styled.View`
     //height: 15%;
@@ -28,7 +29,7 @@ const TabContainer = styled.SafeAreaView`
   background-color: skyblue;
 `;
 
-const GroupPage = ({route}) => {
+const GroupPage = ({route, navigation}) => {
     const domain = useContext(DomainContext);
     const user = useContext(UserContext);
     const data = route.params.groupData;
@@ -47,6 +48,9 @@ const GroupPage = ({route}) => {
     
     useEffect(() => {
         setUrl(`${domain}/${data.mainImg}`);
+    }, []);    
+
+    useEffect(() => {
         Image.getSize(url, (width, height) => {
             setImgWidth(width);
             setImgHeight(height);
@@ -58,7 +62,7 @@ const GroupPage = ({route}) => {
                 setResizedHeight(height);
             }
         })
-    });    
+    }, [url])
 
     const GetGroupMember = () => {
         fetch(domain + '/Churmmunity/GetGroupMembers', {
@@ -130,10 +134,11 @@ const GroupPage = ({route}) => {
                     ))}
                 </TabContainer>
                 {tabIndex == 0 && <GroupPageHome data={data} groupMem={groupMember} isMember={isMember} setMember={(value)=>{SetMember(value)}}/>}
-                {tabIndex == 1 && <Feeds/>}
+                {tabIndex == 1 && <Feeds groupId={data.id} navigation={navigation}/>}
                 {tabIndex == 2 && <Text>사진</Text>}
                 <Text>{user.name}</Text>
             </ScrollView>
+            {tabIndex == 1 && <AddBtn OnPressMethod={() => {navigation.navigate('AddFeed', {groupData: data, navigation: navigation});}}/>}
         </View>
     )
 };

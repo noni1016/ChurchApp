@@ -16,6 +16,8 @@ import RecLightContainer from '~/Components/RecLightContainer';
 import Default from '~/Screen/Default'
 import GroupLongScroll from '~/Screen/GroupLongScroll';
 import GroupPage from '~/Screen/GroupPage'
+import Comments from './Comments';
+import EditFeed from './AddFeed';
 
 import {DomainContext, DomainContextProvider} from '~/Context/Domain';
 import {DataContext, DataContextProvider} from '~/Context/Data';
@@ -137,7 +139,27 @@ const NoniNavi = () => {
                     title: '소모임 상세보기'
                 }}
             />
-             
+            <Stack.Screen
+                name="Comments"
+                component={Comments}
+                options={{
+                    headerShown: true,                    
+                    headerBackTitleVisible: false,
+                    title: '댓글'
+                }}
+            />
+            <Stack.Screen
+                name="AddFeed"
+                component={EditFeed}
+                options={{
+                    headerShown: true,
+                    headerBackTitleVisible: false,
+                    title: '새 게시물',
+                    // headerRight: () => (
+                    //         <Icon name="send" size={26} onPress={() => alert('This is an send button!')} />
+                    // )
+                }}
+             />
         </Stack.Navigator>
     )
 }
@@ -150,8 +172,6 @@ const Noni = () => {
             <UserContextProvider>
                 <DataContextProvider>
                     <NoniNavi />
-                    {/* <NoniMain /> */}
-                    {/* <Image style={{height:'100%',width:'100%'}} source={{uri: 'http://175.212.209.93:7009/ins.png'}} /> */}
                 </DataContextProvider>
             </UserContextProvider>
         </DomainContextProvider>
