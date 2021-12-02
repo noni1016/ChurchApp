@@ -180,6 +180,20 @@ router.post('/GetUserData', (req, res) => {
     });
 })
 
+router.get('/User/:id', (req, res) => {
+    let sql = `SELECT * FROM User WHERE id = ${req.params.id}`
+    console.log(sql);
+    conn.query(sql, function (error, rows, fields) { // sql 쿼리 수행
+        if (!error) {
+            console.log(rows);
+            // console.log('query success')
+            res.send(rows);
+        } else {
+            console.log('query error : ' + error);
+        }
+    });
+})
+
 router.post('/GetGroupFeeds', (req, res) => {
     let sql = `SELECT * FROM Feed WHERE groupId = ${req.body.groupId} ORDER BY time DESC`
     console.log(sql);
