@@ -21,7 +21,7 @@ import EditFeed from './AddFeed';
 
 import {DomainContext, DomainContextProvider} from '~/Context/Domain';
 import {DataContext, DataContextProvider} from '~/Context/Data';
-import {UserContext, UserContextProvider} from '~/Context/User';
+import {UserContext} from '~/Context/User';
 
 
 const Stack = createStackNavigator();
@@ -169,11 +169,9 @@ const Noni = () => {
 
     return (
         <DomainContextProvider>
-            <UserContextProvider>
                 <DataContextProvider>
                     <NoniNavi />
                 </DataContextProvider>
-            </UserContextProvider>
         </DomainContextProvider>
     );
 };

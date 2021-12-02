@@ -64,7 +64,7 @@ const BottomTabNavi = () => {
 }
 
 
-const Navigator = () => {
+const  Navigator = () => {
   return (
       <NavigationContainer>
           <BottomTabNavi />
