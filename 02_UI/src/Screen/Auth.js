@@ -79,11 +79,11 @@ const AuthPage = () => {
       {
             const profile = await getKakaoProfile();
             console.log(`profile : ${profile}`);
-            setAuthInfo(profile);
 
             //프로필 정보 가져온 후 계정 불러오기
         if(isLogin == true)
         {
+          setAuthInfo(profile);
         }
         else
         {
