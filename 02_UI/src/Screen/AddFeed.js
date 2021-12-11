@@ -147,7 +147,32 @@ const EditFeed = ({route, navigation}) => {
         alert(textInput);
         alert(location);
         // 이미지 서버에 넣기
-        // Feed db 추가
+
+        
+
+        // if (imageSource) UpdateImg();
+        // else UpdateFeed();
+    }
+
+    // const UpdateImg = () => {
+    //     const imageData = new FormData();
+    //     imageData.append('name', 'image');
+    //     i
+    // }
+
+    const UpdateFeed = () => {
+        // Feed db 추가   
+        let fetchReq = ``;
+        let fetchMethod = ``;
+
+        fetchReq = `Feed`
+        fetchMethod = `POST`;
+        // sql = `INSERT INTO Feed (groupId, authorId, location, time, contentImg, contentText) VALUES (${req.body.groupId}, ${req.body.authorId}, ${req.body.location}, '${req.body.time}', '${req.body.contentImg}', '${req.body.contentText}')`;
+    
+        // fetch(fetchReq, {
+        //     method: fetchMethod,
+        //     body : JSON.stringify({groupId: data.id, authorId: })
+        // })
     }
 
     // Camera Roll
@@ -160,7 +185,7 @@ const EditFeed = ({route, navigation}) => {
                 console.log('ImageSrc: ' + JSON.stringify(response.assets));
                 console.log('ImageSrc: ' + response.assets[0].uri);
                 // SetImageSource("file:///data/user/0/com.churchapp/cache/rn_image_picker_lib_temp_4af794bf-b436-4f03-abfe-6b53e73e9f21.jpg");
-                SetImageSource(response.assets[0].uri);
+                SetImageSource(response.assets[0]);
             }
         });
     }
@@ -176,7 +201,7 @@ const EditFeed = ({route, navigation}) => {
                 <Text>사진을 추가해보세요</Text>
             </PlusBtnBox>}
             {imageSource && <PlusBtnBox onPress={() => {ShowCameraRoll();}}>
-                <Image style={{ backgroundColor: 'transparent', width: '100%', height: '100%', resizeMode: 'contain' }} source={{uri : imageSource}} />
+                <Image style={{ backgroundColor: 'transparent', width: '100%', height: '100%', resizeMode: 'contain' }} source={{uri : imageSource.uri}} />
             </PlusBtnBox>}
             <FeedTextBox>
                 <ProfileBox>
