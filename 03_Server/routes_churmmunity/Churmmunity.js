@@ -7,6 +7,7 @@ const app = express();
 
 // sql connection
 const conn = require('../config/database');
+var fileName = '';
 
 router.get('/', function (req, res, next) {
     res.json('churmmunity route / ');
@@ -250,5 +251,52 @@ router.post('/FeedComments', (req, res) => {
     });
 })
 
+const uploadPost = multer({
+    storage: multer.diskStorage({
+        destination: function (req, file, cb) {
+            cb(null, 'public/FeedImg');
+        },
+        filename(req, file, cb) {
+            console.log(file.originalname);
+            let maxId = -1;
+            let sql = 'SELECT MAX(id) FROM Feed';
+            conn.query(sql, function (error, rows, fields) {
+                if (!error) {
+                    var result = rows[0];
+                    maxId = result['MAX(id)'];
+                } else {
+                    console.log('query error : ' + error);
+                    maxId = -1;
+                    return;
+                }                
+                console.log(maxId);
+                var temp = file.originalname.split('.');
+                var fileExt = temp[temp.length - 1];
+                fileName = 'FeedId' + (maxId + 1) + '.' + fileExt;                
+                cb(null, fileName);
+            })
+        },
+    }),
+})
+
+router.post('/Feed/Img', uploadPost.single('file'), async (req, res, next) => {
+    console.log(req.file.filename);
+    res.send(true);
+})
+
+router.post('/Feed', (req, res) => {
+    console.log(req.body);
+    let sql = `INSERT INTO Feed (groupId, authorId, location, time, contentImg, contentText) VALUES ('${req.body.groupId}', '${req.body.authorId}', '${req.body.location}', '${req.body.time}', '/FeedImg/${fileName}', '${req.body.contentText}')`;
+    console.log(sql);
+    conn.query(sql, function (error, rows, fields) { // sql 쿼리 수행
+        if (!error) {
+            // console.log(rows);
+            // console.log('query success')
+            res.send(rows);
+        } else {
+            console.log('query error : ' + error);
+        }
+    });
+})    
 
 module.exports = router;
