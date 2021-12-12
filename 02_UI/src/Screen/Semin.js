@@ -49,7 +49,7 @@ const Semin = () => {
         }
 
         setIsLogin(hasLogInResult);
-    })
+    },[])
 
     const signInWithKakao = async () => {
         const token = await login();

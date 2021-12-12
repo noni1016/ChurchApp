@@ -1,7 +1,7 @@
 import React, {useState, useEffect, useContext} from 'react';
 import {View, Text, Image} from 'react-native';
 import Styled from 'styled-components/native';
-import {UserAuthChecker, UserContextProvider} from '~/Context/User';
+import {UserAuthChecker, UserAuthCheckFlag, UserContextProvider} from '~/Context/User';
 
 import {
     KakaoOAuthToken,
@@ -40,6 +40,7 @@ background-color: #FF0000;
 
 const AuthPage = () => {
     const {authChecker, setAuthChecker} = useContext(UserAuthChecker);
+    const {authCheckFlag, setAuthCheckFlag} = useContext(UserAuthCheckFlag);
     const [isLogin, setIsLogin] = useState(''); //로그인 토큰이 있음
     const [logInResult, setLogInResult] = useState(null); //토큰을 사용해 로그인 함
     const [authInfo, setAuthInfo] = useState(null); //로그인 하여 가져온 계정정보
@@ -69,7 +70,8 @@ const AuthPage = () => {
 
              console.log(`profilerrrrrrrrrrr : ${JSON.stringify(temp)}`);
              setAuthInfo(profile);
-
+             setAuthChecker(true);
+             setAuthCheckFlag(true);
         }
       };
 
@@ -79,11 +81,11 @@ const AuthPage = () => {
       {
             const profile = await getKakaoProfile();
             console.log(`profile : ${profile}`);
-            setAuthInfo(profile);
 
             //프로필 정보 가져온 후 계정 불러오기
         if(isLogin == true)
         {
+          setAuthInfo(profile);
         }
         else
         {
@@ -97,7 +99,7 @@ const AuthPage = () => {
         setAuthChecker(false);
         console.log(e);
       }
-
+      setAuthCheckFlag(true);
       };
 
       const signOutWithKakao = async() => {
@@ -111,7 +113,7 @@ const AuthPage = () => {
 
     return (
       <Screen>
-        {authChecker == false && <AuthScreen>
+        {authCheckFlag && authChecker == false && <AuthScreen>
             <KaKaoBtn onPress={() =>
                 {
                     if(isLogin)
@@ -127,10 +129,10 @@ const AuthPage = () => {
             </KaKaoBtn>
          </AuthScreen>}
 
-            <Body3 onPress={() => signOutWithKakao()}>
+            {/* <Body3 onPress={() => signOutWithKakao()}>
                         {logInResult == null && <Text>{logOutResult}</Text>}
                         {logInResult != null && <Text>{"is log in state"}</Text>}
-                    </Body3>
+                    </Body3> */}
       </Screen>
 
     );
