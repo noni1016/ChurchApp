@@ -213,7 +213,7 @@ const EditFeed = ({route, navigation}) => {
             method: fetchMethod,
             body : JSON.stringify({groupId: data.id, authorId: user.id, location: location, time: sendDate, contentText: textInput}),
             headers: {'Content-Type': 'application/json'}
-        }).then(res => res.json()).then(res => console.log('SUCCESS: ', JSON.stringify(res)))
+        }).then(res => res.json()).then(res => {console.log('SUCCESS: ', JSON.stringify(res)); navigation.navigate('GroupPage', {tabIdx: 1, navigation: navigation});})
     }
 
     // Camera Roll

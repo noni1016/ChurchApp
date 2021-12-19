@@ -168,11 +168,10 @@ const NoniNavi = () => {
 const Noni = () => {
 
     return (
-        <DomainContextProvider>
+
                 <DataContextProvider>
                     <NoniNavi />
                 </DataContextProvider>
-        </DomainContextProvider>
     );
 };
 

@@ -48,20 +48,21 @@ const GroupPage = ({route, navigation}) => {
     
     useEffect(() => {
         setUrl(`${domain}/${data.mainImg}`);
+        if (route.params.tabIdx) setTabIndex(route.params.tabIdx);
     }, []);    
 
     useEffect(() => {
-        Image.getSize(url, (width, height) => {
-            setImgWidth(width);
-            setImgHeight(height);
-            if(width > Dimensions.get('window').width) {
-                setResizedWidth(Dimensions.get('window').width);
-                setResizedHeight(Dimensions.get('window').width / width * height);
-            } else {
-                setResizedWidth(width);
-                setResizedHeight(height);
-            }
-        })
+            Image.getSize(url, (width, height) => {
+                setImgWidth(width);
+                setImgHeight(height);
+                if (width > Dimensions.get('window').width) {
+                    setResizedWidth(Dimensions.get('window').width);
+                    setResizedHeight(Dimensions.get('window').width / width * height);
+                } else {
+                    setResizedWidth(width);
+                    setResizedHeight(height);
+                }
+            }, () => {console.log(`fail to get imgSize : ${url}`)})
     }, [url])
 
     const GetGroupMember = () => {
