@@ -49,6 +49,7 @@ const GroupPage = ({route, navigation}) => {
     useEffect(() => {
         setUrl(`${domain}/${data.mainImg}`);
         if (route.params.tabIdx) setTabIndex(route.params.tabIdx);
+        else setTabIndex(0);
     }, []);    
 
     useEffect(() => {
@@ -135,7 +136,7 @@ const GroupPage = ({route, navigation}) => {
                     ))}
                 </TabContainer>
                 {tabIndex == 0 && <GroupPageHome data={data} groupMem={groupMember} isMember={isMember} setMember={(value)=>{SetMember(value)}}/>}
-                {tabIndex == 1 && <Feeds groupId={data.id} navigation={navigation}/>}
+                {tabIndex == 1 && <Feeds groupId={data.id} feedAdded={route.params.tabIdx} navigation={navigation}/>}
                 {tabIndex == 2 && <Text>사진</Text>}
                 <Text>{user.name}</Text>
             </ScrollView>

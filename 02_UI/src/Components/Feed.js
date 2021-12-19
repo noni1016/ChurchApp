@@ -80,10 +80,10 @@ const CommentInputContainer = Styled.View`
     background-color: transparent;
 `;
 
-const actionSheetRef = createRef();
 
 
-const Feed = ({feed, navigation}) => {
+
+const Feed = ({feed, onFeedChange, navigation}) => {
 
     const domain = useContext(DomainContext);
     const user = useContext(UserContext);
@@ -95,6 +95,8 @@ const Feed = ({feed, navigation}) => {
     let [resizedWidth, setResizedWidth] = useState();
     let [resizedHeight, setResizedHeight] = useState();
     let [commentInput, setCommentInput] = useState('');
+    let [imgPathInServer, setImgPathInServer] = useState();
+    const actionSheetRef = createRef();
 
     let actionSheet;
 
@@ -136,6 +138,16 @@ const Feed = ({feed, navigation}) => {
     useEffect(() => {
         if (feed.contentImg) {
             setFeedImgUrl(`${domain}/${feed.contentImg}`);
+            if (feed.contentImg)
+            {
+                console.log('feed.contentImg: ' + feed.contentImg)
+                let temp = feed.contentImg.split('/');
+                setImgPathInServer(temp[temp.length - 1]);
+            }
+            else
+            {
+                setImgPathInServer(-1);
+            }
         }
     }, [feed])
 
@@ -205,7 +217,7 @@ const Feed = ({feed, navigation}) => {
                     </Text>
                 </HeaderInfo>
                 <HeaderOptionBtnContainer>
-                    <Icon name="dots-three-vertical" size={30} onPress={() => {actionSheetRef.current?.setModalVisible();}} />
+                    <Icon name="dots-three-vertical" size={30} onPress={() => {alert(feed.id); actionSheetRef.current?.setModalVisible();}} />
                 </HeaderOptionBtnContainer>
             </FeedHeader>
             <FeedBody>
@@ -246,9 +258,16 @@ const Feed = ({feed, navigation}) => {
 
             <ActionSheet ref={actionSheetRef}>
                 <View>
-                    <ActionSheetBtn OnPressMethod={() => alert('Edit!')}>Edit</ActionSheetBtn>
-                    <ActionSheetBtn OnPressMethod={() => alert('Delete!')}>Delete</ActionSheetBtn>
-                    <ActionSheetBtn OnPressMethod={() => alert('Cancel!')}>Cancel</ActionSheetBtn>
+                    <ActionSheetBtn OnPressMethod={() => alert(feed.id)}>Edit</ActionSheetBtn>
+                    <ActionSheetBtn OnPressMethod={() => {
+                        console.log(`${domain}/Churmmunity/Feed/${feed.id}/${imgPathInServer}`);
+                        fetch(`${domain}/Churmmunity/Feed/${feed.id}/${imgPathInServer}`, {
+                            method: 'DELETE',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                        }).then((res) => res.json()).then((res) => {alert(`Delete Feed ${feed.id} ${res}`); actionSheetRef.current?.setModalVisible(false); onFeedChange();})}}>Delete</ActionSheetBtn>
+                    <ActionSheetBtn OnPressMethod={() => actionSheetRef.current?.setModalVisible(false)}>Cancel</ActionSheetBtn>
                 </View>
             </ActionSheet>
              
