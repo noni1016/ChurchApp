@@ -1,10 +1,12 @@
-import React, {useState, useEffect, useContext} from 'react';
-import { View, FlatList, Text, Dimensions, ScrollView, Image, TouchableOpacity} from 'react-native';
+import React, {useState, useEffect, useContext, createRef} from 'react';
+import { View, FlatList, Text, Dimensions, ScrollView, Image, TouchableOpacity, Alert} from 'react-native';
 import Styled from 'styled-components/native';
 import {DomainContext} from '~/Context/Domain';
 import { UserContext } from '~/Context/User';
 import Icon from 'react-native-vector-icons/Entypo';
 import Comments from '~/Screen/Comments';
+import ActionSheet from 'react-native-actions-sheet';
+import ActionSheetBtn from './ActionSheetBtn';
 
 const FeedContainer = Styled.View`
     flex-direction: column;
@@ -80,18 +82,23 @@ const CommentInputContainer = Styled.View`
 
 
 
-const Feed = ({feed, navigation}) => {
+
+const Feed = ({feed, onFeedChange, navigation}) => {
 
     const domain = useContext(DomainContext);
     const user = useContext(UserContext);
     let [feedAuthorData, setFeedAuthorData] = useState();
-    let [feedAuthorImgUrl, setFeedAuthorImgUrl] = useState('');
-    let [feedImgUrl, setFeedImgUrl] = useState('');
+    let [feedAuthorImgUrl, setFeedAuthorImgUrl] = useState();
+    let [feedImgUrl, setFeedImgUrl] = useState();
     let [feedComments, setFeedComments] = useState([]);
     let [firstCommentAuthor, setFirstCommentAuthor] = useState([]);
     let [resizedWidth, setResizedWidth] = useState();
     let [resizedHeight, setResizedHeight] = useState();
     let [commentInput, setCommentInput] = useState('');
+    let [imgPathInServer, setImgPathInServer] = useState();
+    const actionSheetRef = createRef();
+
+    let actionSheet;
 
     const GetFeedComments = () => {
         let sendFeedData = {groupId: feed.groupId, feedId: feed.id};
@@ -131,12 +138,23 @@ const Feed = ({feed, navigation}) => {
     useEffect(() => {
         if (feed.contentImg) {
             setFeedImgUrl(`${domain}/${feed.contentImg}`);
+            if (feed.contentImg)
+            {
+                console.log('feed.contentImg: ' + feed.contentImg)
+                let temp = feed.contentImg.split('/');
+                setImgPathInServer(temp[temp.length - 1]);
+            }
+            else
+            {
+                setImgPathInServer(-1);
+            }
         }
     }, [feed])
 
     useEffect(() => {
         if (domain && feedImgUrl != '')
         {
+            console.log('feedImgUrl: ' + feedImgUrl)
             Image.getSize(feedImgUrl, (width, height) => {
                 // console.log(width + ' - ' + height);
                 // setImgWidth(width);
@@ -146,7 +164,7 @@ const Feed = ({feed, navigation}) => {
     
                 // console.log(resizedWidth + ' - ' + resizedHeight);
     
-            })
+            }, () => console.log(`Fail to get ImgSize : ${feedImgUrl}`))
             console.log('feedImgGetSize')
         }
     }, [feedImgUrl])
@@ -186,8 +204,9 @@ const Feed = ({feed, navigation}) => {
 
     return (
         <FeedContainer>
+
             <FeedHeader>
-                <Image style={{ backgroundColor: 'transparent', width: 50, height: 50, resizeMode: 'contain' }} source={feedAuthorImgUrl ? {uri: feedAuthorImgUrl } : null} />
+                <Image style={{ backgroundColor: 'transparent', width: 50, height: 50}} source={feedAuthorImgUrl ? {uri: feedAuthorImgUrl } : null} />
                 <HeaderInfo>
                     {feedAuthorData && 
                         <Text style={{fontWeight: 'bold', fontSize: 18}}>
@@ -198,12 +217,12 @@ const Feed = ({feed, navigation}) => {
                     </Text>
                 </HeaderInfo>
                 <HeaderOptionBtnContainer>
-                    <Icon name="dots-three-vertical" size={30} onPress={() => alert('This is a dots-three-vertical button!')} />
+                    <Icon name="dots-three-vertical" size={30} onPress={() => {alert(feed.id); actionSheetRef.current?.setModalVisible();}} />
                 </HeaderOptionBtnContainer>
             </FeedHeader>
             <FeedBody>
                 <FeedImgContainer>
-                    <Image style={{ backgroundColor: 'transparent', width: resizedWidth, height: resizedHeight, resizeMode: 'contain' }} source={feedImgUrl ? {uri: feedImgUrl } : null} />
+                    <Image style={{ backgroundColor: 'transparent', width: resizedWidth, height: resizedHeight}} source={feedImgUrl ? {uri: feedImgUrl } : null} />
                 </FeedImgContainer>
                 <Text>{feed.contentText}</Text>
             </FeedBody>
@@ -211,17 +230,17 @@ const Feed = ({feed, navigation}) => {
             <FeedFooter>
                 {feedComments.length > 0 ?
                     (<FeedCommentContainer>
-                        <Image style={{ backgroundColor: 'transparent', width: 25, height: 25, resizeMode: 'contain', marginRight: 10}} source={firstCommentAuthor.photo? {uri: `${domain}/${firstCommentAuthor.photo}` } : null} />
+                        <Image style={{ backgroundColor: 'transparent', width: 25, height: 25, marginRight: 10}} source={firstCommentAuthor.photo? {uri: `${domain}/${firstCommentAuthor.photo}` } : null} />
                         <Text><Text style={{marginRight: 10, fontWeight: 'bold'}}>{firstCommentAuthor.name}</Text>{feedComments[0].text}</Text>
                     </FeedCommentContainer>) : null}
                 {feedComments.length > 1 ? 
                     (<TouchableOpacity 
                         style={{marginLeft: 10}} 
-                        onPress={() => {navigation.navigate('Comments', {comments: feedComments, navigation: navigation});}}>
+                        onPress={() => {navigation.navigate('Comments', {comments: feedComments, tabIdx: 1, navigation: navigation});}}>
                             <Text style={{fontWeight: 'bold'}}>더보기...</Text>
                     </TouchableOpacity>) : null}
                 <CommentInputContainer>
-                    <Image style={{ backgroundColor: 'transparent', width: 30, height: 30, resizeMode: 'contain', marginRight: 10}} source={user.photo? {uri: `${domain}/${user.photo}` } : null} />
+                    <Image style={{ backgroundColor: 'transparent', width: 30, height: 30, marginRight: 10}} source={user.photo? {uri: `${domain}/${user.photo}` } : null} />
                     <Input 
                         autoFocus={false}
                         autoCapitalize="none"
@@ -236,6 +255,23 @@ const Feed = ({feed, navigation}) => {
                     />
                 </CommentInputContainer>
             </FeedFooter>
+
+            <ActionSheet ref={actionSheetRef}>
+                <View>
+                    <ActionSheetBtn OnPressMethod={() => alert(feed.id)}>Edit</ActionSheetBtn>
+                    <ActionSheetBtn OnPressMethod={() => {
+                        console.log(`${domain}/Churmmunity/Feed/${feed.id}/${imgPathInServer}`);
+                        fetch(`${domain}/Churmmunity/Feed/${feed.id}/${imgPathInServer}`, {
+                            method: 'DELETE',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                        }).then((res) => res.json()).then((res) => {alert(`Delete Feed ${feed.id} ${res}`); actionSheetRef.current?.setModalVisible(false); onFeedChange();})}}>Delete</ActionSheetBtn>
+                    <ActionSheetBtn OnPressMethod={() => actionSheetRef.current?.setModalVisible(false)}>Cancel</ActionSheetBtn>
+                </View>
+            </ActionSheet>
+             
+
             
 
         </FeedContainer>
