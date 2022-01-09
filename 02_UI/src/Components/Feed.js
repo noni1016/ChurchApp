@@ -258,7 +258,7 @@ const Feed = ({feed, onFeedChange, navigation}) => {
 
             <ActionSheet ref={actionSheetRef}>
                 <View>
-                    <ActionSheetBtn OnPressMethod={() => alert(feed.id)}>Edit</ActionSheetBtn>
+                    <ActionSheetBtn OnPressMethod={() => {navigation.navigate('AddFeed', {feedData: feed, navigation: navigation});}}>Edit</ActionSheetBtn>
                     <ActionSheetBtn OnPressMethod={() => {
                         console.log(`${domain}/Churmmunity/Feed/${feed.id}/${imgPathInServer}`);
                         fetch(`${domain}/Churmmunity/Feed/${feed.id}/${imgPathInServer}`, {

@@ -115,7 +115,8 @@ const SendBtn = Styled.TouchableOpacity`
 
 const EditFeed = ({route, navigation}) => {
     const domain = useContext(DomainContext);
-    const data = route.params.groupData;    
+    // const data = route.params.groupData;    
+    const [groupData, SetGroupData] = useState();
     const user = useContext(UserContext);
     const [userProfileImgUrl, SetUserProfileImgUrl] = useState(null);
     const [textInput, SetTextInput] = useState('');
@@ -136,6 +137,17 @@ const EditFeed = ({route, navigation}) => {
             path: 'images',
         }
     }
+
+    useEffect(() => {
+        if (route.params.groupData)
+        {
+            SetGroupData(route.params.groupData);
+        }
+        else if (route.params.feedData)
+        {
+            fetch(domain + `/Churmmunity/Group/${route.params.feedData.groupId}`).then(res => res.json()).then(res => {SetGroupData(res);});
+        }
+    }, [])
 
     // Get User Image
     useEffect(() => {
@@ -211,7 +223,7 @@ const EditFeed = ({route, navigation}) => {
 
         fetch(fetchReq, {
             method: fetchMethod,
-            body : JSON.stringify({groupId: data.id, authorId: user.id, location: location, time: sendDate, contentText: textInput}),
+            body : JSON.stringify({groupId: groupData.id, authorId: user.id, location: location, time: sendDate, contentText: textInput}),
             headers: {'Content-Type': 'application/json'}
         }).then(res => res.json()).then(
             res => {alert('SUCCESS: ', JSON.stringify(res)); 
@@ -237,7 +249,7 @@ const EditFeed = ({route, navigation}) => {
     return (
         <ScrollView>
         <Container>
-            <GroupNameBox><GroupTitle>{data.name}</GroupTitle></GroupNameBox>
+            {groupData && <GroupNameBox><GroupTitle>{groupData.name}</GroupTitle></GroupNameBox>}
             {imageSource == undefined && <PlusBtnBox onPress={() => {ShowCameraRoll();}}>
                 <PlusText>+</PlusText>
                 <Text>버튼을 눌러</Text>
