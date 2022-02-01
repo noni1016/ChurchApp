@@ -115,15 +115,14 @@ const SendBtn = Styled.TouchableOpacity`
 
 const EditFeed = ({route, navigation}) => {
     const domain = useContext(DomainContext);
-    // const data = route.params.groupData;    
+    
+    const [edit, SetEdit] = useState(false); // false : AddMode, true: EditMode
     const [groupData, SetGroupData] = useState();
     const user = useContext(UserContext);
     const [userProfileImgUrl, SetUserProfileImgUrl] = useState(null);
     const [textInput, SetTextInput] = useState('');
     const [location, SetLocation] = useState('');
     const [imageSource, SetImageSource] = useState(undefined);
-    const [imageWidth, SetImageWidth] = useState();
-    const [imageHeight, SetImageHeight] = useState();
     const [putImgSuccessFlag, SetPutImgSuccess] = useState(false);
 
     const options = {
@@ -145,7 +144,12 @@ const EditFeed = ({route, navigation}) => {
         }
         else if (route.params.feedData)
         {
-            fetch(domain + `/Churmmunity/Group/${route.params.feedData.groupId}`).then(res => res.json()).then(res => {SetGroupData(res);});
+            fetch(domain + `/Churmmunity/Group/${route.params.feedData.groupId}`).then(res => res.json()).then(res => {SetGroupData(res[0]);});
+            SetTextInput(route.params.feedData.contentText);
+            SetLocation(route.params.feedData.location);
+            SetImageSource({uri: domain + route.params.feedData.contentImg});
+            navigation.setOptions({title: '게시글 수정'});
+            SetEdit(true);
         }
     }, [])
 
@@ -157,10 +161,9 @@ const EditFeed = ({route, navigation}) => {
 
     const PutFeed = () => {
         // console.log(value);
-        alert(textInput);
-        alert(location);
-
-        if (imageSource) UpdateImg();
+        // alert(textInput);
+        // alert(location);
+        if (imageSource.name) UpdateImg();
         else UpdateFeed();
     }
 
@@ -168,8 +171,13 @@ const EditFeed = ({route, navigation}) => {
         let fetchReq = ``;
         let fetchMethod = ``;
 
-        fetchReq = `${domain}/Churmmunity/Feed/Img`;
-        fetchMethod = `POST`;
+        // if (edit) {
+            fetchReq = `${domain}/Churmmunity/Feed/Img`;
+            fetchMethod = `POST`;
+        // } else {
+        //     fetchReq = `${domain}/Churmmunity/Feed/`
+        // }
+
 
         const imageData = new FormData();
         imageData.append('file', {
@@ -190,7 +198,7 @@ const EditFeed = ({route, navigation}) => {
             console.log(res);
             if(res) {
                 SetPutImgSuccess(true);
-            } else {StPutImgSuccess(false)}
+            } else {SetPutImgSuccess(false)}
         });
     }
 
@@ -206,8 +214,13 @@ const EditFeed = ({route, navigation}) => {
         let fetchReq = ``;
         let fetchMethod = ``;
 
-        fetchReq = `${domain}/Churmmunity/Feed`
-        fetchMethod = `POST`;
+        if (edit === false) { // AddMode
+            fetchReq = `${domain}/Churmmunity/Feed`
+            fetchMethod = `POST`;
+        } else { // EditMode
+            fetchReq = `${domain}/Churmmunity/Feed/${route.params.feedData.id}`
+            fetchMethod = `PUT`;
+        }
         // sql = `INSERT INTO Feed (groupId, authorId, location, time, contentImg, contentText) 
         //VALUES (${req.body.groupId}, ${req.body.authorId}, ${req.body.location}, '${req.body.time}', '${req.body.contentImg}', '${req.body.contentText}')`;
     

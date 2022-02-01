@@ -22,6 +22,22 @@ ex) C:\Users\hinon\AppData\Local\Android\Sdk\emulator
 * emulator -avd "AVD Name" \
 ex) emulator -avd Pixel_3a_API_30_x86
 3. Debugging 도 가능 --> https://www.youtube.com/watch?v=UE66n7HOIAg
+* 아래 내용 .vscode/launch.json 에 추가
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Attach to packager",
+            "cwd": "${workspaceFolder}",
+            "type": "reactnative",
+            "request": "attach"
+        }
+    ]
+}
+
 <br />
 <br />
 
