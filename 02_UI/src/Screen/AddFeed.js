@@ -122,7 +122,7 @@ const EditFeed = ({route, navigation}) => {
     const [userProfileImgUrl, SetUserProfileImgUrl] = useState(null);
     const [textInput, SetTextInput] = useState('');
     const [location, SetLocation] = useState('');
-    const [imageSource, SetImageSource] = useState(undefined);
+    const [imgSrc, SetImgSrc] = useState(undefined);
     const [putImgSuccessFlag, SetPutImgSuccess] = useState(false);
 
     const options = {
@@ -147,7 +147,7 @@ const EditFeed = ({route, navigation}) => {
             fetch(domain + `/Churmmunity/Group/${route.params.feedData.groupId}`).then(res => res.json()).then(res => {SetGroupData(res[0]);});
             SetTextInput(route.params.feedData.contentText);
             SetLocation(route.params.feedData.location);
-            SetImageSource({uri: domain + route.params.feedData.contentImg});
+            SetImgSrc({uri: domain + route.params.feedData.contentImg});
             navigation.setOptions({title: '게시글 수정'});
             SetEdit(true);
         }
@@ -163,7 +163,8 @@ const EditFeed = ({route, navigation}) => {
         // console.log(value);
         // alert(textInput);
         // alert(location);
-        if (imageSource.name) UpdateImg();
+        console.log('imgSrc : ' + imgSrc.fileName);
+        if (imgSrc.fileName) UpdateImg();
         else UpdateFeed();
     }
 
@@ -171,20 +172,22 @@ const EditFeed = ({route, navigation}) => {
         let fetchReq = ``;
         let fetchMethod = ``;
 
-        // if (edit) {
+        if (edit === false) { // AddMode
             fetchReq = `${domain}/Churmmunity/Feed/Img`;
             fetchMethod = `POST`;
-        // } else {
-        //     fetchReq = `${domain}/Churmmunity/Feed/`
-        // }
+        } else { // EditMode
+            fetchReq = `${domain}/Churmmunity/Feed/Img/${route.params.feedData.id}`;
+            fetchMethod = `PUT`;
+        }
 
+        console.log('fetchReq : ' + fetchReq);
 
         const imageData = new FormData();
         imageData.append('file', {
-            uri: imageSource.uri,
-            type: imageSource.type,
-            name: imageSource.fileName,
-            data: imageSource.data
+            uri: imgSrc.uri,
+            type: imgSrc.type,
+            name: imgSrc.fileName,
+            data: imgSrc.data
         });
 
         fetch(fetchReq, {
@@ -240,7 +243,7 @@ const EditFeed = ({route, navigation}) => {
             headers: {'Content-Type': 'application/json'}
         }).then(res => res.json()).then(
             res => {alert('SUCCESS: ', JSON.stringify(res)); 
-            navigation.navigate('GroupPage', {tabIdx: 1, navigation: navigation});})
+            navigation.navigate('GroupPage', {tabIdx: 1, edit: true, navigation: navigation});})
     }
 
     // Camera Roll
@@ -253,7 +256,7 @@ const EditFeed = ({route, navigation}) => {
                 console.log('ImageSrc: ' + JSON.stringify(response.assets));
                 console.log('ImageSrc: ' + response.assets[0].uri);
                 // SetImageSource("file:///data/user/0/com.churchapp/cache/rn_image_picker_lib_temp_4af794bf-b436-4f03-abfe-6b53e73e9f21.jpg");
-                SetImageSource(response.assets[0]);
+                SetImgSrc(response.assets[0]);
             }
         });
     }
@@ -263,13 +266,13 @@ const EditFeed = ({route, navigation}) => {
         <ScrollView>
         <Container>
             {groupData && <GroupNameBox><GroupTitle>{groupData.name}</GroupTitle></GroupNameBox>}
-            {imageSource == undefined && <PlusBtnBox onPress={() => {ShowCameraRoll();}}>
+            {imgSrc == undefined && <PlusBtnBox onPress={() => {ShowCameraRoll();}}>
                 <PlusText>+</PlusText>
                 <Text>버튼을 눌러</Text>
                 <Text>사진을 추가해보세요</Text>
             </PlusBtnBox>}
-            {imageSource && <PlusBtnBox onPress={() => {ShowCameraRoll();}}>
-                <Image style={{ backgroundColor: 'transparent', width: '100%', height: '100%', resizeMode: 'contain' }} source={{uri : imageSource.uri}} />
+            {imgSrc && <PlusBtnBox onPress={() => {ShowCameraRoll();}}>
+                <Image style={{ backgroundColor: 'transparent', width: '100%', height: '100%', resizeMode: 'contain' }} source={{uri : imgSrc.uri}} />
             </PlusBtnBox>}
             <FeedTextBox>
                 <ProfileBox>

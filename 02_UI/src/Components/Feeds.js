@@ -17,16 +17,18 @@ const Feeds = ({groupId, feedAdded, navigation}) => {
 
     // 그룹의 Feed 들을 불러옴
     useEffect(() => {
-        fetch(domain + '/Churmmunity/GetGroupFeeds', {
-            method: 'POST',
-            body: JSON.stringify({groupId : groupId}),
-            headers:{
-                Accept: 'application/json',
-                'Content-Type': 'application/json'
-            }
-        }).then(res => res.json()).then(res => {SetGroupFeeds(res);});
-        alert('on change in');
+    //     fetch(domain + '/Churmmunity/GetGroupFeeds', {
+    //         method: 'POST',
+    //         body: JSON.stringify({groupId : groupId}),
+    //         headers:{
+    //             Accept: 'application/json',
+    //             'Content-Type': 'application/json'
+    //         }
+    //     }).then(res => res.json()).then(res => {alert('on change in'); SetGroupFeeds(res);});     
+        
+        fetch(`${domain}/Churmmunity/GroupFeeds/${groupId}`).then(res => res.json()).then(res => {alert('on change in'); SetGroupFeeds(res);});   
     }, [groupId, reload, feedAdded])
+
 
     return (
         <>
