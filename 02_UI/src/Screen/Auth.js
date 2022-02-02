@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { View, Text, Image } from 'react-native';
 import Styled from 'styled-components/native';
-import { UserAuthChecker, UserAuthCheckFlag, UserContextProvider } from '~/Context/User';
+import { UserData, UserAuthChecker, UserAuthCheckFlag, UserContext, UserContextProvider } from '~/Context/User';
+//import JoinPage from './JoinPage';
 
 import {
   KakaoOAuthToken,
@@ -12,6 +13,7 @@ import {
   unlink,
 } from '@react-native-seoul/kakao-login';
 import { DomainContext } from '~/Context/Domain';
+import JoinPage from './JoinPage';
 
 const Screen = Styled.View`
     flex-direction: column;
@@ -43,10 +45,52 @@ const AuthPage = () => {
   const domain = useContext(DomainContext);
   const { authChecker, setAuthChecker } = useContext(UserAuthChecker);
   const { authCheckFlag, setAuthCheckFlag } = useContext(UserAuthCheckFlag);
+  const { currentUserData, setUserData} = useContext(UserData)
   const [isLogin, setIsLogin] = useState(''); //로그인 토큰이 있음
   const [logInResult, setLogInResult] = useState(null); //토큰을 사용해 로그인 함
   const [authInfo, setAuthInfo] = useState(null); //로그인 하여 가져온 계정정보
   const [logOutResult, setLogOutResult] = useState(null);
+  const [tryGetKakao, setKakaoFlag] = useState(false);
+  const [kakaoProfile, setKakaoProfile] = useState(null);
+
+  const GetUser = (kakao_id) => {
+    console.log(kakao_id);
+    fetch(domain + '/Login/User/kakao/' + kakao_id).then(res => res.json()).then(res => 
+      {
+        setUserData(res[0]);
+        setKakaoFlag(true);
+      });
+    
+    
+    // console.log('FeedComment!!!!', feedComments.length);
+}
+
+useEffect(() => {
+
+  if(tryGetKakao == false)
+  {
+    return;
+  }
+
+  console.log("use effect");
+  if(currentUserData == null)
+  {
+    console.log("is null");
+    //회원가입 페이지 가야하나
+    
+    
+  }
+  else
+  {
+    console.log(currentUserData);
+    
+  }
+
+  setAuthChecker({checkFlag : true, authInfo : kakaoProfile});
+  setAuthCheckFlag(true);
+  //여기서 카카오 인증 데이터로 뭔가 썸띵 체크를 하면 될듯
+
+}, [tryGetKakao])
 
   useEffect(() => {
     getProfile();
@@ -57,7 +101,6 @@ const AuthPage = () => {
       hasLogInResult = logInResult.refreshToken != null;
     }
     setIsLogin(hasLogInResult);
-
   }, [])
 
   const signInWithKakao = async () => {
@@ -70,7 +113,7 @@ const AuthPage = () => {
 
       console.log(`profilerrrrrrrrrrr : ${JSON.stringify(temp)}`);
       setAuthInfo(profile);
-      setAuthChecker(true);
+      setAuthChecker({checkFlag : true, authInfo : profile});
       setAuthCheckFlag(true);
     }
   };
@@ -79,10 +122,15 @@ const AuthPage = () => {
     console.log("getProfile");
     try {
       const profile = await getKakaoProfile();
-
       //카카오 id값으로 유저정보 들고오기.
 
+      setKakaoProfile(profile);
+      GetUser(profile.id);
+      //GetUser(4);
       //프로필 정보 가져온 후 계정 불러오기
+      
+      //setAuthChecker({checkFlag : true, authInfo : profile});
+      return;
       if (isLogin == true) {
         setAuthInfo(profile);
         
@@ -106,14 +154,14 @@ const AuthPage = () => {
       else {
         setAuthInfo(null);
       }
-      setAuthChecker(true);
+      setAuthChecker({checkFlag : true, authInfo : profile});
     }
     catch (e) {
       //로그인페이지 노출
-      setAuthChecker(false);
+      setAuthChecker({checkFlag : false, authInfo : profile});
       console.log(e);
     }
-    setAuthCheckFlag(true);
+    //setAuthCheckFlag(true);
   };
 
   const signOutWithKakao = async () => {
@@ -121,11 +169,16 @@ const AuthPage = () => {
     setLogInResult(null);
     setAuthInfo(null);
     setLogOutResult(message);
-    setAuthChecker(false);
+    setAuthChecker({checkFlag : false, authInfo : profile});
   };
 
   return (
     <Screen>
+        {/* // <JoinPage>
+
+        // </JoinPage> */}
+      
+      
       {authCheckFlag && authChecker == false && <AuthScreen>
         <KaKaoBtn onPress={() => {
           if (isLogin) {
@@ -143,6 +196,7 @@ const AuthPage = () => {
                         {logInResult == null && <Text>{logOutResult}</Text>}
                         {logInResult != null && <Text>{"is log in state"}</Text>}
                     </Body3> */}
+
     </Screen>
 
   );
