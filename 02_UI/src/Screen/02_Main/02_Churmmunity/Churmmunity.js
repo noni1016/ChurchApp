@@ -13,11 +13,11 @@ import GroupCardContainer from '~/Components/GroupCardContainer';
 import LightCardContainer from '~/Components/LightCardContainer';
 import RecGroupContainer from '~/Components/RecGroupContainer';
 import RecLightContainer from '~/Components/RecLightContainer';
-import Default from '~/Screen/Default'
-import GroupLongScroll from '~/Screen/GroupLongScroll';
-import GroupPage from '~/Screen/GroupPage'
-import Comments from './Comments';
-import EditFeed from './AddFeed';
+import Default from '~/Screen/99_Etc/Default'
+import GroupLongScroll from '~/Screen/02_Main/02_Churmmunity/Group/GroupLongScroll';
+import GroupPage from '~/Screen/02_Main/02_Churmmunity/Group/GroupPage'
+import Comments from './Group/Comments';
+import EditFeed from './Group/AddFeed';
 
 import {DomainContext, DomainContextProvider} from '~/Context/Domain';
 import {DataContext, DataContextProvider} from '~/Context/Data';
@@ -165,16 +165,15 @@ const NoniNavi = () => {
 }
 
 
-const Noni = () => {
+const Churmmunity = () => {
 
     return (
-        <DomainContextProvider>
+
                 <DataContextProvider>
                     <NoniNavi />
                 </DataContextProvider>
-        </DomainContextProvider>
     );
 };
 
 
-export default Noni;
+export default Churmmunity;

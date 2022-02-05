@@ -39,6 +39,7 @@ const GroupPage = ({route, navigation}) => {
     var [resizedWidth, setResizedWidth] = useState(100);
     var [resizedHeight, setResizedHeight] = useState(100);
     var [url, setUrl] = useState('');
+    var [refresh, SetRefresh] = useState(false);
     var tabs = ['홈', '게시글', '사진'];
 
     var [groupMember, setGroupMember] = useState([]);
@@ -51,17 +52,29 @@ const GroupPage = ({route, navigation}) => {
     }, []);    
 
     useEffect(() => {
-        Image.getSize(url, (width, height) => {
-            setImgWidth(width);
-            setImgHeight(height);
-            if(width > Dimensions.get('window').width) {
-                setResizedWidth(Dimensions.get('window').width);
-                setResizedHeight(Dimensions.get('window').width / width * height);
-            } else {
-                setResizedWidth(width);
-                setResizedHeight(height);
-            }
-        })
+        if (route.params.tabIdx) setTabIndex(route.params.tabIdx);
+        else setTabIndex(0);
+    }, [route.params.tabIdx]);
+
+    useEffect(() => {
+        console.log('route.params.edit: ' + route.params.edit);
+        // if (route.params.edit || tabIndex) SetRefresh(!refresh);
+        SetRefresh(!refresh);
+        console.log('refresh: ' + refresh);
+    }, [route.params.edit, tabIndex]);
+
+    useEffect(() => {
+            Image.getSize(url, (width, height) => {
+                setImgWidth(width);
+                setImgHeight(height);
+                if (width > Dimensions.get('window').width) {
+                    setResizedWidth(Dimensions.get('window').width);
+                    setResizedHeight(Dimensions.get('window').width / width * height);
+                } else {
+                    setResizedWidth(width);
+                    setResizedHeight(height);
+                }
+            }, () => {console.log(`fail to get imgSize : ${url}`)})
     }, [url])
 
     const GetGroupMember = () => {
@@ -134,7 +147,7 @@ const GroupPage = ({route, navigation}) => {
                     ))}
                 </TabContainer>
                 {tabIndex == 0 && <GroupPageHome data={data} groupMem={groupMember} isMember={isMember} setMember={(value)=>{SetMember(value)}}/>}
-                {tabIndex == 1 && <Feeds groupId={data.id} navigation={navigation}/>}
+                {tabIndex == 1 && <Feeds groupId={data.id} feedAdded={refresh} navigation={navigation}/>}
                 {tabIndex == 2 && <Text>사진</Text>}
                 <Text>{user.name}</Text>
             </ScrollView>

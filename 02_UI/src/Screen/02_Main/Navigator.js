@@ -12,12 +12,10 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import Icon2 from 'react-native-vector-icons/FontAwesome5';
 
 //import custom screens
-import Default from './Default';
-import Home from '~/Screen/Home';
-import Churmmunity from './Churmmunity';
-import Noni from './Noni'; //practice page
-import Semin from './Semin'; //practice page
-import Profile from './Profile';
+import Default from '../99_Etc/Default';
+import Home from '~/Screen/02_Main/01_Home/Home';
+import Churmmunity from './02_Churmmunity/Churmmunity';
+import Profile from './03_Profile/Profile';
 
 const BottomTab = createBottomTabNavigator();
 
@@ -36,20 +34,6 @@ const BottomTabNavi = () => {
                 component={Churmmunity}
                 options={{
                     tabBarIcon: ({color}) => <Icon name="people" color={color} size={26} />
-                }}
-            />
-            <BottomTab.Screen
-                name="Serving"
-                component={Noni}
-                options={{
-                    tabBarIcon: ({ color }) => <Icon2 name="heartbeat" color={color} size={26} />
-                }}
-            />
-            <BottomTab.Screen
-                name="Notifications"
-                component={Semin}
-                options={{
-                    tabBarIcon: ({ color }) => <Icon2 name="bell" color={color} size={26} />
                 }}
             />
             <BottomTab.Screen

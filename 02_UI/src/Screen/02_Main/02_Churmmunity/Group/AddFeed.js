@@ -115,14 +115,15 @@ const SendBtn = Styled.TouchableOpacity`
 
 const EditFeed = ({route, navigation}) => {
     const domain = useContext(DomainContext);
-    const data = route.params.groupData;    
+    
+    const [edit, SetEdit] = useState(false); // false : AddMode, true: EditMode
+    const [groupData, SetGroupData] = useState();
     const user = useContext(UserContext);
     const [userProfileImgUrl, SetUserProfileImgUrl] = useState(null);
     const [textInput, SetTextInput] = useState('');
     const [location, SetLocation] = useState('');
-    const [imageSource, SetImageSource] = useState(undefined);
-    const [imageWidth, SetImageWidth] = useState();
-    const [imageHeight, SetImageHeight] = useState();
+    const [imgSrc, SetImgSrc] = useState(undefined);
+    const [putImgSuccessFlag, SetPutImgSuccess] = useState(false);
 
     const options = {
         title: 'Load Photo',
@@ -136,6 +137,22 @@ const EditFeed = ({route, navigation}) => {
         }
     }
 
+    useEffect(() => {
+        if (route.params.groupData)
+        {
+            SetGroupData(route.params.groupData);
+        }
+        else if (route.params.feedData)
+        {
+            fetch(domain + `/Churmmunity/Group/${route.params.feedData.groupId}`).then(res => res.json()).then(res => {SetGroupData(res[0]);});
+            SetTextInput(route.params.feedData.contentText);
+            SetLocation(route.params.feedData.location);
+            SetImgSrc({uri: domain + route.params.feedData.contentImg});
+            navigation.setOptions({title: '게시글 수정'});
+            SetEdit(true);
+        }
+    }, [])
+
     // Get User Image
     useEffect(() => {
         SetUserProfileImgUrl(`${domain}/${user.photo}`);
@@ -144,35 +161,89 @@ const EditFeed = ({route, navigation}) => {
 
     const PutFeed = () => {
         // console.log(value);
-        alert(textInput);
-        alert(location);
-        // 이미지 서버에 넣기
-
-        
-
-        // if (imageSource) UpdateImg();
-        // else UpdateFeed();
+        // alert(textInput);
+        // alert(location);
+        console.log('imgSrc : ' + imgSrc.fileName);
+        if (imgSrc.fileName) UpdateImg();
+        else UpdateFeed();
     }
 
-    // const UpdateImg = () => {
-    //     const imageData = new FormData();
-    //     imageData.append('name', 'image');
-    //     i
-    // }
+    const UpdateImg = () => {
+        let fetchReq = ``;
+        let fetchMethod = ``;
+
+        if (edit === false) { // AddMode
+            fetchReq = `${domain}/Churmmunity/Feed/Img`;
+            fetchMethod = `POST`;
+        } else { // EditMode
+            fetchReq = `${domain}/Churmmunity/Feed/Img/${route.params.feedData.id}`;
+            fetchMethod = `PUT`;
+        }
+
+        console.log('fetchReq : ' + fetchReq);
+
+        const imageData = new FormData();
+        imageData.append('file', {
+            uri: imgSrc.uri,
+            type: imgSrc.type,
+            name: imgSrc.fileName,
+            data: imgSrc.data
+        });
+
+        fetch(fetchReq, {
+            method: fetchMethod,
+            body: imageData,
+            headers: {
+                Accept: 'application/json',
+                'Content-Type' : 'multipart/form-data',
+            }
+        }).then(res => res.json()).then(res => {
+            console.log(res);
+            if(res) {
+                SetPutImgSuccess(true);
+            } else {SetPutImgSuccess(false)}
+        });
+    }
+
+    useEffect(() => {        
+        if (putImgSuccessFlag == true) {
+            UpdateFeed();
+            SetPutImgSuccess(false);
+        }
+    }, [putImgSuccessFlag]);
 
     const UpdateFeed = () => {
         // Feed db 추가   
         let fetchReq = ``;
         let fetchMethod = ``;
 
-        fetchReq = `Feed`
-        fetchMethod = `POST`;
-        // sql = `INSERT INTO Feed (groupId, authorId, location, time, contentImg, contentText) VALUES (${req.body.groupId}, ${req.body.authorId}, ${req.body.location}, '${req.body.time}', '${req.body.contentImg}', '${req.body.contentText}')`;
+        if (edit === false) { // AddMode
+            fetchReq = `${domain}/Churmmunity/Feed`
+            fetchMethod = `POST`;
+        } else { // EditMode
+            fetchReq = `${domain}/Churmmunity/Feed/${route.params.feedData.id}`
+            fetchMethod = `PUT`;
+        }
+        // sql = `INSERT INTO Feed (groupId, authorId, location, time, contentImg, contentText) 
+        //VALUES (${req.body.groupId}, ${req.body.authorId}, ${req.body.location}, '${req.body.time}', '${req.body.contentImg}', '${req.body.contentText}')`;
     
-        // fetch(fetchReq, {
-        //     method: fetchMethod,
-        //     body : JSON.stringify({groupId: data.id, authorId: })
-        // })
+        let writeTime = new Date();
+        let year = writeTime.getFullYear();
+        let month = writeTime.getMonth();
+        let date = writeTime.getDate();
+        let hours = writeTime.getHours();
+        let minutes = writeTime.getMinutes();
+        let seconds = writeTime.getSeconds();
+
+        let sendDate = `${year.toString().substr(-2)}.${month + 1 >= 10 ?  month + 1 : '0' + (month + 1)}.${date >= 10 ? date : '0' + date} ${hours}:${minutes}:${seconds}`;
+
+        fetch(fetchReq, {
+            method: fetchMethod,
+            body : JSON.stringify({groupId: groupData.id, authorId: user.id, location: location, time: sendDate, contentText: textInput}),
+            headers: {'Content-Type': 'application/json'}
+        }).then(res => res.json()).then(
+            res => {alert('SUCCESS: ', JSON.stringify(res)); 
+            navigation.navigate('GroupPage', {tabIdx: 1, edit: true, navigation: navigation});})
     }
 
     // Camera Roll
@@ -185,7 +256,7 @@ const EditFeed = ({route, navigation}) => {
                 console.log('ImageSrc: ' + JSON.stringify(response.assets));
                 console.log('ImageSrc: ' + response.assets[0].uri);
                 // SetImageSource("file:///data/user/0/com.churchapp/cache/rn_image_picker_lib_temp_4af794bf-b436-4f03-abfe-6b53e73e9f21.jpg");
-                SetImageSource(response.assets[0]);
+                SetImgSrc(response.assets[0]);
             }
         });
     }
@@ -194,14 +265,14 @@ const EditFeed = ({route, navigation}) => {
     return (
         <ScrollView>
         <Container>
-            <GroupNameBox><GroupTitle>{data.name}</GroupTitle></GroupNameBox>
-            {imageSource == undefined && <PlusBtnBox onPress={() => {ShowCameraRoll();}}>
+            {groupData && <GroupNameBox><GroupTitle>{groupData.name}</GroupTitle></GroupNameBox>}
+            {imgSrc == undefined && <PlusBtnBox onPress={() => {ShowCameraRoll();}}>
                 <PlusText>+</PlusText>
                 <Text>버튼을 눌러</Text>
                 <Text>사진을 추가해보세요</Text>
             </PlusBtnBox>}
-            {imageSource && <PlusBtnBox onPress={() => {ShowCameraRoll();}}>
-                <Image style={{ backgroundColor: 'transparent', width: '100%', height: '100%', resizeMode: 'contain' }} source={{uri : imageSource.uri}} />
+            {imgSrc && <PlusBtnBox onPress={() => {ShowCameraRoll();}}>
+                <Image style={{ backgroundColor: 'transparent', width: '100%', height: '100%', resizeMode: 'contain' }} source={{uri : imgSrc.uri}} />
             </PlusBtnBox>}
             <FeedTextBox>
                 <ProfileBox>
