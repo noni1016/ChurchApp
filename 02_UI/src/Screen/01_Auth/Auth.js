@@ -67,7 +67,7 @@ useEffect(() => {
       //카카오 계정정보 가져오기.
       const profile = await getKakaoProfile();
       setKakaoAuthData(profile);
-      GetUser(99);
+      GetUser(profile.id);
     }
     catch (e) {
       //카카오 로그인페이지 노출
