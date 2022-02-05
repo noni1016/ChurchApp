@@ -4,12 +4,11 @@
 //3. 다니는 교회 입력 - 교인인증필요.. 어떻게
 //4. 확인
 
-import React, {useState, useContext, useEffect} from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { View, FlatList, Text, Dimensions, ScrollView, Image, NativeSyntheticEvent, NativeScrollEvent, Button } from 'react-native';
 import Styled from 'styled-components/native';
 import AddBtn from '~/Components/AddBtn'
-import { UserAuthChecker, UserAuthCheckFlag, UserContextProvider } from '~/Context/User';
-import AuthPage from './Auth';
+import { UserData, KakaoAuthData, UserContextProvider } from '~/Context/User';
 import { DomainContext } from '~/Context/Domain';
 
 const Input = Styled.TextInput`
@@ -25,26 +24,23 @@ const NickNameCheckBtn = Styled.TouchableOpacity`
 height: 100px;
 width: 200px;
 background-color: green;
-`
+`;
 
 const JoinBtn = Styled.TouchableOpacity`
 width: 50%;
 height: 15%;
-background-color: #ff000055;
-// background-color: transparent;
-`
+background-color: red;
+border-bottom-width: 10px;
+`;
 
 const JoinPage = () => {
     const domain = useContext(DomainContext);
-    const { authChecker, setAuthChecker } = useContext(UserAuthChecker);
+    const { userData, setUserData } = useContext(UserData);
+    const { kakaoAuthData } = useContext(KakaoAuthData);
 
     let [nickName, setNickName] = useState('');
     let [churchName, setChurchName] = useState('');
-    
-    function zzz(authChecker)
-    {
-        return authChecker.getAuthInfo();
-    }
+
     const NickNameTextHandler = (value) => {
         setNickName(value);
     }
@@ -54,17 +50,17 @@ const JoinPage = () => {
     }
 
     const CheckNickName = () => {
-        
+
     }
 
     const JoinUser = () => {
-        console.log(authChecker.authInfo);
-        let sendCommentUserData = {name: nickName, photo: authChecker.authInfo.profileImageUrl, church : churchName, age : 10, level : 99, role :0, id_domain : authChecker.authInfo.id};
+        console.log(kakaoAuthData);
+        let sendCommentUserData = { name: nickName, photo: kakaoAuthData.profileImageUrl, church: churchName, age: 10, level: 99, role: 0, id_domain: kakaoAuthData.id };
         console.log(sendCommentUserData);
         fetch(domain + '/Login/User/kakao', {
             method: 'POST',
             body: JSON.stringify(sendCommentUserData),
-            headers:{
+            headers: {
                 Accept: 'application/json',
                 'Content-Type': 'application/json'
             }
@@ -72,47 +68,40 @@ const JoinPage = () => {
             console.log(res)
             //로그인
         });
-        // console.log('FeedComment!!!!', feedComments.length);
     }
 
     return (
-    <View>
-      
-        <Text>회원가입</Text>
-        <Input 
-                        autoFocus={false}
-                        autoCapitalize="none"
-                        autoCorrect={false}
-                        placeholder= {authChecker.authInfo.nickname}
-                        returnKeyType="done"
-                        onChangeText={NickNameTextHandler}
-                        value={nickName}
-                        // onSubmitEditing={({nativeEvent}) => {
-                        //     AddInput(nativeEvent.text);
-                        // }}
-                    />          
-      <Input 
-                        autoFocus={false}
-                        autoCapitalize="none"
-                        autoCorrect={false}
-                        placeholder="교회 추가"
-                        returnKeyType="done"
-                        onChangeText={ChurchNameTextHandler}
-                        value={churchName}
-                        //onSubmitEditing={({nativeEvent}) => {
-                        //    AddInput(nativeEvent.text);
-                        //}}
-                    />     
-
-        <JoinBtn onPress = {() => 
-        {
-            JoinUser();
-        }}>
-        </JoinBtn>     
-
-    </View>
-
-    
+        <View>
+            <Input
+                autoFocus={false}
+                autoCapitalize="none"
+                autoCorrect={false}
+                placeholder={kakaoAuthData.nickname}
+                returnKeyType="done"
+                onChangeText={NickNameTextHandler}
+                value={nickName}
+            // onSubmitEditing={({nativeEvent}) => {
+            //     AddInput(nativeEvent.text);
+            // }}
+            />
+            <Input
+                autoFocus={false}
+                autoCapitalize="none"
+                autoCorrect={false}
+                placeholder="교회 추가"
+                returnKeyType="done"
+                onChangeText={ChurchNameTextHandler}
+                value={churchName}
+            //onSubmitEditing={({nativeEvent}) => {
+            //    AddInput(nativeEvent.text);
+            //}}
+            />
+            <JoinBtn onPress={() => {
+                JoinUser();
+            }}>
+                <Text>회원가입</Text>
+            </JoinBtn>
+        </View>
     )
 };
 
