@@ -31,10 +31,6 @@ app.get('/', (req, res) => {
     res.send({ express: 'YOUR EXPRESS BACKEND IS CONNECTED TO REACT' });
 }); // HomePage
 
-
-// web test 용 routes
-app.use('/BoardCrud', require('./routes_www/BoardCrud')); // /BoardCrud/ 로 접근하는 url 요청 처리
-
-
 // app test 용 routes
 app.use('/Churmmunity', require('./routes_churmmunity/Churmmunity')); // /churmmunity/ 로 접근하는 url 요청 처리
+app.use('/Login', require('./routes_churmmunity/Login')); // /churmmunity/ 로 접근하는 url 요청 처리

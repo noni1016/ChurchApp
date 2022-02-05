@@ -8,6 +8,7 @@ const app = express();
 // sql connection
 const conn = require('../config/database');
 var fileName = '';
+var imgUpload = false;
 
 router.get('/', function (req, res, next) {
     res.json('churmmunity route / ');
@@ -195,12 +196,12 @@ router.get('/User/:id', (req, res) => {
     });
 })
 
-router.post('/GetGroupFeeds', (req, res) => {
-    let sql = `SELECT * FROM Feed WHERE groupId = ${req.body.groupId} ORDER BY time DESC`
+router.get('/GroupFeeds/:id', (req, res) => {
+    let sql = `SELECT * FROM Feed WHERE groupId = ${req.params.id} ORDER BY time DESC`
     console.log(sql);
     conn.query(sql, function (error, rows, fields) { // sql 쿼리 수행
         if (!error) {
-            console.log(rows);
+            // console.log(rows);
             // console.log('query success')
             res.send(rows);
         } else {
@@ -209,12 +210,13 @@ router.post('/GetGroupFeeds', (req, res) => {
     });
 })
 
+
 router.post('/GetFeedComments', (req, res) => {
     let sql = `SELECT * FROM Comment WHERE groupId = ${req.body.groupId} AND feedId = ${req.body.feedId} ORDER BY time DESC`
     console.log(sql);
     conn.query(sql, function (error, rows, fields) { // sql 쿼리 수행
         if (!error) {
-            console.log(rows);
+            // console.log(rows);
             // console.log('query success')
             res.send(rows);
         } else {
@@ -228,7 +230,7 @@ router.post('/GetCommentAuthorData', (req, res) => {
     console.log(sql);
     conn.query(sql, function (error, rows, fields) { // sql 쿼리 수행
         if (!error) {
-            console.log(rows);
+            // console.log(rows);
             // console.log('query success')
             res.send(rows);
         } else {
@@ -251,7 +253,7 @@ router.post('/FeedComments', (req, res) => {
     });
 })
 
-const uploadPost = multer({
+const uploadFeedImg = multer({
     storage: multer.diskStorage({
         destination: function (req, file, cb) {
             cb(null, 'public/FeedImg');
@@ -272,21 +274,52 @@ const uploadPost = multer({
                 console.log(maxId);
                 var temp = file.originalname.split('.');
                 var fileExt = temp[temp.length - 1];
-                fileName = 'FeedId' + (maxId + 1) + '.' + fileExt;                
+                fileName = 'FeedId' + (maxId + 1) + '.' + fileExt;         
                 cb(null, fileName);
             })
         },
     }),
 })
 
-router.post('/Feed/Img', uploadPost.single('file'), async (req, res, next) => {
+router.post('/Feed/Img', uploadFeedImg.single('file'), async (req, res, next) => {
     console.log(req.file.filename);
+    imgUpload = true;       
+    res.send(true);
+})
+
+const putFeedImg = multer({
+    storage: multer.diskStorage({
+        destination: function (req, file, cb) {
+            cb(null, 'public/FeedImg');
+        },
+        filename(req, file, cb) {
+            console.log(file.originalname);
+                var temp = file.originalname.split('.');
+                var fileExt = temp[temp.length - 1];
+                fileName = 'FeedId' + req.params.id + '.' + fileExt;         
+                cb(null, fileName);
+        },
+    }),
+})
+
+router.put('/Feed/Img/:id', putFeedImg.single('file'), async (req, res, next) => {
+    console.log(req.file.filename);
+    imgUpload = true;       
     res.send(true);
 })
 
 router.post('/Feed', (req, res) => {
     console.log(req.body);
-    let sql = `INSERT INTO Feed (groupId, authorId, location, time, contentImg, contentText) VALUES ('${req.body.groupId}', '${req.body.authorId}', '${req.body.location}', '${req.body.time}', '/FeedImg/${fileName}', '${req.body.contentText}')`;
+    let sql = ``;
+    if (imgUpload)
+    {
+        sql = `INSERT INTO Feed (groupId, authorId, location, time, contentImg, contentText) VALUES ('${req.body.groupId}', '${req.body.authorId}', "${req.body.location}", '${req.body.time}', '/FeedImg/${fileName}', "${req.body.contentText}")`;
+        imgUpload = false;
+    }
+    else
+    {
+        sql = `INSERT INTO Feed (groupId, authorId, location, time, contentText) VALUES ('${req.body.groupId}', '${req.body.authorId}', "${req.body.location}", '${req.body.time}', "${req.body.contentText}")`;
+    }
     console.log(sql);
     conn.query(sql, function (error, rows, fields) { // sql 쿼리 수행
         if (!error) {
@@ -298,5 +331,69 @@ router.post('/Feed', (req, res) => {
         }
     });
 })    
+
+router.put('/Feed/:id', (req, res) => {
+    console.log(req.body);
+    let sql = ``;
+    if (imgUpload)
+    {
+        sql = `UPDATE Feed SET groupId = '${req.body.groupId}', location = "${req.body.location}", contentImg = "/FeedImg/${fileName}", contentText = "${req.body.contentText}" WHERE id = ${req.params.id}`;
+        // sql = `UPDATE Feed SET groupId, authorId, location, time, contentImg, contentText) VALUES ('${req.body.groupId}', '${req.body.authorId}', "${req.body.location}", '${req.body.time}', '/FeedImg/${fileName}', "${req.body.contentText}")`;
+        imgUpload = false;
+    }
+    else
+    {
+        sql = `UPDATE Feed SET groupId = '${req.body.groupId}', location = "${req.body.location}", contentText = "${req.body.contentText}" WHERE id = ${req.params.id}`;
+    }
+    console.log(sql);
+    conn.query(sql, function (error, rows, fields) { // sql 쿼리 수행
+        if (!error) {
+            // console.log(rows);
+            // console.log('query success')
+            res.send(rows);
+        } else {
+            console.log('query error : ' + error);
+        }
+    });
+});
+
+router.delete('/Feed/:id/:imgSrc', (req, res) => {
+    console.log('Feed delete req');
+    console.log(req.params.imgSrc);
+    if (req.params.imgSrc == '-1')
+    {
+        fs.unlink(`./public/FeedImg/${req.params.imgSrc}`, (err) => {
+            err ? console.log(req.params.imgSrc) : console.log(`${req.params.imgSrc}를 정상적으로 삭제했습니다`);
+          })
+    }
+
+
+    let sql = `DELETE FROM Feed WHERE id=${req.params.id}`;
+    console.log(sql);
+    conn.query(sql, function (error, rows, fields) {
+        if (!error) {
+            console.log(rows);
+            res.send({ result: true });
+        } else {
+            console.log('query error : ' + error);
+            res.send({ result: false });
+        }
+    });
+})
+
+router.get('/Group/:id', (req, res) => {
+    // let sql = 'SELECT * FROM myGroupDatas'; // myGroupDatas 테이블에서 모든 값을 가져옴
+    // console.log('request on');
+    // console.log(req.body);
+    let sql = `SELECT * FROM Groups WHERE id = ${req.params.id}`;
+    console.log(sql);
+    conn.query(sql, function (error, rows, fields) { // sql 쿼리 수행
+        if (!error) {
+            res.send(rows);
+        } else {
+            console.log('query error : ' + error);
+        }
+    });
+})
 
 module.exports = router;
