@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Text, Image } from 'react-native';
-import AuthPage from '~/Screen/Auth';
-import Navigator from '~/Screen/Navigator';
-import JoinPage from '~/Screen/JoinPage';
+import AuthPage from '~/Screen/01_Auth/Auth';
+import Navigator from '~/Screen/02_Main/Navigator';
+import JoinPage from '~/Screen/01_Auth/JoinPage';
 import { UserData, UserAuthChecker, UserAuthCheckFlag, UserContextProvider } from '~/Context/User';
-import Default from './Default';
+import Default from '../99_Etc/Default';
 
 const Main = () => {
     const { authChecker, setAuthChecker } = useContext(UserAuthChecker);

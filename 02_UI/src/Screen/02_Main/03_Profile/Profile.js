@@ -33,7 +33,7 @@ width: 100px;
 background-color: #FF0000;
 `
 
-const Semin = () => {
+const Profile = () => {
     const [isLogin, setIsLogin] = useState('');
     const [logInResult, setLogInResult] = useState(null);
     const [authInfo, setAuthInfo] = useState(null);
@@ -131,4 +131,4 @@ const Semin = () => {
   };
   
   
-  export default Semin;
+  export default Profile;

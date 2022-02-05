@@ -4,7 +4,7 @@ import Styled from 'styled-components/native';
 import {DomainContext} from '~/Context/Domain';
 import { UserContext } from '~/Context/User';
 import Icon from 'react-native-vector-icons/Entypo';
-import Comments from '~/Screen/Comments';
+import Comments from '~/Screen/02_Main/02_Churmmunity/Group/Comments';
 import ActionSheet from 'react-native-actions-sheet';
 import ActionSheetBtn from './ActionSheetBtn';
 
