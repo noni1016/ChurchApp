@@ -1,19 +1,11 @@
-import React, { useState, useEffect, useContext } from 'react';
+import JoinPage from './JoinPage';
+import Main from '~/Screen/02_Main/Main';
 import { View, Text, Image } from 'react-native';
 import Styled from 'styled-components/native';
-import { UserData, UserAuthChecker, UserAuthCheckFlag, UserContext, UserContextProvider } from '~/Context/User';
-//import JoinPage from './JoinPage';
-
-import {
-  KakaoOAuthToken,
-  KakaoProfile,
-  getProfile as getKakaoProfile,
-  login,
-  logout,
-  unlink,
-} from '@react-native-seoul/kakao-login';
+import React, { useState, useEffect, useContext } from 'react';
 import { DomainContext } from '~/Context/Domain';
-import JoinPage from './JoinPage';
+import { UserData, KakaoAuthData } from '~/Context/User';
+import { KakaoOAuthToken, KakaoProfile, getProfile as getKakaoProfile,  login, logout, unlink, } from '@react-native-seoul/kakao-login';
 
 const Screen = Styled.View`
     flex-direction: column;
@@ -43,162 +35,86 @@ background-color: #FF0000;
 
 const AuthPage = () => {
   const domain = useContext(DomainContext);
-  const { authChecker, setAuthChecker } = useContext(UserAuthChecker);
-  const { authCheckFlag, setAuthCheckFlag } = useContext(UserAuthCheckFlag);
-  const { currentUserData, setUserData} = useContext(UserData)
-  const [isLogin, setIsLogin] = useState(''); //로그인 토큰이 있음
-  const [logInResult, setLogInResult] = useState(null); //토큰을 사용해 로그인 함
-  const [authInfo, setAuthInfo] = useState(null); //로그인 하여 가져온 계정정보
-  const [logOutResult, setLogOutResult] = useState(null);
-  const [tryGetKakao, setKakaoFlag] = useState(false);
-  const [kakaoProfile, setKakaoProfile] = useState(null);
+  const { userData, setUserData } = useContext(UserData) //카카오 id를 통해 가져온 앱 회원 정보
+  const { kakaoAuthData, setKakaoAuthData } = useContext(KakaoAuthData) //로그인 하여 가져온 카카오 계정정보
+  
+  const [ authCheckFlag, setAuthCheckFlag ] = useState(false); //카카오 로그인시도했음
+  const [ tryGetKakao, setKakaoFlag] = useState(false); //카카오계정으로 회원 체크했다.
 
   const GetUser = (kakao_id) => {
-    console.log(kakao_id);
+    //console.log(kakao_id); //kakaoAuthData와 같음
     fetch(domain + '/Login/User/kakao/' + kakao_id).then(res => res.json()).then(res => 
       {
         setUserData(res[0]);
         setKakaoFlag(true);
       });
-    
-    
-    // console.log('FeedComment!!!!', feedComments.length);
 }
 
+//처음 진입 시 자동로그인.
 useEffect(() => {
+  autoLogin();
+}, [])
 
-  if(tryGetKakao == false)
-  {
-    return;
-  }
-
-  console.log("use effect");
-  if(currentUserData == null)
-  {
-    console.log("is null");
-    //회원가입 페이지 가야하나
-    
-    
-  }
-  else
-  {
-    console.log(currentUserData);
-    
-  }
-
-  setAuthChecker({checkFlag : true, authInfo : kakaoProfile});
-  setAuthCheckFlag(true);
-  //여기서 카카오 인증 데이터로 뭔가 썸띵 체크를 하면 될듯
-
+//카카오 정보로 회원 정보 체크 후
+useEffect(() => {
 }, [tryGetKakao])
 
-  useEffect(() => {
-    getProfile();
-
-    console.log(`========== : ${authChecker}`);
-    var hasLogInResult = (logInResult != null);
-    if (hasLogInResult) {
-      hasLogInResult = logInResult.refreshToken != null;
+  //앱실행 후 자동로그인
+  const autoLogin = async () => {
+    console.log("getProfile");
+    
+    try {
+      //카카오 계정정보 가져오기.
+      const profile = await getKakaoProfile();
+      setKakaoAuthData(profile);
+      GetUser(profile.id);
     }
-    setIsLogin(hasLogInResult);
-  }, [])
+    catch (e) {
+      //카카오 로그인페이지 노출
+      setKakaoAuthData(null);
+      console.log(e);
+    }
 
+    setAuthCheckFlag(true);
+  };
+
+  //버튼눌러서 직접 로그인
   const signInWithKakao = async () => {
     const token = await login();
     setLogInResult(token);
 
     if (token != null) {
       const profile = await getKakaoProfile();
-      var temp = profile;
 
-      console.log(`profilerrrrrrrrrrr : ${JSON.stringify(temp)}`);
-      setAuthInfo(profile);
-      setAuthChecker({checkFlag : true, authInfo : profile});
+      setKakaoAuthData(profile);
+      GetUser(profile.id);
       setAuthCheckFlag(true);
     }
   };
 
-  const getProfile = async () => {
-    console.log("getProfile");
-    try {
-      const profile = await getKakaoProfile();
-      //카카오 id값으로 유저정보 들고오기.
-
-      setKakaoProfile(profile);
-      GetUser(profile.id);
-      //GetUser(4);
-      //프로필 정보 가져온 후 계정 불러오기
-      
-      //setAuthChecker({checkFlag : true, authInfo : profile});
-      return;
-      if (isLogin == true) {
-        setAuthInfo(profile);
-        
-        console.log(`id: ${profile.id}`);
-        var kakao_id = 4; //profile.id;
-        //DB요청
-        fetch(domain + `/Login/User/Kakao/${kakao_id}`).then(res => res.json()).then(res => {
-
-          if (res.length != 0) {
-            console.log(res.length);
-            console.log(res[0].id);
-            console.log(res[0].name);
-          }
-          else {
-            //회원가입 페이지 연결
-            console.log('no data');
-          }
-        }
-        );
-      }
-      else {
-        setAuthInfo(null);
-      }
-      setAuthChecker({checkFlag : true, authInfo : profile});
-    }
-    catch (e) {
-      //로그인페이지 노출
-      setAuthChecker({checkFlag : false, authInfo : profile});
-      console.log(e);
-    }
-    //setAuthCheckFlag(true);
-  };
-
   const signOutWithKakao = async () => {
     const message = await logout();
-    setLogInResult(null);
-    setAuthInfo(null);
     setLogOutResult(message);
-    setAuthChecker({checkFlag : false, authInfo : profile});
+
+    setUserData(null);
+    setKakaoAuthData(null);
+    authCheckFlag(true);
   };
 
   return (
-    <Screen>
-        {/* // <JoinPage>
-
-        // </JoinPage> */}
-      
-      
-      {authCheckFlag && authChecker == false && <AuthScreen>
-        <KaKaoBtn onPress={() => {
-          if (isLogin) {
-            console.log("already log in");
-          }
-          else {
+    <>
+      {userData == null && <Screen>
+        {authCheckFlag == false && <Image source={require(`~/Assets/Images/mainpray.jpg`)} />}
+        {authCheckFlag && kakaoAuthData == null && <KaKaoBtn onPress={
+          () => {
             signInWithKakao();
-          }
-        }}>
+          }}>
           <Image source={require(`~/Assets/Images/kakao_login_medium_narrow.png`)} />
-        </KaKaoBtn>
-      </AuthScreen>}
-
-      {/* <Body3 onPress={() => signOutWithKakao()}>
-                        {logInResult == null && <Text>{logOutResult}</Text>}
-                        {logInResult != null && <Text>{"is log in state"}</Text>}
-                    </Body3> */}
-
-    </Screen>
-
+        </KaKaoBtn>}
+      </Screen>}
+      {tryGetKakao && userData == null && <JoinPage />}
+      {tryGetKakao && userData != null && <Main />}
+    </>
   );
 };
 
