@@ -9,10 +9,8 @@ import {NavigationContainer, StackActions} from '@react-navigation/native'; //Na
 
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import Icon2 from 'react-native-vector-icons/FontAwesome5';
 
 //import custom screens
-import Default from '../99_Etc/Default';
 import Home from '~/Screen/02_Main/01_Home/Home';
 import Churmmunity from './02_Churmmunity/Churmmunity';
 import Profile from './03_Profile/Profile';
@@ -48,15 +46,13 @@ const BottomTabNavi = () => {
 }
 
 
-const  Navigator = () => {
+const  Main = () => {
   return (
       <NavigationContainer>
           <BottomTabNavi />
-          {/* <MainNavi /> */}
-          {/* <Text>Hello Navigator</Text> */}
       </NavigationContainer>
   );
 };
 
 
-export default Navigator;
+export default Main;

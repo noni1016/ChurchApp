@@ -29,7 +29,7 @@ const TabContainer = styled.SafeAreaView`
   background-color: skyblue;
 `;
 
-const GroupPage = ({route, navigation}) => {
+const ClubPage = ({route, navigation}) => {
     const domain = useContext(DomainContext);
     const user = useContext(UserContext);
     const data = route.params.groupData;
@@ -156,4 +156,4 @@ const GroupPage = ({route, navigation}) => {
     )
 };
 
-export default GroupPage;
+export default ClubPage;
