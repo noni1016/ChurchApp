@@ -102,18 +102,19 @@ useEffect(() => {
   };
 
   return (
-    <Screen>
-      {authCheckFlag == false && <Image source={require(`~/Assets/Images/mainpray.jpg`)} />}
-      {authCheckFlag && kakaoAuthData == null && <KaKaoBtn onPress = { 
-        () =>{
-          signInWithKakao();
-        }}>
-        <Image source={require(`~/Assets/Images/kakao_login_medium_narrow.png`)} />
+    <>
+      {userData == null && <Screen>
+        {authCheckFlag == false && <Image source={require(`~/Assets/Images/mainpray.jpg`)} />}
+        {authCheckFlag && kakaoAuthData == null && <KaKaoBtn onPress={
+          () => {
+            signInWithKakao();
+          }}>
+          <Image source={require(`~/Assets/Images/kakao_login_medium_narrow.png`)} />
         </KaKaoBtn>}
-
-      {tryGetKakao && userData == null && <JoinPage/>}
-      {tryGetKakao && userData != null && <Main/>}
-    </Screen>
+      </Screen>}
+      {tryGetKakao && userData == null && <JoinPage />}
+      {tryGetKakao && userData != null && <Main />}
+    </>
   );
 };
 

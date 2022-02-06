@@ -1,20 +1,19 @@
 import React, {useEffect, useContext, useState} from 'react';
-import {Text, Button, Image, StyleSheet, Dimensions} from 'react-native';
-import styled from 'styled-components/native';
+import {Image, Dimensions} from 'react-native';
+import Styled from 'styled-components/native';
 import {DomainContext} from '~/Context/Domain';
-import { UserContext } from '~/Context/User';
 import IconE from 'react-native-vector-icons/Entypo';
 import IconM from 'react-native-vector-icons/MaterialCommunityIcons';
 
 
-const Container = styled.View`
+const ClubCardBox = Styled.View`
     flex-direction: column;
     justify-content: center;
     align-items: flex-start; 
     background-color: #FFFFFF;
 `;
 
-const GroupTitleAndNumMem = styled.View`
+const ClubTitleAndNumMem = Styled.View`
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
@@ -22,7 +21,7 @@ const GroupTitleAndNumMem = styled.View`
     margin: 5px 0px 0px 0px; //상 우 하 좌
 `;
 
-const GroupTitle = styled.Text`
+const ClubTitle = Styled.Text`
     flex: 9;
     color: black;
     font-size: 25px;
@@ -32,32 +31,32 @@ const GroupTitle = styled.Text`
     /* background-color: #0000FF; */
 `;
 
-const GroupNumContainer = styled.View`
+const ClubNumBox = Styled.View`
     flex-direction: row;
 `;
 
-const GroupNumMem = styled.Text`
+const ClubNumMem = Styled.Text`
     color: black;
     font-size: 15px;
     font-family: 'DoHyeon-Regular';
     text-align: right;
 `;
 
-const LocationContainer = styled.View`
+const LocationBox = Styled.View`
     flex-direction: row;
     justify-content: flex-start;
     margin: 3px 0px 0px 0px; //상 우 하 좌
     /* background-color: #0000FF; */    
 `;
 
-const GroupLocation = styled.Text`
+const ClubLocation = Styled.Text`
     color: black;
     font-size: 15px;
     font-family: 'DoHyeon-Regular';
     text-align: left;
 `;
 
-const MainImageContainer = styled.View`
+const MainImageBox = Styled.View`
     flex-direction: row;
     width: ${Dimensions.get('window').width * 0.9}px;
     justify-content: center;
@@ -66,27 +65,20 @@ const MainImageContainer = styled.View`
 `;
 
 
-const GroupCard = ({data}) => {
+const ClubCard = ({club}) => {
 
     const domain = useContext(DomainContext);
-       
-    // const imageWidth = Dimensions.get('window').width * 0.8;
-    var [imgWidth, setImgWidth] = useState();
-    var [imgHeight, setImgHeight] = useState();
     
     var [resizedWidth, setResizedWidth] = useState(100);
     var [resizedHeight, setResizedHeight] = useState(100);
 
-
     var [url, setUrl] = useState('');
 
     useEffect(() => {
-        // console.log(`${domain}/${data.mainImg}`);
-        setUrl(`${domain}/${data.mainImg}`);
-        if (domain && data.mainImg && url != '')
+        setUrl(`${domain}/${club.mainImg}`);
+        if (domain && club.mainImg && url != '')
         {
             Image.getSize(url, (width, height) => {
-                // console.log(width + ' - ' + height);
                 setImgWidth(width);
                 setImgHeight(height);
                 if(width > Dimensions.get('window').width * 0.9) {
@@ -95,37 +87,31 @@ const GroupCard = ({data}) => {
                 } else {
                     setResizedWidth(width);
                     setResizedHeight(height);
-                }
-    
-                // console.log(resizedWidth + ' - ' + resizedHeight);
-    
+                }    
             })
         }
-
-
     });
 
 
     return (
-        <Container width='90%'>
-            <MainImageContainer>
+        <ClubCardBox width='90%'>
+            <MainImageBox>
                 <Image style={{backgroundColor: '#FFFFFF', width: resizedWidth, height: resizedHeight, resizeMode: 'contain'}} source={url ? {uri: url } : null} />
-            </MainImageContainer>
-            <GroupTitleAndNumMem>
-                <GroupTitle>{data.name}</GroupTitle>
-                <GroupNumContainer>
+            </MainImageBox>
+            <ClubTitleAndNumMem>
+                <ClubTitle>{club.name}</ClubTitle>
+                <ClubNumBox>
                     <IconM name="human-child" size={15} color="#000000" />
-                    <GroupNumMem>{data.numMember}</GroupNumMem>
-                </GroupNumContainer>
-            </GroupTitleAndNumMem>
-            <LocationContainer>
+                    <ClubNumMem>{club.numMember}</ClubNumMem>
+                </ClubNumBox>
+            </ClubTitleAndNumMem>
+            <LocationBox>
                 <IconE name="location-pin" size={15} color="#000000" />
-                <GroupLocation>{data.location}</GroupLocation>
-            </LocationContainer>
-            
-        </Container>
+                <ClubLocation>{club.location}</ClubLocation>
+            </LocationBox>            
+        </ClubCardBox>
     );
   };
   
   
-  export default GroupCard;
+  export default ClubCard;
