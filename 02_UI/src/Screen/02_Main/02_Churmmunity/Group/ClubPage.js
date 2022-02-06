@@ -32,7 +32,7 @@ const TabContainer = styled.SafeAreaView`
 const ClubPage = ({route, navigation}) => {
     const domain = useContext(DomainContext);
     const user = useContext(UserContext);
-    const data = route.params.groupData;
+    const data = route.params.club;
     const [tabIndex, setTabIndex] = useState(0);
     var [imgWidth, setImgWidth] = useState();
     var [imgHeight, setImgHeight] = useState();    

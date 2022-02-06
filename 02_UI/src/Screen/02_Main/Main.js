@@ -15,9 +15,6 @@ import Home from '~/Screen/02_Main/01_Home/Home';
 import Churmmunity from './02_Churmmunity/Churmmunity';
 import Profile from './03_Profile/Profile';
 
-//import contexts
-import { UserData, KakaoAuthData } from '~/Context/User';
-
 const BottomTab = createBottomTabNavigator();
 
 const BottomTabNavi = () => {

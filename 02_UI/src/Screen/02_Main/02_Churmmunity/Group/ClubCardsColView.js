@@ -22,7 +22,7 @@ const ClubCardsColView = ({route, navigation}) => {
                     return `myData-${index}`;
                 }}
                 renderItem={({ item, index }) => (
-                    <ClubCard data={item}></ClubCard>
+                    <ClubCard club={item}></ClubCard>
                 )}
             />
         </ClubCardsColViewBox>

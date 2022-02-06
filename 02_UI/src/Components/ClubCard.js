@@ -4,6 +4,7 @@ import Styled from 'styled-components/native';
 import {DomainContext} from '~/Context/Domain';
 import IconE from 'react-native-vector-icons/Entypo';
 import IconM from 'react-native-vector-icons/MaterialCommunityIcons';
+import ImageSize from 'react-native-image-size';
 
 
 const ClubCardBox = Styled.View`
@@ -76,21 +77,22 @@ const ClubCard = ({club}) => {
 
     useEffect(() => {
         setUrl(`${domain}/${club.mainImg}`);
-        if (domain && club.mainImg && url != '')
-        {
-            Image.getSize(url, (width, height) => {
-                setImgWidth(width);
-                setImgHeight(height);
-                if(width > Dimensions.get('window').width * 0.9) {
+    }, []);
+
+    useEffect(() => {
+        if (club.mainImg) {
+            ImageSize.getSize(url).then(size => {
+                if (size.width > Dimensions.get('window').width * 0.9) {
                     setResizedWidth(Dimensions.get('window').width * 0.9);
-                    setResizedHeight(Dimensions.get('window').width * 0.9 / width * height);
+                    setResizedHeight(Dimensions.get('window').width * 0.9 / size.width * size.height);
                 } else {
-                    setResizedWidth(width);
-                    setResizedHeight(height);
-                }    
+                    setResizedWidth(size.width);
+                    setResizedHeight(size.height);
+                }
             })
         }
-    });
+    }, [url]);
+
 
 
     return (

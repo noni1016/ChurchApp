@@ -90,7 +90,7 @@ const NoniNavi = () => {
                     )
                 }}
             />
-             {/* <Stack.Screen
+             <Stack.Screen
                 name="ShowMoreClubs"
                 component={ClubCardsColView}
                 options={{
@@ -107,7 +107,7 @@ const NoniNavi = () => {
                     headerBackTitleVisible: false,
                     title: '소모임 상세보기'
                 }}
-            /> */}
+            />
             {/*<Stack.Screen
                 name="Comments"
                 component={Comments}

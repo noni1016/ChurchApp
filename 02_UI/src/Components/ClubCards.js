@@ -74,7 +74,7 @@ const ClubCards = ({title, orgDatas, navigation}) => {
                 <Title>{title}</Title>
                 <ShowMore
                     onPress={() => {
-                        navigation.navigate('ShowMoreClub', {clubs: data, navigation: navigation});
+                        navigation.navigate('ShowMoreClubs', {clubs: datas, navigation: navigation});
                     }}>></ShowMore>
             </Header>
                 <ScrollView 
@@ -89,7 +89,7 @@ const ClubCards = ({title, orgDatas, navigation}) => {
                     }}>
                         {datas.map((data, index) => (
                             <Body activeOpacity={1} key={index} onPress = {() => {
-                                navigation.navigate('ClubPage', {clubs : data, navigation: navigation});}}>
+                                navigation.navigate('ClubPage', {club : data, navigation: navigation});}}>
                                 <ClubCard club={data} />
                             </Body>
                         ))}
