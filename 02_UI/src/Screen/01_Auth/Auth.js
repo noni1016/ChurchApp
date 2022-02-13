@@ -4,7 +4,7 @@ import { View, Text, Image } from 'react-native';
 import Styled from 'styled-components/native';
 import React, { useState, useEffect, useContext } from 'react';
 import { DomainContext } from '~/Context/Domain';
-import { UserData, KakaoAuthData } from '~/Context/User';
+import { UserData, KakaoAuthData, TryGetKakao } from '~/Context/User';
 import { KakaoOAuthToken, KakaoProfile, getProfile as getKakaoProfile,  login, logout, unlink, } from '@react-native-seoul/kakao-login';
 
 const Screen = Styled.View`
@@ -39,19 +39,22 @@ const AuthPage = () => {
   const { kakaoAuthData, setKakaoAuthData } = useContext(KakaoAuthData) //로그인 하여 가져온 카카오 계정정보
   
   const [ authCheckFlag, setAuthCheckFlag ] = useState(false); //카카오 로그인시도했음
-  const [ tryGetKakao, setKakaoFlag] = useState(false); //카카오계정으로 회원 체크했다.
-
+  //const [ tryGetKakao, setKakaoFlag] = useState(false); //카카오계정으로 회원 체크했다.
+  const { tryGetKakao, setKakaoFlag } = useContext(TryGetKakao);
+  
   const GetUser = (kakao_id) => {
     //console.log(kakao_id); //kakaoAuthData와 같음
     fetch(domain + '/Login/User/kakao/' + kakao_id).then(res => res.json()).then(res => 
       {
         setUserData(res[0]);
         setKakaoFlag(true);
+        console.log(res[0]);
       });
 }
 
 //처음 진입 시 자동로그인.
 useEffect(() => {
+  //signOutWithKakao();
   autoLogin();
 }, [])
 
@@ -81,8 +84,8 @@ useEffect(() => {
   //버튼눌러서 직접 로그인
   const signInWithKakao = async () => {
     const token = await login();
-    setLogInResult(token);
-
+    console.log(token);
+    //setLogInResult(token);
     if (token != null) {
       const profile = await getKakaoProfile();
 
@@ -98,12 +101,12 @@ useEffect(() => {
 
     setUserData(null);
     setKakaoAuthData(null);
-    authCheckFlag(true);
+    authCheckFlag(false);
   };
 
   return (
     <>
-      {userData == null && <Screen>
+      {tryGetKakao == false && userData == null && <Screen>
         {authCheckFlag == false && <Image source={require(`~/Assets/Images/mainpray.jpg`)} />}
         {authCheckFlag && kakaoAuthData == null && <KaKaoBtn onPress={
           () => {

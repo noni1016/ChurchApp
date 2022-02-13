@@ -10,6 +10,7 @@ import Styled from 'styled-components/native';
 import AddBtn from '~/Components/AddBtn'
 import { UserData, KakaoAuthData, UserContextProvider } from '~/Context/User';
 import { DomainContext } from '~/Context/Domain';
+import Main from '~/Screen/02_Main/Main';
 
 const Input = Styled.TextInput`
     width: 50%;
@@ -55,7 +56,7 @@ const JoinPage = () => {
 
     const JoinUser = () => {
         console.log(kakaoAuthData);
-        let sendCommentUserData = { name: nickName, photo: kakaoAuthData.profileImageUrl, church: churchName, age: 10, level: 99, role: 0, id_domain: kakaoAuthData.id };
+        let sendCommentUserData = { name: nickName == '' ? kakaoAuthData.nickname : nickName, photo: kakaoAuthData.profileImageUrl, church: churchName, age: 10, level: 99, role: 0, id_domain: kakaoAuthData.id };
         console.log(sendCommentUserData);
         fetch(domain + '/Login/User/kakao', {
             method: 'POST',
@@ -67,11 +68,13 @@ const JoinPage = () => {
         }).then(res => res.json()).then(res => {
             console.log(res)
             //로그인
+            setUserData(res);
         });
     }
 
     return (
-        <View>
+        <>
+        { userData == null && kakaoAuthData != null && <View>
             <Input
                 autoFocus={false}
                 autoCapitalize="none"
@@ -101,7 +104,11 @@ const JoinPage = () => {
             }}>
                 <Text>회원가입</Text>
             </JoinBtn>
-        </View>
+        </View>}
+        { userData != null && <Main/> }
+        </>
+        
+        
     )
 };
 
