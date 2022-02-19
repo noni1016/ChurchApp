@@ -66,8 +66,10 @@ const JoinPage = () => {
                 'Content-Type': 'application/json'
             }
         }).then(res => res.json()).then(res => {
-            console.log(res)
-            //로그인
+            console.log("[JOINUSER]");
+            console.log(res);
+            console.log("[=========]");
+            //로그인 
             setUserData(res);
         });
     }

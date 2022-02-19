@@ -48,7 +48,10 @@ const AuthPage = () => {
       {
         setUserData(res[0]);
         setKakaoFlag(true);
+        
+        console.log("[AutoLogin]");
         console.log(res[0]);
+        console.log("[=========]");
       });
 }
 
@@ -88,7 +91,6 @@ useEffect(() => {
     //setLogInResult(token);
     if (token != null) {
       const profile = await getKakaoProfile();
-
       setKakaoAuthData(profile);
       GetUser(profile.id);
       setAuthCheckFlag(true);
