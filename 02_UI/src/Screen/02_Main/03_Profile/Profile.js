@@ -12,28 +12,22 @@ import {
   unlink,
 } from '@react-native-seoul/kakao-login';
 
-const Screen = Styled.View`
-    flex-direction: column;
-    flex: 1;
-    align-items : center;
-    justify-content: center;
-`;
-
-const Body = Styled.TouchableOpacity`
-
-`;
-
-const Body2 = Styled.TouchableOpacity`
-height: 100px;
-width: 200px;
-background-color: #0000FF;
-`
-
-const Body3 = Styled.TouchableOpacity`
+const ChangePhoto = Styled.TouchableOpacity`
 height: 100px;
 width: 100px;
-background-color: #FF0000;
+background-color: transparent;
+align-items : center;
+margin: 0px 0px 0px 25px; //상 우 하 좌
 `
+
+const Button = Styled.TouchableOpacity`
+height: 25px;
+width: 70px;
+background-color: #FF0000;
+align-items : center;
+margin: 0px 0px 0px 25px; //상 우 하 좌
+`
+
 //로그아웃 로직 빼고 지울거임
 const Profile = () => {
   const { userData, setUserData } = useContext(UserData);
@@ -53,25 +47,20 @@ const Profile = () => {
 
   return (
     <>
-      {userData != null && <Screen>
-        <Body onPress={() => {
-          // if (isLogin) {
-          //   console.log("already log in");
-          // }
-          // else {
-          //   signInWithKakao();
-          // }
-        }}>
-          <Image source={require(`~/Assets/Images/kakao_login_medium_narrow.png`)} />
-        </Body>
+      {userData != null && <View>
+        <Text>{userData.name}</Text>
+        <Text>{userData.church}</Text>
         
-        <Text>{userData.id}</Text>
-        
-        <Body3 onPress={() => signOutWithKakao()}>
-          
-        </Body3>
-      </Screen>}
-      {userData == null && kakaoAuthData == null  && tryGetKakao == false && <Auth/>}
+        <ChangePhoto onPress={() => console.log(userData.photo)}>
+           <Image style={{ width: '100%', height: '100%', resizeMode: 'contain' }} source={{ uri: userData.photo }} />
+        </ChangePhoto>
+
+        <Button onPress={() => signOutWithKakao()}>
+          <Text>Logout</Text>
+        </Button>
+      </View>}
+
+      {userData == null && kakaoAuthData == null && tryGetKakao == false && <Auth />}
     </>
   );
 };
