@@ -65,6 +65,7 @@ const GroupPageHome = ({data, groupMem, isMember, setMember}) => {
         if (isMember) {
             setButton((<JoinBtn onPress={()=>{
                 alert('탈퇴하기');
+                fetch(`${domain}/Club/${data.id}/Exit/3`).then(setMember(false));
                 // fetch(domain + '/Churmmunity/ExitGroup', {
                 //     method: 'POST',
                 //     body: JSON.stringify(reqJoinExitData),
@@ -73,14 +74,14 @@ const GroupPageHome = ({data, groupMem, isMember, setMember}) => {
                 //         'Content-Type': 'application/json'
                 //     }
                 // }).then(res => console.log(res));
-                setMember(false);
                 }}>
                         <JoinBtnText>탈퇴하기</JoinBtnText>
                     </JoinBtn>));
         } else {
             setButton((<JoinBtn onPress={()=>{
                 alert('가입하기');
-                fetch(`${domain}/Club/${data.id}/Join/3`).then(res => {setMember(true);});
+                fetch(`${domain}/Club/${data.id}/Join/3`).then(setMember(true));
+                // .then(res => {setMember(true);});
                 // fetch(domain + '/Churmmunity/JoinGroup', {
                 //     method: 'POST',
                 //     body: JSON.stringify(reqJoinExitData),

@@ -88,26 +88,11 @@ const ClubPage = ({route, navigation}) => {
         })
     }, [clubMember])
 
-    /* DB Groups.numMember 저장 요청--> 서버에서 해야함*/
-    const SetNumGroupMemberDB = () => {
-        let sendNumMemberData = {groupId: data.id, numMember: clubMember.length};
-        console.log('SetNumGroupMemberDB Called!')
-        fetch(domain + '/Churmmunity/SetNumGroupMember', {
-            method: 'POST',
-            body: JSON.stringify(sendNumMemberData),
-            headers:{
-                Accept: 'application/json',
-                'Content-Type': 'application/json'
-            }
-        }).then(res => res.json()).then(res => console.log(res));
-    };
-
     /* 가입하기 누르면 현재 유저를 멤버로 설정해줌 */
     const setMember = (curUserIsMemOfThisGroup) => {
         console.log('SetMember Called!')
         setIsMember(curUserIsMemOfThisGroup);
-        GetGroupMember();
-        SetNumGroupMemberDB();
+        fetch(`${domain}/Club/${data.id}/Member`).then(res => res.json()).then(res => {setClubMember(res);});
     };
 
 
