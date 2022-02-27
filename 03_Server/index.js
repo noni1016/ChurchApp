@@ -34,3 +34,10 @@ app.get('/', (req, res) => {
 // app test 용 routes
 app.use('/Churmmunity', require('./routes_churmmunity/Churmmunity')); // /churmmunity/ 로 접근하는 url 요청 처리
 app.use('/Login', require('./routes_churmmunity/Login')); // /churmmunity/ 로 접근하는 url 요청 처리
+
+
+// Refactoring
+app.use('/Club', require('./routes/03_Churmmunity/Club')); // /churmmunity/ 로 접근하는 url 요청 처리
+// app.use('/Spot', require('./routes/03_Churmmunity/Spot')); // /churmmunity/ 로 접근하는 url 요청 처리
+// app.use('/Auth', require('./routes/01_Auth/Auth'));
+app.use('/User', require('./routes/04_User/User'));
