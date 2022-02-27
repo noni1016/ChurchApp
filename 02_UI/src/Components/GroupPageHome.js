@@ -47,7 +47,6 @@ const NumGroupMemCont = styled.View`
 
 
 const GroupPageHome = ({data, groupMem, isMember, setMember}) => {
-
     const domain = useContext(DomainContext);    
     const user = useContext(UserContext);
     var [numGroupMem, setNumGroupMem] = useState(0);
@@ -66,14 +65,14 @@ const GroupPageHome = ({data, groupMem, isMember, setMember}) => {
         if (isMember) {
             setButton((<JoinBtn onPress={()=>{
                 alert('탈퇴하기');
-                fetch(domain + '/Churmmunity/ExitGroup', {
-                    method: 'POST',
-                    body: JSON.stringify(reqJoinExitData),
-                    headers:{
-                        Accept: 'application/json',
-                        'Content-Type': 'application/json'
-                    }
-                }).then(res => console.log(res));
+                // fetch(domain + '/Churmmunity/ExitGroup', {
+                //     method: 'POST',
+                //     body: JSON.stringify(reqJoinExitData),
+                //     headers:{
+                //         Accept: 'application/json',
+                //         'Content-Type': 'application/json'
+                //     }
+                // }).then(res => console.log(res));
                 setMember(false);
                 }}>
                         <JoinBtnText>탈퇴하기</JoinBtnText>
@@ -81,16 +80,18 @@ const GroupPageHome = ({data, groupMem, isMember, setMember}) => {
         } else {
             setButton((<JoinBtn onPress={()=>{
                 alert('가입하기');
-                fetch(domain + '/Churmmunity/JoinGroup', {
-                    method: 'POST',
-                    body: JSON.stringify(reqJoinExitData),
-                    headers:{
-                        Accept: 'application/json',
-                        'Content-Type': 'application/json'
-                    }
-                }).then(res => {console.log(res);});
-                setMember(true);
-                }}>
+                fetch(`${domain}/Club/${data.id}/Join/3`).then(res => {setMember(true);});
+                // fetch(domain + '/Churmmunity/JoinGroup', {
+                //     method: 'POST',
+                //     body: JSON.stringify(reqJoinExitData),
+                //     headers:{
+                //         Accept: 'application/json',
+                //         'Content-Type': 'application/json'
+                //     }
+                // }).then(res => {console.log(res);});
+                // setMember(true);
+                // }}
+            }}>
                         <JoinBtnText>가입하기</JoinBtnText>
                     </JoinBtn>));
         }        

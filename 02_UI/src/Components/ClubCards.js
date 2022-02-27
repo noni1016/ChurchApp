@@ -64,7 +64,7 @@ const DataIndicator = Styled.View`
 
 const ClubCards = ({title, orgDatas, navigation}) => {
 
-    const [indicatorIdx, SetIndicatorIdx] = useState(0);
+    const [indicatorIdx, setIndicatorIdx] = useState(0);
     var datas = orgDatas.length > 8 ? orgDatas.slice(0,7) : orgDatas;
     const dataLength = datas.length;    
 
@@ -83,7 +83,7 @@ const ClubCards = ({title, orgDatas, navigation}) => {
                     showsHorizontalScrollIndicator={false}
                     scrollEnabled={dataLength > 1}
                     onScroll={(event) => {
-                        SetIndicatorIdx(
+                        setIndicatorIdx(
                             Math.round(event.nativeEvent.contentOffset.x / Dimensions.get('window').width)
                         );
                     }}>
