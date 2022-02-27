@@ -3,7 +3,7 @@ import { Text, Dimensions, ScrollView, Image, NativeSyntheticEvent, NativeScroll
 import styled from 'styled-components/native';
 import {DataContext} from '~/Context/Data';
 
-import GroupCard from '~/Components/GroupCard';
+import ClubCard from '~/Components/ClubCard';
 
 const MyGroupContainer = styled.View`
   flex-direction: column;
@@ -100,7 +100,7 @@ const RecGroupContainer = ({orgDatas, navigation}) => {
                     }}>
                         {datas.map((data, index) => (
                             <Body>
-                                <GroupCard data={data}></GroupCard>
+                                <ClubCard data={data}></ClubCard>
                             </Body>
                         ))}
                 </ScrollView>

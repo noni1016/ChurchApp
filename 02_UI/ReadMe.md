@@ -20,7 +20,17 @@
 ex) C:\Users\hinon\AppData\Local\Android\Sdk\emulator
 2. Emulator 실행
 * emulator -avd "AVD Name" \
-ex) emulator -avd Pixel_3a_API_30_x86
+ex) 
+```
+    emulator -avd Pixel_3a_API_30_x86
+```
+* 주로 쓰는 에뮬레이터 리스트
+    * Pixel 5 API 29
+* 설치된 가상 기기 이름 보는 명령어
+```
+    emulator -list-avds
+```
+
 3. Debugging 도 가능 --> https://www.youtube.com/watch?v=UE66n7HOIAg
 * 아래 내용 .vscode/launch.json 에 추가
 {

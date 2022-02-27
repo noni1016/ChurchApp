@@ -1,21 +1,17 @@
-import React, {useState, useEffect, useContext} from 'react';
-import { Text, Dimensions, ScrollView, Image, NativeSyntheticEvent, NativeScrollEvent } from 'react-native';
-import styled from 'styled-components/native';
-import {DataContext} from '~/Context/Data';
-
-import GroupCard from '~/Components/GroupCard';
-
-var initGroupData = { id: 0, name: `꺄아아아`, mainImg: `WinLockImages/a48b65589f2727feb93b12693ffeccb5d4aa1c0b6bbc1dff4d503ff28eba5a4c.jpg`, location: `수원시 영통구 매탄4동 10`, numMember: 10 };
+import React, {useState} from 'react';
+import { Dimensions, ScrollView} from 'react-native';
+import Styled from 'styled-components/native';
+import ClubCard from '~/Components/ClubCard';
 
 
-const MyGroupContainer = styled.View`
+const ClubCardBox = Styled.View`
   flex-direction: column;
   height: 350px;
   background-color: #FFFFFF;
   margin: 20px 0px 0px 0px; //상 우 하 좌
 `;
 
-const Header = styled.View`
+const Header = Styled.View`
     height: 15%;
     flex-direction: row;
     justify-content: space-between;
@@ -24,7 +20,7 @@ const Header = styled.View`
     /* background-color: #FF0000; */
 `;
 
-const Body = styled.TouchableOpacity`
+const Body = Styled.TouchableOpacity`
     height: 100%;
     flex: 1;
     flex-direction: column;
@@ -35,7 +31,7 @@ const Body = styled.TouchableOpacity`
 `;
 
 
-const ShowMore = styled.Text`
+const ShowMore = Styled.Text`
     flex: 1;
     color: black;
     font-size: 28px;
@@ -43,14 +39,14 @@ const ShowMore = styled.Text`
     text-align: right;
 `;
 
-const Title = styled.Text`
+const Title = Styled.Text`
     flex: 9;
     color: black;
     font-size: 25px;
     font-family: 'DoHyeon-Regular';
 `;
 
-const InidicatorContainer = styled.View`
+const InidicatorBox = Styled.View`
     height: 5%;
     flex-direction: row;
     justify-content: center;
@@ -58,7 +54,7 @@ const InidicatorContainer = styled.View`
     /* background-color: #FF0000; */
 `;
 
-const DataIndicator = styled.View`
+const DataIndicator = Styled.View`
   width: 6px;
   height: 6px;
   border-radius: 4px;
@@ -66,76 +62,55 @@ const DataIndicator = styled.View`
 `;
 
 
-const GroupCardContainer = ({title, orgDatas, navigation}) => {
+const ClubCards = ({title, orgDatas, navigation}) => {
 
-    // const DataContext = useContext(DataContext);
-    const {showMoreMode, setShowMoreMode} = useContext(DataContext);
-
-    // console.log(data[0]);
-    const [indicatorIndex, setIndicatorIndex] = useState(0);
+    const [indicatorIdx, SetIndicatorIdx] = useState(0);
     var datas = orgDatas.length > 8 ? orgDatas.slice(0,7) : orgDatas;
-    const dataLength = datas.length;
-
-    // useEffect(() => {
-    //     console.log(`Data Length : ${datas.length}`);
-    // }, []);
-    
+    const dataLength = datas.length;    
 
     return (
-        <MyGroupContainer>
+        <ClubCardBox>
             <Header>
                 <Title>{title}</Title>
                 <ShowMore
                     onPress={() => {
-                        setShowMoreMode(0);
-                        navigation.navigate('ShowMore');
+                        navigation.navigate('ShowMoreClubs', {clubs: datas, navigation: navigation});
                     }}>></ShowMore>
             </Header>
-            {/* <Body> */}
                 <ScrollView 
                     horizontal={true}
                     pagingEnabled={true}
                     showsHorizontalScrollIndicator={false}
                     scrollEnabled={dataLength > 1}
                     onScroll={(event) => {
-                        setIndicatorIndex(
+                        SetIndicatorIdx(
                             Math.round(event.nativeEvent.contentOffset.x / Dimensions.get('window').width)
                         );
                     }}>
                         {datas.map((data, index) => (
                             <Body activeOpacity={1} key={index} onPress = {() => {
-                                // alert(data.name);
-                                navigation.navigate('GroupPage', {groupData : data, navigation: navigation});
-                                }}>
-                                <GroupCard 
-                                    data={data}                           
-                                ></GroupCard>
+                                navigation.navigate('ClubPage', {club : data, navigation: navigation});}}>
+                                <ClubCard club={data} />
                             </Body>
                         ))}
                 </ScrollView>
-                <InidicatorContainer>
+                <InidicatorBox>
                     {dataLength > 1 &&
                         datas.map((datas, index) => (
                             <DataIndicator
                                 key={`data-${index}`}
                                 style={{
                                     backgroundColor:
-                                        indicatorIndex >= index && indicatorIndex < index + 1
+                                        indicatorIdx >= index && indicatorIdx < index + 1
                                             ? '#3769EF'
                                             : '#D3D3D3',
                                 }}
                             />
                         ))}
-                </InidicatorContainer>
-                {/* <GroupCard data={data[0]}></GroupCard> */}
-            {/* </Body> */}
-
-
-
-        </MyGroupContainer>
-        
+                </InidicatorBox>
+        </ClubCardBox>        
     );
 
 }
 
-export default GroupCardContainer;
+export default ClubCards;

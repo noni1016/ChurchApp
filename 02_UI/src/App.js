@@ -1,19 +1,19 @@
 import React, {useState, useEffect, useContext} from 'react';
-import { Text } from 'react-native';
-import Main from './Screen/02_Main/Main';
-import {UserAuthChecker, UserContextProvider} from '~/Context/User';
-import {DomainContext, DomainContextProvider} from '~/Context/Domain';
+import { Image, Text } from 'react-native';
+import AuthPage from './Screen/01_Auth/Auth'
+// import {KakaoAuthData, UserData, UserContextProvider} from '~/Context/User';
+import { UserContextProvider} from '~/Context/User';
+import {DomainContextProvider} from '~/Context/Domain';
+import Main from '~/Screen/02_Main/Main';
 
 const App = () => {
-
     return (
       <DomainContextProvider>
         <UserContextProvider>
-          <Main />
+        {/* <Image source={require(`~/Assets/Images/mainpray.jpg`)} /> */}
+          <AuthPage/>
         </UserContextProvider>
-      </DomainContextProvider>
-
-        // <Text>Hello</Text>
+     </DomainContextProvider>
   );
 };
 export default App;
