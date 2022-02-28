@@ -4,7 +4,6 @@ import {DomainContext} from '~/Context/Domain';
 import { UserContext } from '~/Context/User';
 import Styled from 'styled-components/native';
 import {launchImageLibrary} from 'react-native-image-picker';
-import { TextInput } from 'react-native-gesture-handler';
 
 const Container = Styled.View`
     flex-direction: column;
@@ -116,15 +115,16 @@ const SendBtn = Styled.TouchableOpacity`
 const EditFeed = ({route, navigation}) => {
     const domain = useContext(DomainContext);
     
-    const [edit, SetEdit] = useState(false); // false : AddMode, true: EditMode
-    const [groupData, SetGroupData] = useState();
+    const edit = route.params.edit;
+    const club = route.params.club;
     const user = useContext(UserContext);
     const [userProfileImgUrl, SetUserProfileImgUrl] = useState(null);
-    const [textInput, SetTextInput] = useState('');
-    const [location, SetLocation] = useState('');
-    const [imgSrc, SetImgSrc] = useState(undefined);
-    const [putImgSuccessFlag, SetPutImgSuccess] = useState(false);
+    const [textInput, setTextInput] = useState('');
+    const [location, setLocation] = useState('');
+    const [imgSrc, setImgSrc] = useState(undefined);
+    const [putImgSuccessFlag, setPutImgSuccess] = useState(false);
 
+    /* react-native-image-picker 라이브러리 사용 옵션 */
     const options = {
         title: 'Load Photo',
         customButton: [
@@ -137,19 +137,14 @@ const EditFeed = ({route, navigation}) => {
         }
     }
 
+    /* 최초 마운팅시 Add Mode 이면 공백으로 두고, Edit Mode 이면 내용 채워줌 */
     useEffect(() => {
-        if (route.params.groupData)
+        if (edit && route.params.feedData) 
         {
-            SetGroupData(route.params.groupData);
-        }
-        else if (route.params.feedData)
-        {
-            fetch(domain + `/Churmmunity/Group/${route.params.feedData.groupId}`).then(res => res.json()).then(res => {SetGroupData(res[0]);});
-            SetTextInput(route.params.feedData.contentText);
-            SetLocation(route.params.feedData.location);
-            SetImgSrc({uri: domain + route.params.feedData.contentImg});
+            setTextInput(route.params.feedData.contentText);
+            setLocation(route.params.feedData.location);
+            setImgSrc({uri: domain + route.params.feedData.contentImg});
             navigation.setOptions({title: '게시글 수정'});
-            SetEdit(true);
         }
     }, [])
 
@@ -200,15 +195,15 @@ const EditFeed = ({route, navigation}) => {
         }).then(res => res.json()).then(res => {
             console.log(res);
             if(res) {
-                SetPutImgSuccess(true);
-            } else {SetPutImgSuccess(false)}
+                setPutImgSuccess(true);
+            } else {setPutImgSuccess(false)}
         });
     }
 
     useEffect(() => {        
         if (putImgSuccessFlag == true) {
             UpdateFeed();
-            SetPutImgSuccess(false);
+            setPutImgSuccess(false);
         }
     }, [putImgSuccessFlag]);
 
@@ -239,7 +234,7 @@ const EditFeed = ({route, navigation}) => {
 
         fetch(fetchReq, {
             method: fetchMethod,
-            body : JSON.stringify({groupId: groupData.id, authorId: user.id, location: location, time: sendDate, contentText: textInput}),
+            body : JSON.stringify({groupId: club.id, authorId: user.id, location: location, time: sendDate, contentText: textInput}),
             headers: {'Content-Type': 'application/json'}
         }).then(res => res.json()).then(
             res => {alert('SUCCESS: ', JSON.stringify(res)); 
@@ -256,7 +251,7 @@ const EditFeed = ({route, navigation}) => {
                 console.log('ImageSrc: ' + JSON.stringify(response.assets));
                 console.log('ImageSrc: ' + response.assets[0].uri);
                 // SetImageSource("file:///data/user/0/com.churchapp/cache/rn_image_picker_lib_temp_4af794bf-b436-4f03-abfe-6b53e73e9f21.jpg");
-                SetImgSrc(response.assets[0]);
+                setImgSrc(response.assets[0]);
             }
         });
     }
@@ -265,7 +260,7 @@ const EditFeed = ({route, navigation}) => {
     return (
         <ScrollView>
         <Container>
-            {groupData && <GroupNameBox><GroupTitle>{groupData.name}</GroupTitle></GroupNameBox>}
+            {route.params.club && <GroupNameBox><GroupTitle>{route.params.club.name}</GroupTitle></GroupNameBox>}
             {imgSrc == undefined && <PlusBtnBox onPress={() => {ShowCameraRoll();}}>
                 <PlusText>+</PlusText>
                 <Text>버튼을 눌러</Text>
@@ -286,7 +281,7 @@ const EditFeed = ({route, navigation}) => {
                         autoCorrect={false}
                         placeholder="내용을 입력해주세요"
                         returnKeyType="done"
-                        onChangeText={SetTextInput}
+                        onChangeText={setTextInput}
                         value={textInput}
                         // onSubmitEditing={({nativeEvent}) => {
                         //     AddInput(nativeEvent.text);
@@ -302,7 +297,7 @@ const EditFeed = ({route, navigation}) => {
                         autoCorrect={false}
                         placeholder=""
                         returnKeyType="done"
-                        onChangeText={SetLocation}
+                        onChangeText={setLocation}
                         value={location}
                     />
             </LocationBox>

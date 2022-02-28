@@ -4,7 +4,7 @@ import Styled from 'styled-components/native';
 import {DomainContext} from '~/Context/Domain';
 import {UserContext} from '~/Context/User';
 import Tab from '~/Components/Tab';
-import GroupPageHome from '~/Components/GroupPageHome';
+import ClubPageHome from '~/Components/GroupPageHome';
 import Feeds from '~/Components/Feeds';
 import AddBtn from '~/Components/AddBtn';
 import ImageSize from 'react-native-image-size';
@@ -118,12 +118,12 @@ const ClubPage = ({route, navigation}) => {
                         />
                     ))}
                 </TabContainer>
-                {tabIdx == 0 && <GroupPageHome data={data} groupMem={clubMember} isMember={isMember} setMember={(value)=>{setMember(value)}}/>}
-                {tabIdx == 1 && <Feeds groupId={data.id} feedAdded={refresh} navigation={navigation}/>}
+                {tabIdx == 0 && <ClubPageHome data={data} clubMem={clubMember} isMember={isMember} setMember={(value)=>{setMember(value)}}/>}
+                {tabIdx == 1 && <Feeds club={data} feedAdded={refresh} navigation={navigation}/>}
                 {tabIdx == 2 && <Text>사진</Text>}
                 <Text>{user.name}</Text>
             </ScrollView>
-            {tabIdx == 1 && <AddBtn OnPressMethod={() => {navigation.navigate('AddFeed', {groupData: data, navigation: navigation});}}/>}
+            {tabIdx == 1 && <AddBtn OnPressMethod={() => {navigation.navigate('EditFeed', {edit: false, clubData: data, navigation: navigation});}}/>}
         </View>
     )
 };

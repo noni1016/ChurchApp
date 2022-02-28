@@ -11,16 +11,10 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import ClubCards from '~/Components/ClubCards';
 import ClubCardsColView from '~/Screen/02_Main/02_Churmmunity/Group/ClubCardsColView';
 import ClubPage from '~/Screen/02_Main/02_Churmmunity/Group/ClubPage'
-// import LightCardContainer from '~/Components/LightCardContainer';
-// import RecGroupContainer from '~/Components/RecGroupContainer';
-// import RecLightContainer from '~/Components/RecLightContainer';
-// import Default from '~/Screen/99_Etc/Default'
-// import Comments from './Group/Comments';
-// import EditFeed from './Group/AddFeed';
+import Comments from './Group/Comments';
+import EditFeed from './Group/EditFeed';
 
 import {DomainContext, DomainContextProvider} from '~/Context/Domain';
-// import {DataContext, DataContextProvider} from '~/Context/Data';
-// import {UserContext} from '~/Context/User';
 
 
 const Stack = createStackNavigator();
@@ -109,7 +103,7 @@ const NoniNavi = () => {
                     title: '소모임 상세보기'
                 }}
             />
-            {/*<Stack.Screen
+            <Stack.Screen
                 name="Comments"
                 component={Comments}
                 options={{
@@ -119,7 +113,7 @@ const NoniNavi = () => {
                 }}
             />
             <Stack.Screen
-                name="AddFeed"
+                name="EditFeed"
                 component={EditFeed}
                 options={{
                     headerShown: true,
@@ -129,7 +123,7 @@ const NoniNavi = () => {
                     //         <Icon name="send" size={26} onPress={() => alert('This is an send button!')} />
                     // )
                 }}
-             /> */}
+             />
         </Stack.Navigator>
     )
 }

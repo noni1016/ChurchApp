@@ -83,7 +83,7 @@ const CommentInputContainer = Styled.View`
 
 
 
-const Feed = ({feed, onFeedChange, navigation}) => {
+const Feed = ({club, feed, onFeedChange, navigation}) => {
 
     const domain = useContext(DomainContext);
     const user = useContext(UserContext);
@@ -98,10 +98,9 @@ const Feed = ({feed, onFeedChange, navigation}) => {
     let [imgPathInServer, setImgPathInServer] = useState();
     const actionSheetRef = createRef();
 
-    let actionSheet;
-
+    /* 댓글 불러오는 함수 */
     const GetFeedComments = () => {
-        let sendFeedData = {groupId: feed.groupId, feedId: feed.id};
+        let sendFeedData = {groupId: feed.clubId, feedId: feed.id};
         fetch(domain + '/Churmmunity/GetFeedComments', {
             method: 'POST',
             body: JSON.stringify(sendFeedData),
@@ -110,21 +109,23 @@ const Feed = ({feed, onFeedChange, navigation}) => {
                 'Content-Type': 'application/json'
             }
         }).then(res => res.json()).then(res => {setFeedComments(res);});
+
         // console.log('FeedComment!!!!', feedComments.length);
     }
 
+    /* 초기 마운팅시 Feed 댓글들을 받아옴 */
     useEffect(() => {
-        // console.log(feed);
-        let sendUserData = {userId: feed.authorId};
-        fetch(domain + '/Churmmunity/GetUserData', {
-            method: 'POST',
-            body: JSON.stringify(sendUserData),
-            headers:{
-                Accept: 'application/json',
-                'Content-Type': 'application/json'
-            }
-        }).then(res => res.json()).then(res => setFeedAuthorData(res[0]));
-        GetFeedComments(); 
+        // let sendUserData = {userId: feed.authorId};
+        // fetch(domain + '/Churmmunity/GetUserData', {
+        //     method: 'POST',
+        //     body: JSON.stringify(sendUserData),
+        //     headers:{
+        //         Accept: 'application/json',
+        //         'Content-Type': 'application/json'
+        //     }
+        // }).then(res => res.json()).then(res => setFeedAuthorData(res[0]));
+        // GetFeedComments(); 
+        fetch(`${domain}/Club/${feed.Id}/Comments`).then(res => res.json()).then(res => {setFeedComments(res);});  
     }, [])
     
     useEffect(() => {
@@ -186,7 +187,7 @@ const Feed = ({feed, onFeedChange, navigation}) => {
     }, [feedComments])
 
     const AddInput = (text) => {
-        let sendCommentData = {groupId: feed.groupId, feedId: feed.id, authorId: user.id, text: text};
+        let sendCommentData = {groupId: feed.clubId, feedId: feed.id, authorId: user.id, text: text};
         fetch(domain + '/Churmmunity/FeedComments/', {
             method: 'POST',
             body: JSON.stringify(sendCommentData),            
@@ -258,7 +259,7 @@ const Feed = ({feed, onFeedChange, navigation}) => {
 
             <ActionSheet ref={actionSheetRef}>
                 <View>
-                    <ActionSheetBtn OnPressMethod={() => {navigation.navigate('AddFeed', {feedData: feed, navigation: navigation});}}>Edit</ActionSheetBtn>
+                    <ActionSheetBtn OnPressMethod={() => {navigation.navigate('EditFeed', {club: club, feed: feed, navigation: navigation});}}>Edit</ActionSheetBtn>
                     <ActionSheetBtn OnPressMethod={() => {
                         console.log(`${domain}/Churmmunity/Feed/${feed.id}/${imgPathInServer}`);
                         fetch(`${domain}/Churmmunity/Feed/${feed.id}/${imgPathInServer}`, {
