@@ -16,7 +16,8 @@ const Feeds = ({club, feedAdded, navigation}) => {
 
     /* 그룹의 Feed 들을 불러옴 */
     useEffect(() => {
-        fetch(`${domain}/Club/${club.Id}/Feeds`).then(res => res.json()).then(res => {setClubFeeds(res);});   
+        console.log(`${domain}/Club/${club.id}/Feeds`);
+        fetch(`${domain}/Club/${club.id}/Feeds`).then(res => res.json()).then(res => {setClubFeeds(res);});   
     }, [club, reload, feedAdded])
 
 

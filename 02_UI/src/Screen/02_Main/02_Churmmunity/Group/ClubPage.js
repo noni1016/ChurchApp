@@ -38,7 +38,7 @@ const ClubPage = ({route, navigation}) => {
     var [resizedHeight, setResizedHeight] = useState(100);
     var [url, setUrl] = useState('');
     var [refresh, setRefresh] = useState(false);    
-    var [clubMember, setClubMember] = useState([]);
+    var [members, setMembers] = useState([]);
     var [isMember, setIsMember] = useState(false);
     var tabs = ['홈', '게시글', '사진'];
     
@@ -76,23 +76,23 @@ const ClubPage = ({route, navigation}) => {
 
     /* 멤버 정보 불러오기 */
     useEffect(() => {
-        fetch(`${domain}/Club/${data.id}/Member`).then(res => res.json()).then(res => {setClubMember(res);});
+        fetch(`${domain}/Club/${data.id}/Member`).then(res => res.json()).then(res => {setMembers(res);});
     }, [data])
 
     /* 멤버 정보 불러왓으면 현재 유저가 그룹 멤버인지 확인 */
     useEffect(() => {
-        clubMember.map((member, index) => {
+        members.map((member, index) => {
             if (member.id === user.id) {
                 setIsMember(true);
             }
         })
-    }, [clubMember])
+    }, [members])
 
     /* 가입하기 누르면 현재 유저를 멤버로 설정해줌 */
     const setMember = (curUserIsMemOfThisGroup) => {
         console.log('SetMember Called!')
         setIsMember(curUserIsMemOfThisGroup);
-        fetch(`${domain}/Club/${data.id}/Member`).then(res => res.json()).then(res => {setClubMember(res);});
+        fetch(`${domain}/Club/${data.id}/Member`).then(res => res.json()).then(res => {setMembers(res);});
     };
 
 
@@ -118,12 +118,12 @@ const ClubPage = ({route, navigation}) => {
                         />
                     ))}
                 </TabContainer>
-                {tabIdx == 0 && <ClubPageHome data={data} clubMem={clubMember} isMember={isMember} setMember={(value)=>{setMember(value)}}/>}
+                {tabIdx == 0 && <ClubPageHome data={data} members={members} isMember={isMember} setMember={(value)=>{setMember(value)}}/>}
                 {tabIdx == 1 && <Feeds club={data} feedAdded={refresh} navigation={navigation}/>}
                 {tabIdx == 2 && <Text>사진</Text>}
                 <Text>{user.name}</Text>
             </ScrollView>
-            {tabIdx == 1 && <AddBtn OnPressMethod={() => {navigation.navigate('EditFeed', {edit: false, clubData: data, navigation: navigation});}}/>}
+            {tabIdx == 1 && <AddBtn OnPressMethod={() => {navigation.navigate('EditFeed', {edit: false, club: data, navigation: navigation});}}/>}
         </View>
     )
 };

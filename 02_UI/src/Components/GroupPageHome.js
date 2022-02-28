@@ -46,18 +46,18 @@ const NumGroupMemCont = Styled.View`
 `;
 
 
-const ClubPageHome = ({data, clubMem, isMember, setMember}) => {
+const ClubPageHome = ({data, members, isMember, setMember}) => {
     const domain = useContext(DomainContext);    
     const user = useContext(UserContext);
-    var [numGroupMem, setNumGroupMem] = useState(0);
+    var [numClubMem, setNumClubMem] = useState(0);
 
     var [button, setButton] = useState((<JoinBtn onPress={()=>{alert('가입하기')}}>
                     <JoinBtnText>가입하기</JoinBtnText>
                 </JoinBtn>));
 
     useEffect(() => {
-        setNumGroupMem(groupMem.length);
-    }, [groupMem])
+        setNumClubMem(members.length);
+    }, [members])
 
     useEffect(() => {
         console.log('GroupDetailHome is Member: ', isMember);
@@ -81,9 +81,9 @@ const ClubPageHome = ({data, clubMem, isMember, setMember}) => {
             <Desc>{data.description}</Desc>
             {button}
             <NumGroupMemCont>
-                <Text fontSize={18}>멤버 {numGroupMem} 명</Text>
+                <Text fontSize={18}>멤버 {numClubMem} 명</Text>
             </NumGroupMemCont>
-            {groupMem.map((member, index) => (<GroupMemProfile member={member} />))}
+            {members.map((member, index) => (<GroupMemProfile member={member} />))}
         </Container>
     )
 }

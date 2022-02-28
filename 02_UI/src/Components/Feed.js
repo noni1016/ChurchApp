@@ -4,9 +4,9 @@ import Styled from 'styled-components/native';
 import {DomainContext} from '~/Context/Domain';
 import { UserContext } from '~/Context/User';
 import Icon from 'react-native-vector-icons/Entypo';
-import Comments from '~/Screen/02_Main/02_Churmmunity/Group/Comments';
 import ActionSheet from 'react-native-actions-sheet';
 import ActionSheetBtn from './ActionSheetBtn';
+import ImageSize from 'react-native-image-size';
 
 const FeedContainer = Styled.View`
     flex-direction: column;
@@ -113,21 +113,13 @@ const Feed = ({club, feed, onFeedChange, navigation}) => {
         // console.log('FeedComment!!!!', feedComments.length);
     }
 
-    /* 초기 마운팅시 Feed 댓글들을 받아옴 */
+    /* 초기 마운팅시 Author 정보, Feed 댓글들을 받아옴 */
     useEffect(() => {
-        // let sendUserData = {userId: feed.authorId};
-        // fetch(domain + '/Churmmunity/GetUserData', {
-        //     method: 'POST',
-        //     body: JSON.stringify(sendUserData),
-        //     headers:{
-        //         Accept: 'application/json',
-        //         'Content-Type': 'application/json'
-        //     }
-        // }).then(res => res.json()).then(res => setFeedAuthorData(res[0]));
-        // GetFeedComments(); 
-        fetch(`${domain}/Club/${feed.Id}/Comments`).then(res => res.json()).then(res => {setFeedComments(res);});  
+        fetch(`${domain}/User/${feed.authorId}`).then(res => res.json()).then(res => {setFeedAuthorData(res[0])});
+        fetch(`${domain}/Club/${club.id}/Feed/${feed.Id}/Comments`).then(res => res.json()).then(res => {setFeedComments(res);});  
     }, [])
     
+    /* Author 의 프로필 이미지를 띄우기 위해 Url Set */
     useEffect(() => {
         if (feedAuthorData)
         {
@@ -135,59 +127,50 @@ const Feed = ({club, feed, onFeedChange, navigation}) => {
         }
     }, [feedAuthorData]);
 
+    /* 이미지가 있는 Content 를 지울 때 서버에 지울 이미지 경로를 전송하기 위해 Path 설정 --> Transaction 처리 필요*/
+    // useEffect(() => {
+    //     if (feed.contentImg) {
+    //         setFeedImgUrl(`${domain}/${feed.contentImg}`);
+    //         if (feed.contentImg)
+    //         {
+    //             let temp = feed.contentImg.split('/');
+    //             setImgPathInServer(temp[temp.length - 1]);
+    //         }
+    //         else
+    //         {
+    //             setImgPathInServer(-1);
+    //         }
+    //     }
+    // }, [feed])
 
-    useEffect(() => {
-        if (feed.contentImg) {
-            setFeedImgUrl(`${domain}/${feed.contentImg}`);
-            if (feed.contentImg)
-            {
-                console.log('feed.contentImg: ' + feed.contentImg)
-                let temp = feed.contentImg.split('/');
-                setImgPathInServer(temp[temp.length - 1]);
-            }
-            else
-            {
-                setImgPathInServer(-1);
-            }
-        }
-    }, [feed])
-
+    /* Feed Image 사이즈를 화면 너비에 맞게 조정 */
     useEffect(() => {
         if (domain && feedImgUrl != '')
         {
-            console.log('feedImgUrl: ' + feedImgUrl)
-            Image.getSize(feedImgUrl, (width, height) => {
-                // console.log(width + ' - ' + height);
-                // setImgWidth(width);
-                // setImgHeight(height);
-                    setResizedWidth(Dimensions.get('window').width * 0.95);
-                    setResizedHeight((Dimensions.get('window').width * 0.95) / width * height);
-    
-                // console.log(resizedWidth + ' - ' + resizedHeight);
-    
-            }, () => console.log(`Fail to get ImgSize : ${feedImgUrl}`))
-            console.log('feedImgGetSize')
+            ImageSize.getSize(url).then((size) => {
+                let width = size.width;
+                let height = size.height;
+                if (width > Dimensions.get('window').width) {
+                    setResizedWidth(Dimensions.get('window').width);
+                    setResizedHeight(Dimensions.get('window').width / width * height);
+                } else {
+                    setResizedWidth(width);
+                    setResizedHeight(height);
+                }
+            }, () => { console.log(`fail to get imgSize : ${feedImgUrl}`) })
         }
     }, [feedImgUrl])
 
-
+    /* 첫번째 댓글을 보여줄 때 필요한 댓글 author 정보를 불러옴 */
     useEffect(() => {
         if (feedComments.length > 0) {
-            let sendCommentUserData = {userId: feedComments[0].authorId};
-            fetch(domain + '/Churmmunity/GetCommentAuthorData', {
-                method: 'POST',
-                body: JSON.stringify(sendCommentUserData),
-                headers:{
-                    Accept: 'application/json',
-                    'Content-Type': 'application/json'
-                }
-            }).then(res => res.json()).then(res => {setFirstCommentAuthor(res[0]);});
-            // console.log('FeedComment!!!!', feedComments.length);
+            fetch(`${domain}/User/${feedComments[0].authorId}`).then(res => res.json()).then(res => {setFirstCommentAuthor(res[0])});
         }
     }, [feedComments])
 
+    /* 댓글 등록 */
     const AddInput = (text) => {
-        let sendCommentData = {groupId: feed.clubId, feedId: feed.id, authorId: user.id, text: text};
+        let sendCommentData = {clubId: feed.clubId, feedId: feed.id, authorId: user.id, text: text};
         fetch(domain + '/Churmmunity/FeedComments/', {
             method: 'POST',
             body: JSON.stringify(sendCommentData),            
@@ -261,7 +244,6 @@ const Feed = ({club, feed, onFeedChange, navigation}) => {
                 <View>
                     <ActionSheetBtn OnPressMethod={() => {navigation.navigate('EditFeed', {club: club, feed: feed, navigation: navigation});}}>Edit</ActionSheetBtn>
                     <ActionSheetBtn OnPressMethod={() => {
-                        console.log(`${domain}/Churmmunity/Feed/${feed.id}/${imgPathInServer}`);
                         fetch(`${domain}/Churmmunity/Feed/${feed.id}/${imgPathInServer}`, {
                             method: 'DELETE',
                             headers: {
