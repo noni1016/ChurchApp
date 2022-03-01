@@ -50,7 +50,7 @@ const NoniMain = ({navigation}) => {
     const userData = useContext(UserData);
 
     useEffect(() => {
-        fetch(`${domain}/User/3/Club`).then(res => res.json()).then(res => {setMyClubs(res)});
+        fetch(`${domain}/User/${userData.id}/Club`).then(res => res.json()).then(res => {setMyClubs(res)});
         fetch(`${domain}/Club/Sort/Rand()/7`).then(res => res.json()).then(res => {setRecClubs(res)});
         
         // fetch(domain + '/Churmmunity/GetMyLightDatas').then(res => res.json()).then(res => {setMyLightDatas(res)});
