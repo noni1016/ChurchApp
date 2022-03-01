@@ -2,7 +2,7 @@ import React, {useContext, useEffect} from 'react';
 import { View, FlatList, Text, Dimensions, ScrollView, Image, NativeSyntheticEvent, NativeScrollEvent } from 'react-native';
 import Styled from 'styled-components/native';
 import AddBtn from '~/Components/AddBtn'
-import { UserContext, AuthContext, UserContextProvider } from '~/Context/User';
+import { AuthContext, UserContextProvider } from '~/Context/User';
 
 const data = {id: 5};
 

@@ -2,7 +2,7 @@ import React, {useState, useEffect, useContext} from 'react';
 import { Text, Dimensions} from 'react-native';
 import Styled from 'styled-components/native';
 import {DomainContext} from '~/Context/Domain';
-import {UserContext} from '~/Context/User';
+import {UserData} from '~/Context/User';
 import GroupMemProfile from './GroupMemProfile';
 
 const Container = Styled.View`
@@ -48,7 +48,7 @@ const NumGroupMemCont = Styled.View`
 
 const ClubPageHome = ({data, members, isMember, setMember}) => {
     const domain = useContext(DomainContext);    
-    const user = useContext(UserContext);
+    const userData = useContext(UserData);
     var [numClubMem, setNumClubMem] = useState(0);
 
     var [button, setButton] = useState((<JoinBtn onPress={()=>{alert('가입하기')}}>
@@ -63,13 +63,13 @@ const ClubPageHome = ({data, members, isMember, setMember}) => {
         console.log('GroupDetailHome is Member: ', isMember);
         if (isMember) {
             setButton((<JoinBtn onPress={()=>{
-                fetch(`${domain}/Club/${data.id}/Exit/${user.id}`).then(setMember(false));}}>
+                fetch(`${domain}/Club/${data.id}/Exit/${userData.id}`).then(setMember(false));}}>
                         <JoinBtnText>탈퇴하기</JoinBtnText>
                     </JoinBtn>));
         } else {
             setButton((<JoinBtn onPress={()=>{
                 alert('가입하기');
-                fetch(`${domain}/Club/${data.id}/Join/${user.id}`).then(setMember(true));}}>
+                fetch(`${domain}/Club/${data.id}/Join/${userData.id}`).then(setMember(true));}}>
                         <JoinBtnText>가입하기</JoinBtnText>
                     </JoinBtn>));
         }        

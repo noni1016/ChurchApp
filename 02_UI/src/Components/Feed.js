@@ -2,7 +2,7 @@ import React, {useState, useEffect, useContext, createRef} from 'react';
 import { View, FlatList, Text, Dimensions, ScrollView, Image, TouchableOpacity, Alert} from 'react-native';
 import Styled from 'styled-components/native';
 import {DomainContext} from '~/Context/Domain';
-import { UserContext } from '~/Context/User';
+import { UserData } from '~/Context/User';
 import Icon from 'react-native-vector-icons/Entypo';
 import ActionSheet from 'react-native-actions-sheet';
 import ActionSheetBtn from './ActionSheetBtn';
@@ -86,7 +86,7 @@ const CommentInputContainer = Styled.View`
 const Feed = ({club, feed, onFeedChange, navigation}) => {
 
     const domain = useContext(DomainContext);
-    const user = useContext(UserContext);
+    const userData = useContext(UserData);
     let [feedAuthorData, setFeedAuthorData] = useState();
     let [feedAuthorImgUrl, setFeedAuthorImgUrl] = useState();
     let [feedImgUrl, setFeedImgUrl] = useState();
@@ -170,7 +170,7 @@ const Feed = ({club, feed, onFeedChange, navigation}) => {
 
     /* 댓글 등록 */
     const AddInput = (text) => {
-        let sendCommentData = {clubId: feed.clubId, feedId: feed.id, authorId: user.id, text: text};
+        let sendCommentData = {clubId: feed.clubId, feedId: feed.id, authorId: userData.id, text: text};
         fetch(domain + '/Churmmunity/FeedComments/', {
             method: 'POST',
             body: JSON.stringify(sendCommentData),            
@@ -224,7 +224,7 @@ const Feed = ({club, feed, onFeedChange, navigation}) => {
                             <Text style={{fontWeight: 'bold'}}>더보기...</Text>
                     </TouchableOpacity>) : null}
                 <CommentInputContainer>
-                    <Image style={{ backgroundColor: 'transparent', width: 30, height: 30, marginRight: 10}} source={user.photo? {uri: `${domain}/${user.photo}` } : null} />
+                    <Image style={{ backgroundColor: 'transparent', width: 30, height: 30, marginRight: 10}} source={userData.photo? {uri: `${domain}/${userData.photo}` } : null} />
                     <Input 
                         autoFocus={false}
                         autoCapitalize="none"
