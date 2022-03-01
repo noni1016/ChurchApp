@@ -14,6 +14,7 @@ import ClubPage from '~/Screen/02_Main/02_Churmmunity/Group/ClubPage'
 import Comments from './Group/Comments';
 import EditFeed from './Group/EditFeed';
 
+import { UserData, UserContextProvider } from '~/Context/User';
 import {DomainContext, DomainContextProvider} from '~/Context/Domain';
 
 
@@ -45,10 +46,11 @@ const NoniMain = ({navigation}) => {
     var [recClubs, setRecClubs] = useState([initClub]);
     var [recLights, setRecLights] = useState([initMyLightData]);
     // var [loading, setLoading] = useState([]);
-    var data = {userId : 3}; // 로그인 기능 완성될때까지 임시 사용
+    //var data = {userId : 3}; // 로그인 기능 완성될때까지 임시 사용
+    const userData = useContext(UserData);
 
     useEffect(() => {
-        fetch(`${domain}/User/${data.userId}/Club`).then(res => res.json()).then(res => {setMyClubs(res)});
+        fetch(`${domain}/User/3/Club`).then(res => res.json()).then(res => {setMyClubs(res)});
         fetch(`${domain}/Club/Sort/Rand()/7`).then(res => res.json()).then(res => {setRecClubs(res)});
         
         // fetch(domain + '/Churmmunity/GetMyLightDatas').then(res => res.json()).then(res => {setMyLightDatas(res)});
@@ -70,10 +72,11 @@ const NoniMain = ({navigation}) => {
 };
 
 const NoniNavi = () => {
+    const { userData, setUserData } = useContext(UserData);
     return (
         <Stack.Navigator>
             <Stack.Screen
-                name="[Noni] Churmmunity"
+                name={userData.name + " / " + userData.id + " / " + userData.church}
                 component={NoniMain}
                 options={{
                     headerShown: true,
