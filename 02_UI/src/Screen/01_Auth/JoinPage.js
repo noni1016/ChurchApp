@@ -55,10 +55,10 @@ const JoinPage = () => {
     }
 
     const JoinUser = () => {
-        console.log(kakaoAuthData);
+        // console.log(kakaoAuthData);
         let sendCommentUserData = { name: nickName == '' ? kakaoAuthData.nickname : nickName, photo: kakaoAuthData.profileImageUrl, church: churchName, age: 10, level: 99, role: 0, id_domain: kakaoAuthData.id };
         console.log(sendCommentUserData);
-        fetch(domain + '/Login/User/kakao', {
+        fetch(domain + '/User/Domain/kakao', {
             method: 'POST',
             body: JSON.stringify(sendCommentUserData),
             headers: {
@@ -70,8 +70,8 @@ const JoinPage = () => {
             console.log(res);
             console.log("[=========]");
             //로그인 
-            setUserData(res);
-        });
+            setUserData(res[0]);
+        }).catch(e => {console.log("[JOINFAIL]"); console.log(e.json())});
     }
 
     return (

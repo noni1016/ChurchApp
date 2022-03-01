@@ -11,16 +11,11 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import ClubCards from '~/Components/ClubCards';
 import ClubCardsColView from '~/Screen/02_Main/02_Churmmunity/Group/ClubCardsColView';
 import ClubPage from '~/Screen/02_Main/02_Churmmunity/Group/ClubPage'
-// import LightCardContainer from '~/Components/LightCardContainer';
-// import RecGroupContainer from '~/Components/RecGroupContainer';
-// import RecLightContainer from '~/Components/RecLightContainer';
-// import Default from '~/Screen/99_Etc/Default'
-// import Comments from './Group/Comments';
-// import EditFeed from './Group/AddFeed';
+import Comments from './Group/Comments';
+import EditFeed from './Group/EditFeed';
 
+import { UserData, UserContextProvider } from '~/Context/User';
 import {DomainContext, DomainContextProvider} from '~/Context/Domain';
-// import {DataContext, DataContextProvider} from '~/Context/Data';
-// import {UserContext} from '~/Context/User';
 
 
 const Stack = createStackNavigator();
@@ -46,16 +41,18 @@ var initMyLightData = [{ id: 0, name: `로딩중`, mainImg: `WinLockImages/a48b6
 const NoniMain = ({navigation}) => {
 
     const domain = useContext(DomainContext);
-    var [myClubs, SetMyClubs] = useState([initClub]);
+    var [myClubs, setMyClubs] = useState([initClub]);
     var [myLightDatas, setMyLightDatas] = useState([initMyLightData]);
-    var [recGroups, setRecGroups] = useState([initClub]);
+    var [recClubs, setRecClubs] = useState([initClub]);
     var [recLights, setRecLights] = useState([initMyLightData]);
     // var [loading, setLoading] = useState([]);
-    var data = {userId : 3}; // 로그인 기능 완성될때까지 임시 사용
+    //var data = {userId : 3}; // 로그인 기능 완성될때까지 임시 사용
+    const userData = useContext(UserData);
 
     useEffect(() => {
-        fetch(`${domain}/User/${data.userId}/Club`).then(res => res.json()).then(res => {SetMyClubs(res)});
-        // fetch(domain + '/Churmmunity/GetMyGroupDatas').then(res => res.json()).then(res=> {setMyGroupDatas(res)});
+        fetch(`${domain}/User/${userData.id}/Club`).then(res => res.json()).then(res => {setMyClubs(res)});
+        fetch(`${domain}/Club/Sort/Rand()/7`).then(res => res.json()).then(res => {setRecClubs(res)});
+        
         // fetch(domain + '/Churmmunity/GetMyLightDatas').then(res => res.json()).then(res => {setMyLightDatas(res)});
         // fetch(domain + '/Churmmunity/GetRecGroupsOrderRand').then(res => res.json()).then(res => {setRecGroups(res)});
         // fetch(domain + '/Churmmunity/GetRecLightsOrderTime').then(res => res.json()).then(res => {setRecLights(res)});
@@ -64,8 +61,8 @@ const NoniMain = ({navigation}) => {
     return (
         <ScrollView>
             <ClubCards title={'내 모임'} orgDatas={myClubs} navigation={navigation}/>
+            <ClubCards title={'오늘의 모임'} orgDatas={recClubs} navigation={navigation}/>
             {/* <LightCardContainer datas={myLightDatas}/> */}
-            {/* <GroupCardContainer title={'오늘의 모임'} orgDatas={recGroups} navigation={navigation}/> */}
             {/* <RecLightContainer orgDatas={recLights}/> */}
             <EmptyArea />
         </ScrollView>
@@ -75,10 +72,11 @@ const NoniMain = ({navigation}) => {
 };
 
 const NoniNavi = () => {
+    const { userData, setUserData } = useContext(UserData);
     return (
         <Stack.Navigator>
             <Stack.Screen
-                name="[Noni] Churmmunity"
+                name={userData.name + " / " + userData.id + " / " + userData.church}
                 component={NoniMain}
                 options={{
                     headerShown: true,
@@ -108,7 +106,7 @@ const NoniNavi = () => {
                     title: '소모임 상세보기'
                 }}
             />
-            {/*<Stack.Screen
+            <Stack.Screen
                 name="Comments"
                 component={Comments}
                 options={{
@@ -118,7 +116,7 @@ const NoniNavi = () => {
                 }}
             />
             <Stack.Screen
-                name="AddFeed"
+                name="EditFeed"
                 component={EditFeed}
                 options={{
                     headerShown: true,
@@ -128,7 +126,7 @@ const NoniNavi = () => {
                     //         <Icon name="send" size={26} onPress={() => alert('This is an send button!')} />
                     // )
                 }}
-             /> */}
+             />
         </Stack.Navigator>
     )
 }

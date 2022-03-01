@@ -44,7 +44,7 @@ const AuthPage = () => {
   
   const GetUser = (kakao_id) => {
     //console.log(kakao_id); //kakaoAuthData와 같음
-    fetch(domain + '/Login/User/kakao/' + kakao_id).then(res => res.json()).then(res => 
+    fetch(domain + '/User/Domain/kakao/' + kakao_id).then(res => res.json()).then(res => 
       {
         setUserData(res[0]);
         setKakaoFlag(true);

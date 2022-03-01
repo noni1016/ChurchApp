@@ -20,19 +20,10 @@ const Data = Styled.View`
 
 const Comment = ({data, navigation}) => {
     const domain = useContext(DomainContext);
-    const [commentAuthor, SetCommentAuthor] = useState([]);
+    const [commentAuthor, setCommentAuthor] = useState([]);
 
     useEffect(() => {
-        let sendCommentUserData = {userId: data.authorId};
-        fetch(domain + '/Churmmunity/GetCommentAuthorData', {
-            method: 'POST',
-            body: JSON.stringify(sendCommentUserData),
-            headers:{
-                Accept: 'application/json',
-                'Content-Type': 'application/json'
-            }
-        }).then(res => res.json()).then(res => {SetCommentAuthor(res[0]);});
-        console.log(`time : ${data.time.slice(2, -3)}`);
+        fetch(`${domain}/User/${data.authorId}`).then(res => res.json()).then(res => {setCommentAuthor(res[0])});
     }, [data]);
 
     return (
@@ -45,8 +36,7 @@ const Comment = ({data, navigation}) => {
                 <Text style={{color: 'grey'}}>{data.time.slice(2, -3)}</Text>
             </Data>
         </Container>
-    );
-  
+    );  
 }
 
 export default Comment;

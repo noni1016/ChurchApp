@@ -2,11 +2,12 @@ import React, {useState, useEffect, useContext} from 'react';
 import { View, Text, Dimensions, ScrollView, Image } from 'react-native';
 import Styled from 'styled-components/native';
 import {DomainContext} from '~/Context/Domain';
-import {UserContext} from '~/Context/User';
+import {UserData} from '~/Context/User';
 import Tab from '~/Components/Tab';
-import GroupPageHome from '~/Components/GroupPageHome';
+import ClubPageHome from '~/Components/GroupPageHome';
 import Feeds from '~/Components/Feeds';
 import AddBtn from '~/Components/AddBtn';
+import ImageSize from 'react-native-image-size';
 
 const Header = Styled.View`
     flex-direction: row;
@@ -30,80 +31,68 @@ const TabContainer = Styled.SafeAreaView`
 
 const ClubPage = ({route, navigation}) => {
     const domain = useContext(DomainContext);
-    const user = useContext(UserContext);
+    const userData = useContext(UserData);
     const data = route.params.club;
-    const [tabIdx, SetTabIdx] = useState(0); 
-    var [resizedWidth, SetResizedWidth] = useState(100);
-    var [resizedHeight, SetResizedHeight] = useState(100);
-    var [url, SetUrl] = useState('');
-    var [refresh, SetRefresh] = useState(false);
+    const [tabIdx, setTabIdx] = useState(0); 
+    var [resizedWidth, setResizedWidth] = useState(100);
+    var [resizedHeight, setResizedHeight] = useState(100);
+    var [url, setUrl] = useState('');
+    var [refresh, setRefresh] = useState(false);    
+    var [members, setMembers] = useState([]);
+    var [isMember, setIsMember] = useState(false);
     var tabs = ['홈', '게시글', '사진'];
-
-    var [clubMember, SetClubMember] = useState([]);
-    var reqMemberData = {groupId: data.id};
-
-    var [isMember, SetIsMember] = useState(false);
     
+    /* 첫 마운팅때 Group 상단 사진 url 설정 */
     useEffect(() => {
-        SetUrl(`${domain}/${data.mainImg}`);
+        setUrl(`${domain}/${data.mainImg}`);
     }, []);    
 
+    /* Group 상단 사진의 사이즈를 화면 사이즈에 맞게 설정 */
     useEffect(() => {
-        Image.getSize(url, (width, height) => {
+        ImageSize.getSize(url).then((size) => {
+            let width = size.width;
+            let height = size.height;
             if (width > Dimensions.get('window').width) {
-                SetResizedWidth(Dimensions.get('window').width);
-                SetResizedHeight(Dimensions.get('window').width / width * height);
+                setResizedWidth(Dimensions.get('window').width);
+                setResizedHeight(Dimensions.get('window').width / width * height);
             } else {
-                SetResizedWidth(width);
-                SetResizedHeight(height);
+                setResizedWidth(width);
+                setResizedHeight(height);
             }
         }, () => { console.log(`fail to get imgSize : ${url}`) })
     }, [url])
 
+    /* 네비게이션으로 reload 된 경우 탭 유지해줌 */
     useEffect(() => {
-        if (route.params.tabIdx) SetTabIdx(route.params.tabIdx);
-        else SetTabIdx(0);
+        if (route.params.tabIdx) setTabIdx(route.params.tabIdx);
+        else setTabIdx(0);
     }, [route.params.tabIdx]);
 
     useEffect(() => {
         console.log('route.params.edit: ' + route.params.edit);
-        SetRefresh(!refresh);
+        setRefresh(!refresh);
         console.log('refresh: ' + refresh);
     }, [route.params.edit, tabIdx]);
 
+    /* 멤버 정보 불러오기 */
     useEffect(() => {
-        fetch(`${domain}/Club/${data.id}/Member`).then(res => res.json()).then(res => {SetClubMember(res);});
+        fetch(`${domain}/Club/${data.id}/Member`).then(res => res.json()).then(res => {setMembers(res);});
     }, [data])
 
+    /* 멤버 정보 불러왓으면 현재 유저가 그룹 멤버인지 확인 */
     useEffect(() => {
-        // 이 그룹 멤버인지 찾기
-        clubMember.map((member, index) => {
-            if (member.id === user.id) {
-                SetIsMember(true);
+        members.map((member, index) => {
+            if (member.id === userData.id) {
+                setIsMember(true);
             }
         })
-        console.log('isMember: ',isMember);
-    }, [clubMember])
+    }, [members])
 
-    //DB Groups.numMember 저장 요청
-    const SetNumGroupMemberDB = () => {
-        let sendNumMemberData = {groupId: data.id, numMember: clubMember.length};
-        console.log('SetNumGroupMemberDB Called!')
-        fetch(domain + '/Churmmunity/SetNumGroupMember', {
-            method: 'POST',
-            body: JSON.stringify(sendNumMemberData),
-            headers:{
-                Accept: 'application/json',
-                'Content-Type': 'application/json'
-            }
-        }).then(res => res.json()).then(res => console.log(res));
-    };
-
-    const SetMember = (curUserIsMemOfThisGroup) => {
+    /* 가입하기 누르면 현재 유저를 멤버로 설정해줌 */
+    const setMember = (curUserIsMemOfThisGroup) => {
         console.log('SetMember Called!')
-        SetIsMember(curUserIsMemOfThisGroup);
-        GetGroupMember();
-        SetNumGroupMemberDB();
+        setIsMember(curUserIsMemOfThisGroup);
+        fetch(`${domain}/Club/${data.id}/Member`).then(res => res.json()).then(res => {setMembers(res);});
     };
 
 
@@ -124,17 +113,17 @@ const ClubPage = ({route, navigation}) => {
                             selected={tabIdx === index}
                             label={label}
                             onPress={() => {
-                                SetTabIdx(index);
+                                setTabIdx(index);
                             }}
                         />
                     ))}
                 </TabContainer>
-                {tabIdx == 0 && <GroupPageHome data={data} groupMem={clubMember} isMember={isMember} setMember={(value)=>{SetMember(value)}}/>}
-                {tabIdx == 1 && <Feeds groupId={data.id} feedAdded={refresh} navigation={navigation}/>}
+                {tabIdx == 0 && <ClubPageHome data={data} members={members} isMember={isMember} setMember={(value)=>{setMember(value)}}/>}
+                {tabIdx == 1 && <Feeds club={data} feedAdded={refresh} navigation={navigation}/>}
                 {tabIdx == 2 && <Text>사진</Text>}
-                <Text>{user.name}</Text>
+                <Text>{userData.name}</Text>
             </ScrollView>
-            {tabIdx == 1 && <AddBtn OnPressMethod={() => {navigation.navigate('AddFeed', {groupData: data, navigation: navigation});}}/>}
+            {tabIdx == 1 && <AddBtn OnPressMethod={() => {navigation.navigate('EditFeed', {edit: false, club: data, navigation: navigation});}}/>}
         </View>
     )
 };

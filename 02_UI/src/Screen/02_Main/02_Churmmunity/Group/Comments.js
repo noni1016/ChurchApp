@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {View,Text, FlatList, SafeAreaView} from 'react-native';
-import Comment from '~/Components/Comment';
+import Comment from '~/Components/Comments';
 
 
 const RenderItem = ({item}) => {
@@ -14,11 +14,11 @@ const RenderItem = ({item}) => {
 
 const Comments = ({route, navigation}) => {
 
-  const [comments, SetComments] = useState([]);
+  const [comments, setComments] = useState([]);
   // const comments = route.params.comments;
 
   useEffect(() => {
-    SetComments(route.params.comments);
+    setComments(route.params.comments);
   })
 
     return (
