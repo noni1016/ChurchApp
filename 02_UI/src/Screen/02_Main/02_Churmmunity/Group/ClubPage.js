@@ -2,7 +2,7 @@ import React, {useState, useEffect, useContext} from 'react';
 import { View, Text, Dimensions, ScrollView, Image } from 'react-native';
 import Styled from 'styled-components/native';
 import {DomainContext} from '~/Context/Domain';
-import {UserContext} from '~/Context/User';
+import {UserData} from '~/Context/User';
 import Tab from '~/Components/Tab';
 import ClubPageHome from '~/Components/GroupPageHome';
 import Feeds from '~/Components/Feeds';
@@ -31,7 +31,7 @@ const TabContainer = Styled.SafeAreaView`
 
 const ClubPage = ({route, navigation}) => {
     const domain = useContext(DomainContext);
-    const user = useContext(UserContext);
+    const userData = useContext(UserData);
     const data = route.params.club;
     const [tabIdx, setTabIdx] = useState(0); 
     var [resizedWidth, setResizedWidth] = useState(100);
@@ -82,7 +82,7 @@ const ClubPage = ({route, navigation}) => {
     /* 멤버 정보 불러왓으면 현재 유저가 그룹 멤버인지 확인 */
     useEffect(() => {
         members.map((member, index) => {
-            if (member.id === user.id) {
+            if (member.id === userData.id) {
                 setIsMember(true);
             }
         })
@@ -121,7 +121,7 @@ const ClubPage = ({route, navigation}) => {
                 {tabIdx == 0 && <ClubPageHome data={data} members={members} isMember={isMember} setMember={(value)=>{setMember(value)}}/>}
                 {tabIdx == 1 && <Feeds club={data} feedAdded={refresh} navigation={navigation}/>}
                 {tabIdx == 2 && <Text>사진</Text>}
-                <Text>{user.name}</Text>
+                <Text>{userData.name}</Text>
             </ScrollView>
             {tabIdx == 1 && <AddBtn OnPressMethod={() => {navigation.navigate('EditFeed', {edit: false, club: data, navigation: navigation});}}/>}
         </View>

@@ -80,7 +80,7 @@ const ClubCard = ({club}) => {
     }, []);
 
     useEffect(() => {
-        if (club.mainImg) {
+        if (url) {
             ImageSize.getSize(url).then(size => {
                 if (size.width > Dimensions.get('window').width * 0.9) {
                     setResizedWidth(Dimensions.get('window').width * 0.9);

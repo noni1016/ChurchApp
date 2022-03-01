@@ -1,7 +1,7 @@
 import React, {useState, useEffect, useContext} from 'react';
 import { View, Text, Dimensions, ScrollView, Image} from 'react-native';
 import {DomainContext} from '~/Context/Domain';
-import { UserContext } from '~/Context/User';
+import { UserData } from '~/Context/User';
 import Styled from 'styled-components/native';
 import {launchImageLibrary} from 'react-native-image-picker';
 
@@ -118,7 +118,7 @@ const EditFeed = ({route, navigation}) => {
     const edit = route.params.edit;
     console.log('edit:', edit);
     const club = route.params.club;
-    const user = useContext(UserContext);
+    const userData = useContext(UserData);
     const [userProfileImgUrl, SetUserProfileImgUrl] = useState(null);
     const [textInput, setTextInput] = useState('');
     const [location, setLocation] = useState('');
@@ -151,8 +151,8 @@ const EditFeed = ({route, navigation}) => {
 
     /* 현재 User 이미지를 띄우기 위한 URL 설정 */
     useEffect(() => {
-        SetUserProfileImgUrl(`${domain}/${user.photo}`);
-    }, [user]);
+        SetUserProfileImgUrl(`${domain}/${userData.photo}`);
+    }, [userData]);
 
     /* Feed 올리기. 이미지가 있으면 이미지부터 올리고 텍스트를 업데이트함 */
     const putFeed = () => {
@@ -234,7 +234,7 @@ const EditFeed = ({route, navigation}) => {
 
         fetch(fetchReq, {
             method: fetchMethod,
-            body : JSON.stringify({clubId: club.id, authorId: user.id, location: location, time: sendDate, contentText: textInput}),
+            body : JSON.stringify({clubId: club.id, authorId: userData.id, location: location, time: sendDate, contentText: textInput}),
             headers: {'Content-Type': 'application/json'}
         }).then(res => res.json()).then(
             res => {alert('SUCCESS: ', JSON.stringify(res)); 
@@ -271,7 +271,7 @@ const EditFeed = ({route, navigation}) => {
             <FeedTextBox>
                 <ProfileBox>
                     <Image style={{ backgroundColor: 'transparent', width: 50, height: 50, resizeMode: 'contain' }} source={{uri : userProfileImgUrl}} />
-                    <Text style={{fontWeight: 'bold', fontSize: 18, margin: 10}}>{user.name}</Text>
+                    <Text style={{fontWeight: 'bold', fontSize: 18, margin: 10}}>{userData.name}</Text>
                 </ProfileBox>
                 <Input 
                         multiline
