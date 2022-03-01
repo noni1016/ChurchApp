@@ -286,5 +286,35 @@ router.post('/:clubId/Feed/:feedId/Comment', (req, res) => {
     });
 })
 
+router.delete('/:clubId/Feed/:feedId', async (req, res) => {
+    let imgSrc = '';
+    let sql1 = `SELECT contentImg from Feed WHERE id=${req.params.feedId}`;
+    let sql2 = `DELETE FROM Feed WHERE id=${req.params.feedId}`;
+    console.log(sql1);
+    console.log(sql2);
+    try {
+        await conn.beginTransaction();
+        await conn.query(sql1, (error, rows) => {
+            imgSrc = rows[0];
+        });
+        await conn.query(sql2, (error, rows) => {
+            if (req.params.imgSrc == '-1')
+            {
+                fs.unlink(`./public/${imgSrc}`, (err) => {
+                    err ? console.log(imgSrc) : console.log(`${imgSrc}를 정상적으로 삭제했습니다`);
+                  })
+            }
+        });
+        await conn.commit();
+        res.send({ result: true });
+    } catch (err) {
+        console.log(err)
+        await conn.rollback()
+        res.send({ result: false });
+    }
+    
+})
+
+
 
 module.exports = router;
