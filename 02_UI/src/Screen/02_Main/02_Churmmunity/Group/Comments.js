@@ -14,11 +14,11 @@ const RenderItem = ({item}) => {
 
 const Comments = ({route, navigation}) => {
 
-  const [comments, SetComments] = useState([]);
+  const [comments, setComments] = useState([]);
   // const comments = route.params.comments;
 
   useEffect(() => {
-    SetComments(route.params.comments);
+    setComments(route.params.comments);
   })
 
     return (

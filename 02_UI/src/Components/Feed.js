@@ -95,28 +95,12 @@ const Feed = ({club, feed, onFeedChange, navigation}) => {
     let [resizedWidth, setResizedWidth] = useState();
     let [resizedHeight, setResizedHeight] = useState();
     let [commentInput, setCommentInput] = useState('');
-    let [imgPathInServer, setImgPathInServer] = useState();
     const actionSheetRef = createRef();
-
-    /* 댓글 불러오는 함수 */
-    const GetFeedComments = () => {
-        let sendFeedData = {groupId: feed.clubId, feedId: feed.id};
-        fetch(domain + '/Churmmunity/GetFeedComments', {
-            method: 'POST',
-            body: JSON.stringify(sendFeedData),
-            headers:{
-                Accept: 'application/json',
-                'Content-Type': 'application/json'
-            }
-        }).then(res => res.json()).then(res => {setFeedComments(res);});
-
-        // console.log('FeedComment!!!!', feedComments.length);
-    }
 
     /* 초기 마운팅시 Author 정보, Feed 댓글들을 받아옴 */
     useEffect(() => {
         fetch(`${domain}/User/${feed.authorId}`).then(res => res.json()).then(res => {setFeedAuthorData(res[0])});
-        fetch(`${domain}/Club/${club.id}/Feed/${feed.Id}/Comments`).then(res => res.json()).then(res => {setFeedComments(res);});  
+        fetch(`${domain}/Club/${club.id}/Feed/${feed.id}/Comments`).then(res => res.json()).then(res => {setFeedComments(res);});  
     }, [])
     
     /* Author 의 프로필 이미지를 띄우기 위해 Url Set */
@@ -127,27 +111,17 @@ const Feed = ({club, feed, onFeedChange, navigation}) => {
         }
     }, [feedAuthorData]);
 
-    /* 이미지가 있는 Content 를 지울 때 서버에 지울 이미지 경로를 전송하기 위해 Path 설정 --> Transaction 처리 필요*/
-    // useEffect(() => {
-    //     if (feed.contentImg) {
-    //         setFeedImgUrl(`${domain}/${feed.contentImg}`);
-    //         if (feed.contentImg)
-    //         {
-    //             let temp = feed.contentImg.split('/');
-    //             setImgPathInServer(temp[temp.length - 1]);
-    //         }
-    //         else
-    //         {
-    //             setImgPathInServer(-1);
-    //         }
-    //     }
-    // }, [feed])
+    useEffect(() => {
+        if (feed.contentImg) {
+            setFeedImgUrl(`${domain}/${feed.contentImg}`);
+        }
+    }, [feed])
 
     /* Feed Image 사이즈를 화면 너비에 맞게 조정 */
     useEffect(() => {
         if (domain && feedImgUrl != '')
         {
-            ImageSize.getSize(url).then((size) => {
+            ImageSize.getSize(feedImgUrl).then((size) => {
                 let width = size.width;
                 let height = size.height;
                 if (width > Dimensions.get('window').width) {
@@ -170,8 +144,8 @@ const Feed = ({club, feed, onFeedChange, navigation}) => {
 
     /* 댓글 등록 */
     const AddInput = (text) => {
-        let sendCommentData = {clubId: feed.clubId, feedId: feed.id, authorId: user.id, text: text};
-        fetch(domain + '/Churmmunity/FeedComments/', {
+        let sendCommentData = {authorId: user.id, text: text};
+        fetch(`${domain}/Club/${feed.clubId}/Feed/${feed.id}/Comment`, {
             method: 'POST',
             body: JSON.stringify(sendCommentData),            
             headers:{
@@ -179,16 +153,11 @@ const Feed = ({club, feed, onFeedChange, navigation}) => {
             }
         })
         setCommentInput('');
-        GetFeedComments();
-    }
-
-    const CommentTextHandler = (value) => {
-        setCommentInput(value);
+        fetch(`${domain}/Club/${club.id}/Feed/${feed.id}/Comments`).then(res => res.json()).then(res => {setFeedComments(res);});  
     }
 
     return (
         <FeedContainer>
-
             <FeedHeader>
                 <Image style={{ backgroundColor: 'transparent', width: 50, height: 50}} source={feedAuthorImgUrl ? {uri: feedAuthorImgUrl } : null} />
                 <HeaderInfo>
@@ -201,7 +170,7 @@ const Feed = ({club, feed, onFeedChange, navigation}) => {
                     </Text>
                 </HeaderInfo>
                 <HeaderOptionBtnContainer>
-                    <Icon name="dots-three-vertical" size={30} onPress={() => {alert(feed.id); actionSheetRef.current?.setModalVisible();}} />
+                    <Icon name="dots-three-vertical" size={30} onPress={() => {actionSheetRef.current?.setModalVisible();}} />
                 </HeaderOptionBtnContainer>
             </FeedHeader>
             <FeedBody>
@@ -231,7 +200,7 @@ const Feed = ({club, feed, onFeedChange, navigation}) => {
                         autoCorrect={false}
                         placeholder="댓글 추가"
                         returnKeyType="done"
-                        onChangeText={CommentTextHandler}
+                        onChangeText={(value) => setCommentInput(value)}
                         value={commentInput}
                         onSubmitEditing={({nativeEvent}) => {
                             AddInput(nativeEvent.text);
@@ -242,9 +211,9 @@ const Feed = ({club, feed, onFeedChange, navigation}) => {
 
             <ActionSheet ref={actionSheetRef}>
                 <View>
-                    <ActionSheetBtn OnPressMethod={() => {navigation.navigate('EditFeed', {club: club, feed: feed, navigation: navigation});}}>Edit</ActionSheetBtn>
+                    <ActionSheetBtn OnPressMethod={() => {navigation.navigate('EditFeed', {edit: true, club: club, feed: feed, navigation: navigation});}}>Edit</ActionSheetBtn>
                     <ActionSheetBtn OnPressMethod={() => {
-                        fetch(`${domain}/Churmmunity/Feed/${feed.id}/${imgPathInServer}`, {
+                        fetch(`${domain}/Club/${club.id}/Feed/${feed.id}`, {
                             method: 'DELETE',
                             headers: {
                                 'Content-Type': 'application/json'
@@ -253,9 +222,6 @@ const Feed = ({club, feed, onFeedChange, navigation}) => {
                     <ActionSheetBtn OnPressMethod={() => actionSheetRef.current?.setModalVisible(false)}>Cancel</ActionSheetBtn>
                 </View>
             </ActionSheet>
-             
-
-            
 
         </FeedContainer>
     )

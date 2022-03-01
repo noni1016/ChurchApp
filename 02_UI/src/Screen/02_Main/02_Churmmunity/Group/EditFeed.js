@@ -116,6 +116,7 @@ const EditFeed = ({route, navigation}) => {
     const domain = useContext(DomainContext);
     
     const edit = route.params.edit;
+    console.log('edit:', edit);
     const club = route.params.club;
     const user = useContext(UserContext);
     const [userProfileImgUrl, SetUserProfileImgUrl] = useState(null);
