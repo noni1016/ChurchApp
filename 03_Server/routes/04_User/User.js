@@ -24,4 +24,55 @@ router.get('/:userId/Club', (req, res) => {
     });
 });
 
+// Get User Data
+router.get('/:userId', (req, res) => {
+    let sql = `SELECT * FROM User WHERE id = ${req.params.userId}`;
+    console.log(sql)
+    conn.query(sql, function (error, rows, fields) { // sql 쿼리 수행
+        if (!error) {
+            console.log(rows);
+            res.send(rows);
+        } else {
+            console.log('query error : ' + error);
+        }
+    });
+});
+
+// Get User Data from domain id
+router.get('/Domain/:domain/:id_domain', (req, res) => {
+    let sql = `SELECT * FROM User WHERE id_${req.params.domain} = ${req.params.id_domain}`;
+    console.log(sql)
+    conn.query(sql, function (error, rows, fields) { // sql 쿼리 수행
+        if (!error) {
+            console.log(rows);
+            res.send(rows);
+        } else {
+            console.log('query error : ' + error);
+        }
+    });
+});
+
+// Join(Upload) User
+router.post('/Domain/:domain', async (req, res) => {
+    let queryResult;
+    let sql1 = `INSERT INTO User (name, photo, church, age, level, role, id_${req.params.domain}) VALUES ('${req.body.name}', '${req.body.photo}', '${req.body.church}', '${req.body.age}', '${req.body.level}', '${req.body.role}', '${req.body.id_domain}')`;
+    let sql2 = `SELECT * FROM User WHERE id_${req.params.domain} = ${req.body.id_domain}`;
+    console.log(sql1);
+    console.log(sql2);
+    try {
+        await conn.beginTransaction();
+        await conn.query(sql1);
+        await conn.query(sql2, async (error, rows) => {
+            queryResult = rows;
+            console.log(queryResult);
+            await conn.commit();
+            res.send(queryResult);
+        });
+    } catch (err) {
+        console.log(err)
+        await conn.rollback()
+        res.status(500).json(err)
+    }
+})
+
 module.exports = router;
