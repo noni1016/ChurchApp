@@ -31,7 +31,7 @@ const TabContainer = Styled.SafeAreaView`
 
 const ClubPage = ({route, navigation}) => {
     const domain = useContext(DomainContext);
-    const userData = useContext(UserData);
+    const {userData} = useContext(UserData);
     const data = route.params.club;
     const [tabIdx, setTabIdx] = useState(0); 
     var [resizedWidth, setResizedWidth] = useState(100);

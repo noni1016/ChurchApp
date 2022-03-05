@@ -118,7 +118,7 @@ const EditFeed = ({route, navigation}) => {
     const edit = route.params.edit;
     console.log('edit:', edit);
     const club = route.params.club;
-    const userData = useContext(UserData);
+    const {userData} = useContext(UserData);
     const [userProfileImgUrl, SetUserProfileImgUrl] = useState(null);
     const [textInput, setTextInput] = useState('');
     const [location, setLocation] = useState('');
@@ -148,11 +148,6 @@ const EditFeed = ({route, navigation}) => {
             navigation.setOptions({title: '게시글 수정'});
         }
     }, [])
-
-    /* 현재 User 이미지를 띄우기 위한 URL 설정 */
-    useEffect(() => {
-        SetUserProfileImgUrl(`${domain}/${userData.photo}`);
-    }, [userData]);
 
     /* Feed 올리기. 이미지가 있으면 이미지부터 올리고 텍스트를 업데이트함 */
     const putFeed = () => {
@@ -236,9 +231,7 @@ const EditFeed = ({route, navigation}) => {
             method: fetchMethod,
             body : JSON.stringify({clubId: club.id, authorId: userData.id, location: location, time: sendDate, contentText: textInput}),
             headers: {'Content-Type': 'application/json'}
-        }).then(res => res.json()).then(
-            res => {alert('SUCCESS: ', JSON.stringify(res)); 
-            navigation.navigate('ClubPage', {tabIdx: 1, edit: true, navigation: navigation});})
+        }).then(res => res.json()).then(res => {navigation.navigate('ClubPage', {tabIdx: 1, edit: true, navigation: navigation});})
     }
 
     // Camera Roll
@@ -270,7 +263,7 @@ const EditFeed = ({route, navigation}) => {
             </PlusBtnBox>}
             <FeedTextBox>
                 <ProfileBox>
-                    <Image style={{ backgroundColor: 'transparent', width: 50, height: 50, resizeMode: 'contain' }} source={{uri : userProfileImgUrl}} />
+                    <Image style={{ backgroundColor: 'transparent', width: 50, height: 50, resizeMode: 'contain' }} source={{uri : userData.photo}} />
                     <Text style={{fontWeight: 'bold', fontSize: 18, margin: 10}}>{userData.name}</Text>
                 </ProfileBox>
                 <Input 

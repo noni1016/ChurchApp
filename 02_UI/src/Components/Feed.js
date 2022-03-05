@@ -86,7 +86,7 @@ const CommentInputContainer = Styled.View`
 const Feed = ({club, feed, onFeedChange, navigation}) => {
 
     const domain = useContext(DomainContext);
-    const userData = useContext(UserData);
+    const {userData} = useContext(UserData);
     let [feedAuthorData, setFeedAuthorData] = useState();
     let [feedAuthorImgUrl, setFeedAuthorImgUrl] = useState();
     let [feedImgUrl, setFeedImgUrl] = useState();
@@ -103,14 +103,6 @@ const Feed = ({club, feed, onFeedChange, navigation}) => {
         fetch(`${domain}/Club/${club.id}/Feed/${feed.id}/Comments`).then(res => res.json()).then(res => {setFeedComments(res);});  
     }, [])
     
-    /* Author 의 프로필 이미지를 띄우기 위해 Url Set */
-    useEffect(() => {
-        if (feedAuthorData)
-        {
-            setFeedAuthorImgUrl(`${domain}/${feedAuthorData.photo}`);
-        }
-    }, [feedAuthorData]);
-
     useEffect(() => {
         if (feed.contentImg) {
             setFeedImgUrl(`${domain}/${feed.contentImg}`);
@@ -159,7 +151,7 @@ const Feed = ({club, feed, onFeedChange, navigation}) => {
     return (
         <FeedContainer>
             <FeedHeader>
-                <Image style={{ backgroundColor: 'transparent', width: 50, height: 50}} source={feedAuthorImgUrl ? {uri: feedAuthorImgUrl } : null} />
+                <Image style={{ backgroundColor: 'transparent', width: 50, height: 50}} source={feedAuthorData ? {uri: feedAuthorData.photo} : null } />
                 <HeaderInfo>
                     {feedAuthorData && 
                         <Text style={{fontWeight: 'bold', fontSize: 18}}>
