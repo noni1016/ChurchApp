@@ -151,8 +151,7 @@ const EditFeed = ({route, navigation}) => {
 
     /* Feed 올리기. 이미지가 있으면 이미지부터 올리고 텍스트를 업데이트함 */
     const putFeed = () => {
-        console.log('imgSrc : ' + imgSrc.fileName);
-        if (imgSrc.fileName) updateImg();
+        if (imgSrc != undefined && imgSrc.fileName) updateImg();
         else updateFeed();
     }
 
