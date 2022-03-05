@@ -175,7 +175,7 @@ const Feed = ({club, feed, onFeedChange, navigation}) => {
             <FeedFooter>
                 {feedComments.length > 0 ?
                     (<FeedCommentContainer>
-                        <Image style={{ backgroundColor: 'transparent', width: 25, height: 25, marginRight: 10}} source={firstCommentAuthor.photo? {uri: `${domain}/${firstCommentAuthor.photo}` } : null} />
+                        <Image style={{ backgroundColor: 'transparent', width: 25, height: 25, marginRight: 10}} source={firstCommentAuthor.photo? {uri: firstCommentAuthor.photo } : null} />
                         <Text><Text style={{marginRight: 10, fontWeight: 'bold'}}>{firstCommentAuthor.name}</Text>{feedComments[0].text}</Text>
                     </FeedCommentContainer>) : null}
                 {feedComments.length > 1 ? 
@@ -185,7 +185,7 @@ const Feed = ({club, feed, onFeedChange, navigation}) => {
                             <Text style={{fontWeight: 'bold'}}>더보기...</Text>
                     </TouchableOpacity>) : null}
                 <CommentInputContainer>
-                    <Image style={{ backgroundColor: 'transparent', width: 30, height: 30, marginRight: 10}} source={userData.photo? {uri: `${domain}/${userData.photo}` } : null} />
+                    <Image style={{ backgroundColor: 'transparent', width: 30, height: 30, marginRight: 10}} source={userData.photo? {uri: userData.photo } : null} />
                     <Input 
                         autoFocus={false}
                         autoCapitalize="none"
