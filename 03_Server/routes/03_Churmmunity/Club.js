@@ -166,6 +166,20 @@ router.get('/:clubId/Feed/:feedId/Comments', (req, res) => {
     });
 })
 
+// Get Feed Images
+router.get('/:clubId/Imgs', (req, res) => {
+    let sql = `SELECT contentImg FROM Feed WHERE clubId = ${req.params.clubId} AND contentImg != 'NULL' ORDER BY time DESC`
+    console.log(sql);
+    conn.query(sql, function (error, rows, fields) { // sql 쿼리 수행
+        if (!error) {
+            // console.log(rows);
+            res.send(rows);
+        } else {
+            console.log('query error : ' + error);
+        }
+    });
+})
+
 // Upload(Post) Feed Img
 const uploadFeedImg = multer({
     storage: multer.diskStorage({
@@ -259,7 +273,7 @@ router.put('/Feed/:id', (req, res) => {
     }
     else
     {
-        sql = `UPDATE Feed SET groupId = '${req.body.clubId}', location = "${req.body.location}", contentText = "${req.body.contentText}" WHERE id = ${req.params.id}`;
+        sql = `UPDATE Feed SET clubId = '${req.body.clubId}', location = "${req.body.location}", contentText = "${req.body.contentText}" WHERE id = ${req.params.id}`;
     }
     console.log(sql);
     conn.query(sql, function (error, rows, fields) { // sql 쿼리 수행
