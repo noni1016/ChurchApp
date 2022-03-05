@@ -3,6 +3,7 @@ import { View, Text, Image } from 'react-native';
 import { UserData, KakaoAuthData, TryGetKakao, UserContextProvider } from '~/Context/User';
 import Auth from '~/Screen/01_Auth/Auth';
 import Styled from 'styled-components/native';
+import { DomainContext } from '~/Context/Domain';
 import {
   KakaoOAuthToken,
   KakaoProfile,
@@ -12,28 +13,61 @@ import {
   unlink,
 } from '@react-native-seoul/kakao-login';
 
+const TestView = Styled.View`
+    width: 100%;
+    height: 50%;
+`;
+
+const ChangableStringData = Styled.View`
+    flex-direction: row;
+    width: 80%;
+    height: 18%;
+    //padding: 25px;
+    margin: 0px 0px 3px 20% //상 우 하 좌
+`;
+
+const Input = Styled.TextInput`
+background-color: yellow;
+width: 60%;
+border-bottom-width: 3px;
+`;
+
+const UserInfoChangeBtn = Styled.TouchableOpacity`
+background-color: green;
+width: 20%;
+border-bottom-width: 3px;
+`;
+
 const ChangePhoto = Styled.TouchableOpacity`
-height: 100px;
-width: 100px;
+height: 20%;
 background-color: transparent;
-align-items : center;
-margin: 0px 0px 0px 25px; //상 우 하 좌
+margin: 0px 0px 10px 0px //상 우 하 좌
 `
 
 const Button = Styled.TouchableOpacity`
 height: 25px;
-width: 70px;
+width: 20%;
 background-color: #FF0000;
 align-items : center;
-margin: 0px 0px 0px 25px; //상 우 하 좌
+margin: 0px 0px 0px 80% //상 우 하 좌
 `
-
-//로그아웃 로직 빼고 지울거임
 const Profile = () => {
+  const domain = useContext(DomainContext);
   const { userData, setUserData } = useContext(UserData);
   const { kakaoAuthData, setKakaoAuthData } = useContext(KakaoAuthData);
   const { tryGetKakao, setKakaoFlag } = useContext(TryGetKakao);
   const [logOutResult, setLogOutResult] = useState(null);
+
+  let [nickName, setNickName] = useState('');
+  let [churchName, setChurchName] = useState('');
+  
+  const NickNameTextHandler = (value) => {
+    setNickName(value);
+}
+
+const ChurchNameTextHandler = (value) => {
+    setChurchName(value);
+}
 
   const signOutWithKakao = async () => {
     const message = await logout();
@@ -45,19 +79,71 @@ const Profile = () => {
     setKakaoFlag(false);
   };
 
+  const reqChangeUserInfo = (changeType, changeValue) => {
+    let changeData = {dataType: changeType, dataValue: changeValue}
+    console.log(changeData);
+    console.log(userData.id);
+
+    // fetch(domain + '/User/Domain/kakao', {
+    //   method: 'POST',
+    //   body: JSON.stringify(sendCommentUserData),
+    //   headers: {
+    //     Accept: 'application/json',
+    //     'Content-Type': 'application/json'
+    //   }
+    // }).then(res => res.json()).then(res => {
+    //   console.log("[JOINUSER]");
+    //   console.log(res);
+    //   console.log("[=========]");
+    //   //로그인 
+    //   setUserData(res[0]);
+    // }).catch(e => { console.log("[JOINFAIL]"); console.log(e.json()) });
+  }
+
   return (
     <>
       {userData != null && <View>
-        <Text>{userData.name}</Text>
-        <Text>{userData.church}</Text>
-        
+        <Button style={{ width: '20%', height: '7%', resizeMode: 'contain', allign: 'flex-end' }} onPress={() => signOutWithKakao()}>
+          <Text>Logout</Text>
+        </Button>
+
         <ChangePhoto onPress={() => console.log(userData.photo)}>
            <Image style={{ width: '100%', height: '100%', resizeMode: 'contain' }} source={{ uri: userData.photo }} />
         </ChangePhoto>
 
-        <Button onPress={() => signOutWithKakao()}>
-          <Text>Logout</Text>
-        </Button>
+        <TestView>
+          <ChangableStringData>
+            <Input
+              autoFocus={false}
+              autoCapitalize="none"
+              autoCorrect={false}
+              placeholder={userData.name}
+              returnKeyType="done"
+              onChangeText={NickNameTextHandler}
+              value={nickName}
+            />
+
+            <UserInfoChangeBtn onPress={() => reqChangeUserInfo("name", { nickName })}>
+              <Text> Name Change </Text>
+            </UserInfoChangeBtn>
+          </ChangableStringData>
+
+          <ChangableStringData>
+            <Input
+              autoFocus={false}
+              autoCapitalize="none"
+              autoCorrect={false}
+              placeholder={userData.church}
+              returnKeyType="done"
+              onChangeText={ChurchNameTextHandler}
+              value={churchName}
+            />
+
+            <UserInfoChangeBtn onPress={() => reqChangeUserInfo("curch", { churchName })}>
+              <Text> Curch Change </Text>
+            </UserInfoChangeBtn>
+          </ChangableStringData>
+        </TestView>
       </View>}
 
       {userData == null && kakaoAuthData == null && tryGetKakao == false && <Auth />}
