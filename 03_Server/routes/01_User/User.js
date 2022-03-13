@@ -75,4 +75,21 @@ router.post('/Domain/:domain', async (req, res) => {
     }
 })
 
+// Update(Put) User Information
+router.put('/:userId/:column', (req, res) => {
+    let queryRes = false;
+    let sql = `UPDATE User SET ${req.params.column} = '${req.body.data}' WHERE id = ${req.params.userId}`;
+    console.log(sql);
+    conn.query(sql, function (error, rows, fields) { // sql 쿼리 수행
+        if (!error) {
+            console.log(rows.affectedRows);
+            if (rows.affectedRows === 1) queryRes = true;
+            // console.log('query success')
+            res.send(queryRes);
+        } else {
+            console.log('query error : ' + error);
+        }
+    });
+});
+
 module.exports = router;

@@ -32,7 +32,7 @@ app.get('/', (req, res) => {
 }); // HomePage
 
 // app test 용 routes
-app.use('/Churmmunity', require('./routes_churmmunity/Churmmunity')); // /churmmunity/ 로 접근하는 url 요청 처리
+// app.use('/Churmmunity', require('./routes_churmmunity/Churmmunity')); // /churmmunity/ 로 접근하는 url 요청 처리
 app.use('/Login', require('./routes_churmmunity/Login')); // /churmmunity/ 로 접근하는 url 요청 처리
 
 

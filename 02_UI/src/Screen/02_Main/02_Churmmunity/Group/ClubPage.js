@@ -5,6 +5,7 @@ import {DomainContext} from '~/Context/Domain';
 import {UserData} from '~/Context/User';
 import Tab from '~/Components/Tab';
 import ClubPageHome from '~/Components/GroupPageHome';
+import Photos from '~/Components/Photos';
 import Feeds from '~/Components/Feeds';
 import AddBtn from '~/Components/AddBtn';
 import ImageSize from 'react-native-image-size';
@@ -120,8 +121,7 @@ const ClubPage = ({route, navigation}) => {
                 </TabContainer>
                 {tabIdx == 0 && <ClubPageHome data={data} members={members} isMember={isMember} setMember={(value)=>{setMember(value)}}/>}
                 {tabIdx == 1 && <Feeds club={data} feedAdded={refresh} navigation={navigation}/>}
-                {tabIdx == 2 && <Text>사진</Text>}
-                <Text>{userData.name}</Text>
+                {tabIdx == 2 && <Photos club={data}>사진</Photos>}
             </ScrollView>
             {tabIdx == 1 && <AddBtn OnPressMethod={() => {navigation.navigate('EditFeed', {edit: false, club: data, navigation: navigation});}}/>}
         </View>
