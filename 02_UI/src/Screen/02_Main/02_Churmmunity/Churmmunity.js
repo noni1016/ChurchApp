@@ -13,6 +13,7 @@ import ClubCardsColView from '~/Screen/02_Main/02_Churmmunity/Group/ClubCardsCol
 import ClubPage from '~/Screen/02_Main/02_Churmmunity/Group/ClubPage'
 import Comments from './Group/Comments';
 import EditFeed from './Group/EditFeed';
+import CreateChurmmunity from './Group/CreateChurmmunity';
 
 import { UserData, UserContextProvider } from '~/Context/User';
 import {DomainContext, DomainContextProvider} from '~/Context/Domain';
@@ -80,15 +81,15 @@ const NoniNavi = () => {
             <Stack.Screen
                 name={userData.name + " / " + userData.id + " / " + userData.church}
                 component={NoniMain}
-                options={{
+                options={({navigation}) => ({
                     headerShown: true,
                     headerRight: () => (
                         <HeaderButtonsContainer>
                             <Icon name="search" size={26} onPress={() => alert('This is a search button!')} />
-                            <Icon name="add" size={26} onPress={() => alert('This is an add button!')} />
+                            <Icon name="add" size={26} onPress={() => navigation.navigate('CreateChurmmunity')} />
                         </HeaderButtonsContainer>
                     )
-                }}
+                })}
             />
              <Stack.Screen
                 name="ShowMoreClubs"
@@ -124,9 +125,15 @@ const NoniNavi = () => {
                     headerShown: true,
                     headerBackTitleVisible: false,
                     title: '새 게시물',
-                    // headerRight: () => (
-                    //         <Icon name="send" size={26} onPress={() => alert('This is an send button!')} />
-                    // )
+                }}
+             />
+            <Stack.Screen
+                name="CreateChurmmunity"
+                component={CreateChurmmunity}
+                options={{
+                    headerShown: true,
+                    headerBackTitleVisible: false,
+                    title: '새 모임',
                 }}
              />
         </Stack.Navigator>
