@@ -80,25 +80,20 @@ const ChurchNameTextHandler = (value) => {
   };
 
   const reqChangeUserInfo = (changeType, changeValue) => {
-    let changeData = {dataType: changeType, dataValue: changeValue}
-    console.log(changeData);
+    console.log(changeType, changeValue);
     console.log(userData.id);
 
-    // fetch(domain + '/User/Domain/kakao', {
-    //   method: 'POST',
-    //   body: JSON.stringify(sendCommentUserData),
-    //   headers: {
-    //     Accept: 'application/json',
-    //     'Content-Type': 'application/json'
-    //   }
-    // }).then(res => res.json()).then(res => {
-    //   console.log("[JOINUSER]");
-    //   console.log(res);
-    //   console.log("[=========]");
-    //   //로그인 
-    //   setUserData(res[0]);
-    // }).catch(e => { console.log("[JOINFAIL]"); console.log(e.json()) });
-  }
+    fetch(`${domain}/User/${userData.id}/${changeType}`, {
+      method: 'PUT',
+      body: JSON.stringify({ data: changeValue}),
+      headers: { 'Content-Type': 'application/json' }
+    }).then(res => res.json()).then(res => {
+      alert(res);
+    }).catch(e => {
+      console.log("[ChangeFail]");
+      console.log(e.json())
+    });
+  };
 
   return (
     <>
@@ -123,7 +118,7 @@ const ChurchNameTextHandler = (value) => {
               value={nickName}
             />
 
-            <UserInfoChangeBtn onPress={() => reqChangeUserInfo("name", { nickName })}>
+            <UserInfoChangeBtn onPress={() => reqChangeUserInfo("name", nickName)}>
               <Text> Name Change </Text>
             </UserInfoChangeBtn>
           </ChangableStringData>
@@ -139,7 +134,7 @@ const ChurchNameTextHandler = (value) => {
               value={churchName}
             />
 
-            <UserInfoChangeBtn onPress={() => reqChangeUserInfo("curch", { churchName })}>
+            <UserInfoChangeBtn onPress={() => reqChangeUserInfo("church", churchName)}>
               <Text> Curch Change </Text>
             </UserInfoChangeBtn>
           </ChangableStringData>
