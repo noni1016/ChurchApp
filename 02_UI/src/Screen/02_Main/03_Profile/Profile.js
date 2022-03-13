@@ -4,6 +4,7 @@ import { UserData, KakaoAuthData, TryGetKakao, UserContextProvider } from '~/Con
 import Auth from '~/Screen/01_Auth/Auth';
 import Styled from 'styled-components/native';
 import { DomainContext } from '~/Context/Domain';
+import {launchImageLibrary} from 'react-native-image-picker';
 import {
   KakaoOAuthToken,
   KakaoProfile,
@@ -57,10 +58,24 @@ const Profile = () => {
   const { kakaoAuthData, setKakaoAuthData } = useContext(KakaoAuthData);
   const { tryGetKakao, setKakaoFlag } = useContext(TryGetKakao);
   const [logOutResult, setLogOutResult] = useState(null);
+  const [imgSrc, setImgSrc] = useState(undefined);
 
   let [nickName, setNickName] = useState('');
   let [churchName, setChurchName] = useState('');
   
+  /* react-native-image-picker 라이브러리 사용 옵션 */
+  const options = {
+    title: 'Load Photo',
+    customButton: [
+        { name: 'button_id_1', title: 'CustomButton 1'},
+        { name: 'button_id_2', title: 'CustomButton 2'},
+    ],
+    storageOptions: {
+        skipBackup: true,
+        path: 'images',
+    }
+}
+
   const NickNameTextHandler = (value) => {
     setNickName(value);
 }
@@ -79,13 +94,37 @@ const ChurchNameTextHandler = (value) => {
     setKakaoFlag(false);
   };
 
-  const reqChangeUserInfo = (changeType, changeValue) => {
+  const showCameraRoll = () => {
+    launchImageLibrary(options, (response) => {
+        if (response.error) {
+            console.log('LaunchCamera Error: ', response.error);
+        }
+        else {
+            console.log('ImageSrc: ' + JSON.stringify(response.assets));
+            console.log('ImageSrc: ' + response.assets[0].uri);
+            setImgSrc(response.assets[0]);
+            updateImg();
+            
+            const imageData = new FormData();
+            imageData.append('file', {
+                uri: imgSrc.uri,
+                type: imgSrc.type,
+                name: imgSrc.fileName,
+                data: imgSrc.data
+            });
+
+            reqChangeUserInfo("photo", imageData)
+        }
+    });
+}
+
+const reqChangeUserInfo = (changeType, changeValue) => {
     console.log(changeType, changeValue);
     console.log(userData.id);
 
     fetch(`${domain}/User/${userData.id}/${changeType}`, {
       method: 'PUT',
-      body: JSON.stringify({ data: changeValue}),
+      body: changeValue,
       headers: { 'Content-Type': 'application/json' }
     }).then(res => res.json()).then(res => {
       alert(res);
@@ -102,7 +141,7 @@ const ChurchNameTextHandler = (value) => {
           <Text>Logout</Text>
         </Button>
 
-        <ChangePhoto onPress={() => console.log(userData.photo)}>
+        <ChangePhoto onPress={() => {showCameraRoll();}}>
            <Image style={{ width: '100%', height: '100%', resizeMode: 'contain' }} source={{ uri: userData.photo }} />
         </ChangePhoto>
 
@@ -118,7 +157,7 @@ const ChurchNameTextHandler = (value) => {
               value={nickName}
             />
 
-            <UserInfoChangeBtn onPress={() => reqChangeUserInfo("name", nickName)}>
+            <UserInfoChangeBtn onPress={() => reqChangeUserInfo("name", JSON.stringify({ data: nickName}))}>
               <Text> Name Change </Text>
             </UserInfoChangeBtn>
           </ChangableStringData>
@@ -134,7 +173,7 @@ const ChurchNameTextHandler = (value) => {
               value={churchName}
             />
 
-            <UserInfoChangeBtn onPress={() => reqChangeUserInfo("church", churchName)}>
+            <UserInfoChangeBtn onPress={() => reqChangeUserInfo("church", JSON.stringify({ data: churchName}))}>
               <Text> Curch Change </Text>
             </UserInfoChangeBtn>
           </ChangableStringData>
