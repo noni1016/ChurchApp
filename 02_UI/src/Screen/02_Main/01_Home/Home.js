@@ -12,7 +12,7 @@ const Home = () => {
     return (
         <>
         {userData != null && <View>
-            <Image style={{ width: '100%', height: '100%', resizeMode: 'contain' }} source={{ uri: userData.photo }} />
+            <Image style={{ width: '100%', height: '100%', resizeMode: 'contain' }} source={{ uri: userData.photo + "?cache="+Math.random() }} />
           </View>}
           
         {userData == null && <View>

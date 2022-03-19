@@ -54,7 +54,7 @@ margin: 0px 0px 0px 80% //상 우 하 좌
 `
 const Profile = () => {
   const domain = useContext(DomainContext);
-  const { userData, setUserData } = useContext(UserData);
+  const { userData, setUserData} = useContext(UserData);
   const { kakaoAuthData, setKakaoAuthData } = useContext(KakaoAuthData);
   const { tryGetKakao, setKakaoFlag } = useContext(TryGetKakao);
   const [logOutResult, setLogOutResult] = useState(null);
@@ -94,32 +94,38 @@ const ChurchNameTextHandler = (value) => {
     setKakaoFlag(false);
   };
 
-  const showCameraRoll = () => {
-    launchImageLibrary(options, (response) => {
-        if (response.error) {
-            console.log('LaunchCamera Error: ', response.error);
-        }
-        else {
-            console.log('ImageSrc: ' + JSON.stringify(response.assets));
-            console.log('ImageSrc: ' + response.assets[0].uri);
-            setImgSrc(response.assets[0]);
-            console.log(imgSrc.uri);
-            const imageData = new FormData();
-            imageData.append('file', {
-                uri: imgSrc.uri,
-                type: imgSrc.type,
-                name: imgSrc.fileName,
-                data: imgSrc.data
-            });
+  useEffect(() => {
+    if (imgSrc) {
+      console.log("=====photo change=====");
+      console.log(imgSrc.uri);
+      const imageData = new FormData();
+      imageData.append('file', {
+        uri: imgSrc.uri,
+        type: imgSrc.type,
+        name: imgSrc.fileName,
+        data: imgSrc.data
+      });
 
-          let fetchHeader = {
-            Accept: 'application/json',
-            'Content-Type': 'multipart/form-data',
-          }
-          reqChangeUserInfo(fetchHeader, "photo", imageData)
-        }
+      let fetchHeader = {
+        Accept: 'application/json',
+        'Content-Type': 'multipart/form-data',
+      }
+      reqChangeUserInfo(fetchHeader, "photo", imageData)
+    }}, [imgSrc]);
+
+  const showCameraRoll = () => {
+    //뒤로가기눌러서 취소했을때 처리 필요
+    launchImageLibrary(options, (response) => {
+      if (response.error) {
+        console.log('LaunchCamera Error: ', response.error);
+      }
+      else {
+        console.log('ImageSrc: ' + JSON.stringify(response.assets));
+        console.log('ImageSrc: ' + response.assets[0].uri);
+        setImgSrc(response.assets[0]);
+      }
     });
-}
+  }
 
 const reqChangeUserInfo = (fetchHeader, changeType, changeValue) => {
     console.log(changeType, changeValue);
@@ -131,9 +137,19 @@ const reqChangeUserInfo = (fetchHeader, changeType, changeValue) => {
       headers: fetchHeader
     }).then(res => res.json()).then(res => {
       alert(res);
+      GetUser(kakaoAuthData.id);
     }).catch(e => {
       console.log("[ChangeFail]");
       console.log(e.json())
+    });
+  };
+
+  const GetUser = (kakao_id) => {
+    //console.log(kakao_id); //kakaoAuthData와 같음
+    fetch(domain + '/User/Domain/kakao/' + kakao_id).then(res => res.json()).then(res => {
+      let userInfo = res[0];
+      userInfo.photo = domain + '/' + res[0].photo;
+      setUserData(userInfo);
     });
   };
 
@@ -145,7 +161,7 @@ const reqChangeUserInfo = (fetchHeader, changeType, changeValue) => {
         </Button>
 
         <ChangePhoto onPress={() => {showCameraRoll();}}>
-           <Image style={{ width: '100%', height: '100%', resizeMode: 'contain' }} source={{ uri: userData.photo }} />
+           <Image style={{ width: '100%', height: '100%', resizeMode: 'contain' }} source={{ uri: userData.photo + "?cache="+Math.random() }} />
         </ChangePhoto>
 
         <TestView>
