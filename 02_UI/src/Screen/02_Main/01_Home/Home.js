@@ -8,6 +8,7 @@ const data = {id: 5};
 
 const Home = () => {
     const { userData, setUserData } = useContext(UserData);
+    
     return (
         <>
         {userData != null && <View>

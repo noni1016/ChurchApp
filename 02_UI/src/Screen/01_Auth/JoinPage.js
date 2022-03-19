@@ -70,7 +70,9 @@ const JoinPage = () => {
             console.log(res);
             console.log("[=========]");
             //로그인 
-            setUserData(res[0]);
+            let userInfo = res[0];
+            userInfo.photo = domain + '/' + res[0].photo;
+            setUserData(userInfo);
         }).catch(e => {console.log("[JOINFAIL]"); console.log(e.json())});
     }
 

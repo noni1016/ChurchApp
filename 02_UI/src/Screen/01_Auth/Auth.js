@@ -44,16 +44,18 @@ const AuthPage = () => {
   
   const GetUser = (kakao_id) => {
     //console.log(kakao_id); //kakaoAuthData와 같음
-    fetch(domain + '/User/Domain/kakao/' + kakao_id).then(res => res.json()).then(res => 
-      {
-        setUserData(res[0]);
-        setKakaoFlag(true);
-        
-        console.log("[AutoLogin]");
-        console.log(res[0]);
-        console.log("[=========]");
-      });
-}
+    fetch(domain + '/User/Domain/kakao/' + kakao_id).then(res => res.json()).then(res => {
+      let userInfo = res[0];
+      userInfo.photo = domain + '/' + res[0].photo;
+      setUserData(userInfo);
+
+      setKakaoFlag(true);
+
+      console.log("[AutoLogin]");
+      console.log(userInfo);
+      console.log("[=========]");
+    });
+  }
 
 //처음 진입 시 자동로그인.
 useEffect(() => {
