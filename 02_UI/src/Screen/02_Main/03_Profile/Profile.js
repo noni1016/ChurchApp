@@ -103,8 +103,7 @@ const ChurchNameTextHandler = (value) => {
             console.log('ImageSrc: ' + JSON.stringify(response.assets));
             console.log('ImageSrc: ' + response.assets[0].uri);
             setImgSrc(response.assets[0]);
-            updateImg();
-            
+            console.log(imgSrc.uri);
             const imageData = new FormData();
             imageData.append('file', {
                 uri: imgSrc.uri,
@@ -113,19 +112,23 @@ const ChurchNameTextHandler = (value) => {
                 data: imgSrc.data
             });
 
-            reqChangeUserInfo("photo", imageData)
+          let fetchHeader = {
+            Accept: 'application/json',
+            'Content-Type': 'multipart/form-data',
+          }
+          reqChangeUserInfo(fetchHeader, "photo", imageData)
         }
     });
 }
 
-const reqChangeUserInfo = (changeType, changeValue) => {
+const reqChangeUserInfo = (fetchHeader, changeType, changeValue) => {
     console.log(changeType, changeValue);
     console.log(userData.id);
 
     fetch(`${domain}/User/${userData.id}/${changeType}`, {
       method: 'PUT',
       body: changeValue,
-      headers: { 'Content-Type': 'application/json' }
+      headers: fetchHeader
     }).then(res => res.json()).then(res => {
       alert(res);
     }).catch(e => {
@@ -157,7 +160,7 @@ const reqChangeUserInfo = (changeType, changeValue) => {
               value={nickName}
             />
 
-            <UserInfoChangeBtn onPress={() => reqChangeUserInfo("name", JSON.stringify({ data: nickName}))}>
+            <UserInfoChangeBtn onPress={() => reqChangeUserInfo({'Content-Type': 'application/json'},"name", JSON.stringify({ data: nickName}))}>
               <Text> Name Change </Text>
             </UserInfoChangeBtn>
           </ChangableStringData>
@@ -173,7 +176,7 @@ const reqChangeUserInfo = (changeType, changeValue) => {
               value={churchName}
             />
 
-            <UserInfoChangeBtn onPress={() => reqChangeUserInfo("church", JSON.stringify({ data: churchName}))}>
+            <UserInfoChangeBtn onPress={() => reqChangeUserInfo({'Content-Type': 'application/json'}, "church", JSON.stringify({ data: churchName}))}>
               <Text> Curch Change </Text>
             </UserInfoChangeBtn>
           </ChangableStringData>
