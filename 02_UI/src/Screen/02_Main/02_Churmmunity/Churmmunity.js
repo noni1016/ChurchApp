@@ -13,7 +13,7 @@ import ClubCardsColView from '~/Screen/02_Main/02_Churmmunity/Group/ClubCardsCol
 import ClubPage from '~/Screen/02_Main/02_Churmmunity/Group/ClubPage'
 import Comments from './Group/Comments';
 import EditFeed from './Group/EditFeed';
-import CreateChurmmunity from './Group/CreateChurmmunity';
+import EditChurmmunity from './Group/EditChurmmunity';
 
 import { UserData, UserContextProvider } from '~/Context/User';
 import {DomainContext, DomainContextProvider} from '~/Context/Domain';
@@ -86,7 +86,7 @@ const NoniNavi = () => {
                     headerRight: () => (
                         <HeaderButtonsContainer>
                             <Icon name="search" size={26} onPress={() => alert('This is a search button!')} />
-                            <Icon name="add" size={26} onPress={() => navigation.navigate('CreateChurmmunity')} />
+                            <Icon name="add" size={26} onPress={() => navigation.navigate('EditChurmmunity', {navigation: navigation})} />
                         </HeaderButtonsContainer>
                     )
                 })}
@@ -128,8 +128,8 @@ const NoniNavi = () => {
                 }}
              />
             <Stack.Screen
-                name="CreateChurmmunity"
-                component={CreateChurmmunity}
+                name="EditChurmmunity"
+                component={EditChurmmunity}
                 options={{
                     headerShown: true,
                     headerBackTitleVisible: false,

@@ -9,10 +9,11 @@ import Photos from '~/Components/Photos';
 import Feeds from '~/Components/Feeds';
 import AddBtn from '~/Components/AddBtn';
 import ImageSize from 'react-native-image-size';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 const Header = Styled.View`
     flex-direction: row;
-    justify-content: flex-start;
+    justify-content: space-between;
     align-items: center;
     padding: 10px 0px 5px 10px; 
     background-color: #FFFFFF;
@@ -41,6 +42,7 @@ const ClubPage = ({route, navigation}) => {
     var [refresh, setRefresh] = useState(false);    
     var [members, setMembers] = useState([]);
     var [isMember, setIsMember] = useState(false);
+    var [isLeader, setIsLeader] = useState(false);
     var tabs = ['홈', '게시글', '사진'];
     
     /* 첫 마운팅때 Group 상단 사진 url 설정 */
@@ -86,6 +88,9 @@ const ClubPage = ({route, navigation}) => {
             if (member.id === userData.id) {
                 setIsMember(true);
             }
+            if (member.role === 'leader') {
+                setIsLeader(true);
+            }
         })
     }, [members])
 
@@ -103,6 +108,7 @@ const ClubPage = ({route, navigation}) => {
                 <Title>
                     {data.name}
                 </Title>
+                {isLeader && <Icon name="settings-outline" size={26} onPress={() => navigation.navigate('EditChurmmunity', {edit: 1, editData: data, navigation: navigation})} />}
             </Header>
             <ScrollView>
                 <Image style={{ backgroundColor: '#000000', width: resizedWidth, height: resizedHeight, resizeMode: 'contain' }} source={url ? {uri: url } : null} />

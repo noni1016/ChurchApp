@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { View, Text, Dimensions, ScrollView, Image, TouchableOpacity } from 'react-native';
-import { create } from 'react-test-renderer';
 import Styled from 'styled-components/native';
 import { DomainContext } from '~/Context/Domain';
 import { UserData } from '~/Context/User';
 import {launchImageLibrary} from 'react-native-image-picker';
+import ImageSize from 'react-native-image-size';
+
 
 
 const OptionName = Styled.Text`
@@ -36,7 +37,7 @@ const TypeSelectBtn = Styled.Text`
 `;
 
 const TitleInput = Styled.TextInput`
-    width: 80%;
+    width: 90%;
     background-color: transparent;
     padding: 0px;
     margin: 10px 10px 10px 20px; //상 우 하 좌
@@ -102,7 +103,10 @@ const SendBtn = Styled.TouchableOpacity`
 `;
 
 
-const CreateChurmmunity = () => {
+const EditChurmmunity = ({route, navigation}) => {
+    const domain = useContext(DomainContext);
+    const edit = route.params.edit;
+    const editData = route.params.editData;
     const [createType, setCreateType] = useState(1);
     const [imgSrc, setImgSrc] = useState(undefined);
     const [textInput, setTextInput] = useState('');
@@ -138,15 +142,28 @@ const CreateChurmmunity = () => {
         alert('Submit Button Pressed!');
     }
     
+    useEffect(() => {
+        if (edit === 1 && route.params.editData) /* 클럽 모임 수정 모드 */
+        {
+            navigation.setOptions({title: '모임 정보 수정'});
+            setImgSrc({uri: domain + '/' + route.params.editData.mainImg});
+            setTextInput(route.params.editData.description);
+        }
+        else if (edit === 2 && route.params.editData) /* 번개 모임 수정 모드 */
+        {
+            navigation.setOptions({title: '번개 모임 수정'});
+        }
+    }, [edit, route.params.editData])
+
     return (        
         <ScrollView>
-            <OptionName>모임 유형</OptionName>
-            <TypeSelectBtnsBox>
+            {!edit && <OptionName>모임 유형</OptionName>}
+            {!edit && (<TypeSelectBtnsBox>
                 <TouchableOpacity onPress={() => setCreateType(1)}><TypeSelectBtn isSelected={createType == 1}>공동체</TypeSelectBtn></TouchableOpacity>
                 <TouchableOpacity onPress={() => setCreateType(2)}><TypeSelectBtn isSelected={createType == 2}>번개</TypeSelectBtn></TouchableOpacity>
-            </TypeSelectBtnsBox>
+            </TypeSelectBtnsBox>)}
             <OptionName>모임 이름</OptionName>
-            <TitleInput></TitleInput>
+            <TitleInput>{editData ? editData.name : ''}</TitleInput>
             <OptionName>모임 대표 이미지</OptionName>
             {imgSrc == undefined && <PlusBtnBox onPress={() => { showCameraRoll(); }}>
                 <PlusText>+</PlusText>
@@ -183,4 +200,4 @@ const CreateChurmmunity = () => {
 
 };
 
-export default CreateChurmmunity;
+export default EditChurmmunity;
