@@ -76,6 +76,45 @@ router.post('/Domain/:domain', async (req, res) => {
 })
 
 // Update(Put) User Information
+// Update(Put) User Img
+let fileName = '';
+const putUserImg = multer({
+    storage: multer.diskStorage({
+        destination: function (req, file, cb) {
+            cb(null, 'public/Profile');
+        },
+        filename(req, file, cb) {
+            console.log(file.originalname);
+                var temp = file.originalname.split('.');
+                var fileExt = temp[temp.length - 1];
+                fileName = 'UserImg' + req.params.userId + '.' + fileExt;         
+                cb(null, fileName);
+        },
+    }),
+})
+
+router.put('/:userId/photo', putUserImg.single('file'), async (req, res, next) => {
+    // console.log(req.file.filename);
+    console.log('Photo change');
+    
+    let queryRes = false;
+    let sql = `UPDATE User SET photo = 'Profile/${fileName}' WHERE id = ${req.params.userId}`;
+    console.log(sql);
+    conn.query(sql, function (error, rows, fields) { // sql 쿼리 수행
+        if (!error) {
+            console.log(rows.affectedRows);
+            if (rows.affectedRows === 1) queryRes = true;
+            // console.log('query success')
+            res.send(queryRes);
+        } else {
+            console.log('query error : ' + error);
+        }
+    });
+
+})
+
+
+
 router.put('/:userId/:column', (req, res) => {
     let queryRes = false;
     let sql = `UPDATE User SET ${req.params.column} = '${req.body.data}' WHERE id = ${req.params.userId}`;
@@ -91,5 +130,6 @@ router.put('/:userId/:column', (req, res) => {
         }
     });
 });
+
 
 module.exports = router;

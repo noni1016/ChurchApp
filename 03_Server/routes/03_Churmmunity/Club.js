@@ -41,7 +41,7 @@ router.get('/Sort/:method/:num', (req, res) => {
 ////////////////////////////////////////////////////////////Club Page
 // Get Club Member
 router.get('/:clubId/Member', (req, res) => {
-    let sql = `SELECT User.id, User.name, User.photo
+    let sql = `SELECT User.id, User.name, User.photo, ClubUser.role
     FROM Club, ClubUser, User
     WHERE ClubUser.clubId = ${req.params.clubId}
         AND ClubUser.userId = User.id
