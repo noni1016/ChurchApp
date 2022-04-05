@@ -94,7 +94,6 @@ const SendBtnBox = Styled.View`
 const SendBtn = Styled.TouchableOpacity`
     width: 90%;
     height: 50px;
-    background-color: blue;
     color: white;
     justify-content: center;
     align-items: center;
@@ -138,8 +137,11 @@ const EditChurmmunity = ({route, navigation}) => {
         });
     }
 
-    const putFeed = () => {
+    const putChurmmunity = () => {
         alert('Submit Button Pressed!');
+    }    
+    const delChurmmunity = () => {
+        alert('Delete Button Pressed!');
     }
     
     useEffect(() => {
@@ -192,8 +194,13 @@ const EditChurmmunity = ({route, navigation}) => {
                 <Text>네이버 지도</Text>
             </PlusBtnBox>
             <SendBtnBox>
-                <SendBtn onPress={() => putFeed()}>
+                <SendBtn style={{backgroundColor: 'blue'}} onPress={() => putChurmmunity()}>
                     <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 18 }}>게시</Text>
+                </SendBtn>
+            </SendBtnBox>
+            <SendBtnBox>
+                <SendBtn style={{backgroundColor: 'red'}} onPress={() => delChurmmunity()}>
+                    <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 18 }}>모임 해산</Text>
                 </SendBtn>
             </SendBtnBox>
         </ScrollView>);
