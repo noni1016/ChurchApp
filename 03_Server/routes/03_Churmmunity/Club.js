@@ -12,7 +12,7 @@ var imgUpload = false;
 ////////////////////////////////////////////////////////////Churmmunity Page
 // All Club
 router.get('/', (req, res) => {
-    let sql = 'SELECT * FROM Club'; // Club 테이블에서 모든 값을 가져옴
+    let sql = 'SELECT * FROM ClubView'; // Club 테이블에서 모든 값을 가져옴
     console.log(sql);
     conn.query(sql, function (error, rows, fields) { // sql 쿼리 수행
         if (!error) {
@@ -26,7 +26,7 @@ router.get('/', (req, res) => {
 
 // All Club with Sorting
 router.get('/Sort/:method/:num', (req, res) => {
-    let sql = `SELECT * FROM Club ORDER BY ${req.params.method} LIMIT 0, ${req.params.num}`; // Club 테이블에서 Sorting 해서 num 개 까지의 값을 가져옴
+    let sql = `SELECT * FROM ClubView ORDER BY ${req.params.method} LIMIT 0, ${req.params.num}`; // Club 테이블에서 Sorting 해서 num 개 까지의 값을 가져옴
     console.log(sql);
     conn.query(sql, function (error, rows, fields) { // sql 쿼리 수행
         if (!error) {
@@ -42,10 +42,10 @@ router.get('/Sort/:method/:num', (req, res) => {
 // Get Club Member
 router.get('/:clubId/Member', (req, res) => {
     let sql = `SELECT User.id, User.name, User.photo, ClubUser.role
-    FROM Club, ClubUser, User
+    FROM ClubView, ClubUser, User
     WHERE ClubUser.clubId = ${req.params.clubId}
         AND ClubUser.userId = User.id
-        AND ClubUser.clubId = Club.id`;
+        AND ClubUser.clubId = ClubView.id`;
     conn.query(sql, function (error, rows, fields) { // sql 쿼리 수행
         if (!error) {
             // console.log(rows);
@@ -59,10 +59,11 @@ router.get('/:clubId/Member', (req, res) => {
 
 // Get Num of club member
 router.get('/:clubId/NumMember/', function (req, res) {
-    let sql = `SELECT COUNT(*) FROM Club, ClubUser, User
-    WHERE ClubUser.clubId = ${req.params.clubId}
-        AND ClubUser.userId = User.id
-        AND ClubUser.clubId = Club.id`;
+    let sql = `SELECT numMember FROM ClubView WHERE id = ${req.params.clubId}`;
+    // let sql = `SELECT COUNT(*) FROM ClubView, ClubUser, User
+    // WHERE ClubUser.clubId = ${req.params.clubId}
+    //     AND ClubUser.userId = User.id
+    //     AND ClubUser.clubId = Club.id`;
     console.log(sql);
     conn.query(sql, function (error, rows, fields) {
         if (!error) {
@@ -75,33 +76,18 @@ router.get('/:clubId/NumMember/', function (req, res) {
 })
 
 // Join club
-router.get('/:clubId/Join/:userId', async (req, res) => {
+router.get('/:clubId/Join/:userId', (req, res) => {
     let cnt = 0;
-    let sql1 = `INSERT INTO ClubUser (clubId, userId, role) VALUES (${req.params.clubId}, ${req.params.userId}, 'user')`;
-    let sql2 = `SELECT COUNT(*) FROM Club, ClubUser, User WHERE ClubUser.clubId = ${req.params.clubId}
-        AND ClubUser.userId = User.id
-        AND ClubUser.clubId = Club.id`;
-    let sql3 = ``;
-    console.log(sql1);
-    console.log(sql2);
-    try {
-        await conn.beginTransaction();
-        await conn.query(sql1);
-        await conn.query(sql2, (error, rows) => {
-            let row = rows[0];
-            cnt = row['COUNT(*)'];       
-            console.log(cnt);     
-            sql3 = `Update Club SET numMember = ${cnt} WHERE id = ${req.params.clubId}`;
-            conn.query(sql3);
-        });
-        console.log(sql3);
-        await conn.commit();
-        res.send('OK');
-    } catch (err) {
-        console.log(err)
-        await conn.rollback()
-        res.status(500).json(err)
-    }
+    let sql = `INSERT INTO ClubUser (clubId, userId, role) VALUES (${req.params.clubId}, ${req.params.userId}, 'user')`;
+    console.log(sql);
+    conn.query(sql, function (error, rows, fields) {
+        if (!error) {
+            console.log(rows);
+            res.send('OK');
+        } else {
+            console.log('query error : ' + error);
+        }
+    });
 })
 
 
@@ -109,33 +95,18 @@ router.get('/:clubId/Join/:userId', async (req, res) => {
 // Exit club
 router.get('/:clubId/Exit/:userId', async (req, res) => {
     let cnt = 0;
-    let sql1 = `DELETE FROM ClubUser 
+    let sql = `DELETE FROM ClubUser 
         WHERE ClubUser.clubId = ${req.params.clubId}
         AND ClubUser.userId = ${req.params.userId}`;
-    let sql2 = `SELECT COUNT(*) FROM Club, ClubUser, User WHERE ClubUser.clubId = ${req.params.clubId}
-        AND ClubUser.userId = User.id
-        AND ClubUser.clubId = Club.id`;
-    let sql3 = ``;
-    console.log(sql1);
-    console.log(sql2);
-    try {
-        await conn.beginTransaction();
-        await conn.query(sql1);
-        await conn.query(sql2, (error, rows) => {
-            let row = rows[0];
-            cnt = row['COUNT(*)'];       
-            console.log(cnt);     
-            sql3 = `Update Club SET numMember = ${cnt} WHERE id = ${req.params.clubId}`;
-            conn.query(sql3);
-        });
-        console.log(sql3);
-        await conn.commit();
-        res.send('OK');
-    } catch (err) {
-        console.log(err)
-        await conn.rollback()
-        res.status(500).json(err)
-    }
+    console.log(sql);
+    conn.query(sql, function (error, rows, fields) {
+        if (!error) {
+            console.log(rows);
+            res.send('OK');
+        } else {
+            console.log('query error : ' + error);
+        }
+    });
 })
 
 // Get Feeds
@@ -158,7 +129,6 @@ router.get('/:clubId/Feed/:feedId/Comments', (req, res) => {
     console.log(sql);
     conn.query(sql, function (error, rows, fields) { // sql 쿼리 수행
         if (!error) {
-            // console.log(rows);
             res.send(rows);
         } else {
             console.log('query error : ' + error);
