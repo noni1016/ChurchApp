@@ -14,6 +14,7 @@ import ClubPage from '~/Screen/02_Main/02_Churmmunity/Group/ClubPage'
 import Comments from './Group/Comments';
 import EditFeed from './Group/EditFeed';
 import EditChurmmunity from './Group/EditChurmmunity';
+import EditMembers from './Group/EditMembers';
 
 import { UserData, UserContextProvider } from '~/Context/User';
 import {DomainContext, DomainContextProvider} from '~/Context/Domain';
@@ -134,6 +135,15 @@ const NoniNavi = () => {
                     headerShown: true,
                     headerBackTitleVisible: false,
                     title: '새 모임',
+                }}
+             />
+            <Stack.Screen
+                name="EditMembers"
+                component={EditMembers}
+                options={{
+                    headerShown: true,
+                    headerBackTitleVisible: false,
+                    title: '멤버 관리',
                 }}
              />
         </Stack.Navigator>
