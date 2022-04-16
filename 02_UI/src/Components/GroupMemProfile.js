@@ -27,7 +27,7 @@ const GroupMemProfile = ({member}) => {
     var [url, setUrl] = useState('');
 
     useEffect(() => {        
-        setUrl(`${member.photo}`);
+        setUrl(`${domain}/${member.photo}`);
     }, [])
 
     return (

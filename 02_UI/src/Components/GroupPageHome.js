@@ -1,9 +1,10 @@
 import React, {useState, useEffect, useContext} from 'react';
-import { Text, Dimensions} from 'react-native';
+import { Text, Dimensions, Alert } from 'react-native';
 import Styled from 'styled-components/native';
 import {DomainContext} from '~/Context/Domain';
 import {UserData} from '~/Context/User';
 import GroupMemProfile from './GroupMemProfile';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 const Container = Styled.View`
     padding: 10px 10px 0px 10px; //상 우 하 좌
@@ -37,6 +38,9 @@ const JoinBtnText = Styled.Text`
 `;
 
 const NumGroupMemCont = Styled.View`
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
     flex: 1;
     border-color: #000000;
     border-bottom-width: 1px;    
@@ -46,12 +50,12 @@ const NumGroupMemCont = Styled.View`
 `;
 
 
-const ClubPageHome = ({data, members, isMember, setMember}) => {
+const ClubPageHome = ({data, members, isMember, isLeader, setMember, navigation}) => {
     const domain = useContext(DomainContext);    
     const {userData, setUserData} = useContext(UserData);
     var [numClubMem, setNumClubMem] = useState(0);
 
-    var [button, setButton] = useState((<JoinBtn onPress={()=>{alert('가입하기')}}>
+    var [button, setButton] = useState((<JoinBtn onPress={()=>{alert('로딩중')}}>
                     <JoinBtnText>가입하기</JoinBtnText>
                 </JoinBtn>));
 
@@ -60,12 +64,16 @@ const ClubPageHome = ({data, members, isMember, setMember}) => {
     }, [members])
 
     useEffect(() => {
-        console.log('GroupDetailHome is Member: ', isMember);
+        console.log('GroupDetailHome is Leader: ', isLeader);
         if (isMember) {
             setButton((<JoinBtn onPress={()=>{
-                fetch(`${domain}/Club/${data.id}/Exit/${userData.id}`).then(setMember(false));}}>
-                        <JoinBtnText>탈퇴하기</JoinBtnText>
-                    </JoinBtn>));
+                if (!isLeader)
+                    fetch(`${domain}/Club/${data.id}/Exit/${userData.id}`).then(setMember(false));
+                else
+                    Alert.alert("리더 탈주 감지!", "리더는 탈퇴할 수 없습니다. 멤버 관리 페이지에서 먼저 리더를 변경하세요.");
+                }}>
+                    <JoinBtnText>탈퇴하기</JoinBtnText>
+                </JoinBtn>));
         } else {
             setButton((<JoinBtn onPress={()=>{
                 fetch(`${domain}/Club/${data.id}/Join/${userData.id}`).then(setMember(true));}}>
@@ -81,8 +89,9 @@ const ClubPageHome = ({data, members, isMember, setMember}) => {
             {button}
             <NumGroupMemCont>
                 <Text fontSize={18}>멤버 {numClubMem} 명</Text>
+                {isLeader && <Icon name="settings-outline" size={18} onPress={() => navigation.navigate('EditMembers', {members: members, navigation: navigation})} />}
             </NumGroupMemCont>
-            {members.map((member, index) => (<GroupMemProfile member={member} />))}
+            {members.map((member, index) => (<GroupMemProfile key={index.toString()} member={member} />))}
         </Container>
     )
 }

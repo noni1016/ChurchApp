@@ -82,14 +82,13 @@ const ClubPage = ({route, navigation}) => {
         fetch(`${domain}/Club/${data.id}/Member`).then(res => res.json()).then(res => {setMembers(res);});
     }, [data])
 
-    /* 멤버 정보 불러왓으면 현재 유저가 그룹 멤버인지 확인 */
-    useEffect(() => {
+    /* 멤버 정보 불러왓으면 현재 유저가 그룹 멤버인지 확인. 리더 여부도 확인 */
+    useEffect(() => {        
         members.map((member, index) => {
             if (member.id === userData.id) {
                 setIsMember(true);
-            }
-            if (member.role === 'leader') {
-                setIsLeader(true);
+                if (member.role === 'leader')
+                    setIsLeader(true);
             }
         })
     }, [members])
@@ -125,7 +124,7 @@ const ClubPage = ({route, navigation}) => {
                         />
                     ))}
                 </TabContainer>
-                {tabIdx == 0 && <ClubPageHome data={data} members={members} isMember={isMember} setMember={(value)=>{setMember(value)}}/>}
+                {tabIdx == 0 && <ClubPageHome data={data} members={members} isMember={isMember} isLeader={isLeader} setMember={(value)=>{setMember(value)}} navigation={navigation}/>}
                 {tabIdx == 1 && <Feeds club={data} feedAdded={refresh} navigation={navigation}/>}
                 {tabIdx == 2 && <Photos club={data}>사진</Photos>}
             </ScrollView>
