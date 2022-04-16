@@ -89,7 +89,7 @@ const ClubPageHome = ({data, members, isMember, isLeader, setMember, navigation}
             {button}
             <NumGroupMemCont>
                 <Text fontSize={18}>멤버 {numClubMem} 명</Text>
-                {isLeader && <Icon name="settings-outline" size={18} onPress={() => navigation.navigate('EditMembers', {members: members, navigation: navigation})} />}
+                {isLeader && <Icon name="settings-outline" size={18} onPress={() => navigation.navigate('EditMembers', {group: data, members: members, navigation: navigation})} />}
             </NumGroupMemCont>
             {members.map((member, index) => (<GroupMemProfile key={index.toString()} member={member} />))}
         </Container>

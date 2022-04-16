@@ -151,7 +151,7 @@ const Feed = ({club, feed, onFeedChange, navigation}) => {
     return (
         <FeedContainer>
             <FeedHeader>
-                <Image style={{ backgroundColor: 'transparent', width: 50, height: 50}} source={feedAuthorData ? {uri: feedAuthorData.photo} : null } />
+                <Image style={{ backgroundColor: 'transparent', width: 50, height: 50}} source={feedAuthorData ? {uri: `${domain}/${feedAuthorData.photo}`} : null } />
                 <HeaderInfo>
                     {feedAuthorData && 
                         <Text style={{fontWeight: 'bold', fontSize: 18}}>
