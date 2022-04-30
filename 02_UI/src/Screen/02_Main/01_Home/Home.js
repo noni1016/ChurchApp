@@ -9,7 +9,7 @@ import {NativeModules, Button} from 'react-native';
 const data = {id: 5};
 
 const Home = () => {
-    const { CalendarModule } = NativeModules;
+    const { CalendarModule, KakaoMapModule } = NativeModules;
     const { userData, setUserData } = useContext(UserData);
     const [location, setLocation] = useState(undefined);
 
@@ -29,9 +29,17 @@ const Home = () => {
         );
     },[])
     
-    const onPress = () => {
+    const onPress = async () => {
         console.log('Native Module');
         CalendarModule.createCalendarEvent('testName', 'testLocation');
+
+         console.log('Kakao Map Module');
+         //KakaoMapModule.createCurrentLocate('kakaoModule', 'noni home');
+         var zz = await KakaoMapModule.getNoni();
+
+         console.log(zz);
+
+         KakaoMapModule.getMap();
     }
     
     return (
