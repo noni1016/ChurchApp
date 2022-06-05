@@ -5,11 +5,13 @@ import AddBtn from '~/Components/AddBtn'
 import { UserData } from '~/Context/User';
 import Geolocation from 'react-native-geolocation-service';
 import {NativeModules, Button} from 'react-native';
+import { TestView } from './DaumMapView';
 
 const data = {id: 5};
 
 const Home = () => {
-    const { CalendarModule, KakaoMapModule } = NativeModules;
+    const { CalendarModule, KakaoMapModule, DaumMapModule } = NativeModules;
+
     const { userData, setUserData } = useContext(UserData);
     const [location, setLocation] = useState(undefined);
 
@@ -50,6 +52,10 @@ const Home = () => {
             <Text>Longitude: {location.longitude}</Text>
             </>
         ) : (<Text>Loading...</Text>)}
+
+        {/* <TestView
+            style={{width: 300, height: 300, backgroundColor: 'yellow'}}
+        /> */}
 
         <Button title="Click" color="#841584" onPress={onPress} />
         {userData != null && <View>
