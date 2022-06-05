@@ -55,12 +55,12 @@ const Home = () => {
 
         <TestView
             initialRegion={{
-                latitude: 36.143099,
-                longitude: 128.392905,
-                zoomLevel: 5,
+                latitude: 67.3589807,
+                longitude: 126.9201303,
+                zoomLevel: 1,
             }}
             mapType={"Standard"}
-            style={{ width: 300, height: 300, }}
+            style={{ width: 400, height: 400, backgroundColor: 'transparent'}}
         />
 
         <Button title="Click" color="#841584" onPress={onPress} />
