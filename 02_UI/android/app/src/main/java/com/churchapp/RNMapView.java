@@ -23,15 +23,15 @@ public class RNMapView extends MapView {
 
 		this.setMapTilePersistentCacheEnabled(true);
 		String apiKey = null;
-		// try {
-		// 	ApplicationInfo ai = appContext.getPackageManager().getApplicationInfo(appContext.getApplicationContext().getPackageName(), PackageManager.GET_META_DATA);
-		// 	Bundle bundle = ai.metaData;
-		// 	if (bundle != null) {
-		// 		apiKey = bundle.getString("com.kakao.sdk.AppKey");
-		// 		this.setDaumMapApiKey(apiKey);
-		// 	}
-		// } catch (NameNotFoundException e) {
-		// 	Log.e(TAG, e.getMessage());
-		// }
+		try {
+			ApplicationInfo ai = appContext.getPackageManager().getApplicationInfo(appContext.getApplicationContext().getPackageName(), PackageManager.GET_META_DATA);
+			Bundle bundle = ai.metaData;
+			if (bundle != null) {
+				apiKey = bundle.getString("com.kakao.sdk.AppKey");
+				this.setDaumMapApiKey(apiKey);
+			}
+		} catch (NameNotFoundException e) {
+			Log.e(TAG, e.getMessage());
+		}
 	}
 }

@@ -53,9 +53,15 @@ const Home = () => {
             </>
         ) : (<Text>Loading...</Text>)}
 
-        {/* <TestView
-            style={{width: 300, height: 300, backgroundColor: 'yellow'}}
-        /> */}
+        <TestView
+            initialRegion={{
+                latitude: 36.143099,
+                longitude: 128.392905,
+                zoomLevel: 5,
+            }}
+            mapType={"Standard"}
+            style={{ width: 300, height: 300, }}
+        />
 
         <Button title="Click" color="#841584" onPress={onPress} />
         {userData != null && <View>
