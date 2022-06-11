@@ -16,7 +16,7 @@
       android:roundIcon="@mipmap/ic_launcher_round"
       android:allowBackup="true"
       android:theme="@style/AppTheme">
-      <meta-data android:name="com.kakao.sdk.AppKey" android:value="598b6c15a810f443c42c0255a2e607ae"/>
+      <meta-data android:name="com.kakao.sdk.AppKey" android:value="9a787aa9f3bd97e804dd8c73dbf0cd5b"/>
       <activity
         android:name=".MainActivity"
         android:label="@string/app_name"

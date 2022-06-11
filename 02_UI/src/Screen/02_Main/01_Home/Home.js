@@ -5,17 +5,20 @@ import AddBtn from '~/Components/AddBtn'
 import { UserData } from '~/Context/User';
 import Geolocation from 'react-native-geolocation-service';
 import {NativeModules, Button} from 'react-native';
-import { TestView } from './DaumMapView';
+import DaumMap from './DaumMapController';
 
 const data = {id: 5};
 
 const Home = () => {
     const { CalendarModule, KakaoMapModule, DaumMapModule } = NativeModules;
 
+    let defaultLocation = {latitude: 37, longitude: 128};
+
     const { userData, setUserData } = useContext(UserData);
-    const [location, setLocation] = useState(undefined);
+    const [location, setLocation] = useState(defaultLocation);
 
     useEffect(() => {
+        DaumMap.setRestApiKey("598b6c15a810f443c42c0255a2e607ae");
         Geolocation.getCurrentPosition(
             position => {
                 const {latitude, longitude} = position.coords;
@@ -32,35 +35,26 @@ const Home = () => {
     },[])
     
     const onPress = async () => {
-        console.log('Native Module');
-        CalendarModule.createCalendarEvent('testName', 'testLocation');
-
-         console.log('Kakao Map Module');
-         //KakaoMapModule.createCurrentLocate('kakaoModule', 'noni home');
-         var zz = await KakaoMapModule.getNoni();
-
-         console.log(zz);
-
-         KakaoMapModule.getMap();
     }
     
     return (
         <>
         {location ? (
             <>
+            <Text> ============================== </Text>
             <Text>Latitude: {location.latitude}</Text>
             <Text>Longitude: {location.longitude}</Text>
+            <Text> ============================== </Text>
             </>
         ) : (<Text>Loading...</Text>)}
-
-        <TestView
-            initialRegion={{
-                latitude: 67.3589807,
-                longitude: 126.9201303,
-                zoomLevel: 1,
-            }}
-            mapType={"Standard"}
-            style={{ width: 400, height: 400, backgroundColor: 'transparent'}}
+        <DaumMap
+                    initialRegion={{
+                        latitude: location.latitude,
+                        longitude: location.longitude,
+                        zoomLevel: 5,
+                    }}
+                    mapType={"Standard"}
+                    style={{ width: 400, height: 400, backgroundColor: 'transparent'}}
         />
 
         <Button title="Click" color="#841584" onPress={onPress} />
