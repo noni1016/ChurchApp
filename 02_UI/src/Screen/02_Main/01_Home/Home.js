@@ -47,7 +47,7 @@ const Home = () => {
             <Text> ============================== </Text>
             </>
         ) : (<Text>Loading...</Text>)}
-        <DaumMap
+        {/* <DaumMap
                     initialRegion={{
                         latitude: location.latitude,
                         longitude: location.longitude,
@@ -55,7 +55,7 @@ const Home = () => {
                     }}
                     mapType={"Standard"}
                     style={{ width: 400, height: 400, backgroundColor: 'transparent'}}
-        />
+        /> */}
 
         <Button title="Click" color="#841584" onPress={onPress} />
         {userData != null && <View>
