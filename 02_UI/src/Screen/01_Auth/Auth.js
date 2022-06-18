@@ -110,7 +110,7 @@ useEffect(() => {
 
   return (
     <>
-      {tryGetKakao == false && userData == null && <Screen>
+      {/* {tryGetKakao == false && userData == null && <Screen>
         {authCheckFlag == false && <Image source={require(`~/Assets/Images/mainpray.jpg`)} />}
         {authCheckFlag && kakaoAuthData == null && <KaKaoBtn onPress={
           () => {
@@ -120,7 +120,8 @@ useEffect(() => {
         </KaKaoBtn>}
       </Screen>}
       {tryGetKakao && userData == null && <JoinPage />}
-      {tryGetKakao && userData != null && <Main />}
+      {tryGetKakao && userData != null && <Main />} */}
+      <Main />
     </>
   );
 };
