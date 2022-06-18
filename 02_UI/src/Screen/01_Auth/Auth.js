@@ -39,21 +39,27 @@ const AuthPage = () => {
   const { kakaoAuthData, setKakaoAuthData } = useContext(KakaoAuthData) //로그인 하여 가져온 카카오 계정정보
   
   const [ authCheckFlag, setAuthCheckFlag ] = useState(false); //카카오 로그인시도했음
-  //const [ tryGetKakao, setKakaoFlag] = useState(false); //카카오계정으로 회원 체크했다.
-  const { tryGetKakao, setKakaoFlag } = useContext(TryGetKakao);
+  const { tryGetKakao, setTryGetKakaoFlag } = useContext(TryGetKakao);
   
   const GetUser = (kakao_id) => {
-    //console.log(kakao_id); //kakaoAuthData와 같음
     fetch(domain + '/User/Domain/kakao/' + kakao_id).then(res => res.json()).then(res => {
-      let userInfo = res[0];
-      userInfo.photo = domain + '/' + res[0].photo;
-      setUserData(userInfo);
+      let resultCount = Object.keys(res).length; //회원정보가 있다면 res가 0이 아닐것
+      setTryGetKakaoFlag(true);
 
-      setKakaoFlag(true);
-
-      console.log("[AutoLogin]");
-      console.log(userInfo);
-      console.log("[=========]");
+      if(resultCount != 0)
+      {
+        let userInfo = res[0];
+        console.log(res);
+        console.log(userInfo);
+  
+        userInfo.photo = domain + '/' + res[0].photo;
+        setUserData(userInfo);
+  
+  
+        console.log("[AutoLogin]");
+        console.log(userInfo);
+        console.log("[=========]");
+      }
     });
   }
 
@@ -70,7 +76,6 @@ useEffect(() => {
   //앱실행 후 자동로그인
   const autoLogin = async () => {
     console.log("getProfile");
-    
     try {
       //카카오 계정정보 가져오기.
       const profile = await getKakaoProfile();
@@ -80,7 +85,6 @@ useEffect(() => {
     catch (e) {
       //카카오 로그인페이지 노출
       setKakaoAuthData(null);
-      console.log(e);
     }
 
     setAuthCheckFlag(true);

@@ -56,7 +56,7 @@ const Profile = () => {
   const domain = useContext(DomainContext);
   const { userData, setUserData} = useContext(UserData);
   const { kakaoAuthData, setKakaoAuthData } = useContext(KakaoAuthData);
-  const { tryGetKakao, setKakaoFlag } = useContext(TryGetKakao);
+  const { tryGetKakao, setTryGetKakaoFlag } = useContext(TryGetKakao);
   const [logOutResult, setLogOutResult] = useState(null);
   const [imgSrc, setImgSrc] = useState(undefined);
 
@@ -91,7 +91,7 @@ const ChurchNameTextHandler = (value) => {
     //성공하면 auth호출해야함. 성공 실패 어캐구분?
     setUserData(null);
     setKakaoAuthData(null);
-    setKakaoFlag(false);
+    setTryGetKakaoFlag(false);
   };
 
   useEffect(() => {
