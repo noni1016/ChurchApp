@@ -9,7 +9,8 @@ import Photos from '~/Components/Photos';
 import Feeds from '~/Components/Feeds';
 import AddBtn from '~/Components/AddBtn';
 import ImageSize from 'react-native-image-size';
-import Icon from 'react-native-vector-icons/Ionicons';
+import Icon1 from 'react-native-vector-icons/Ionicons';
+import Icon2 from 'react-native-vector-icons/AntDesign';
 
 const Header = Styled.View`
     flex-direction: row;
@@ -100,6 +101,7 @@ const ClubPage = ({route, navigation}) => {
         fetch(`${domain}/Club/${data.id}/Member`).then(res => res.json()).then(res => {setMembers(res);});
     };
 
+   
 
     return (
         <View>
@@ -107,7 +109,8 @@ const ClubPage = ({route, navigation}) => {
                 <Title>
                     {data.name}
                 </Title>
-                {isLeader && <Icon name="settings-outline" size={26} onPress={() => navigation.navigate('EditChurmmunity', {edit: 1, editData: data, navigation: navigation})} />}
+                <Icon2 name="notification" size={26} onPress={() =>alert('공지사항버튼')} />
+                {isLeader && <Icon1 name="settings-outline" size={26} onPress={() => navigation.navigate('EditChurmmunity', {edit: 1, editData: data, navigation: navigation})} />}
             </Header>
             <ScrollView>
                 <Image style={{ backgroundColor: '#000000', width: resizedWidth, height: resizedHeight, resizeMode: 'contain' }} source={url ? {uri: url } : null} />
