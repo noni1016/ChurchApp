@@ -6,6 +6,7 @@ import { UserData } from '~/Context/User';
 import Geolocation from 'react-native-geolocation-service';
 import {NativeModules, Button} from 'react-native';
 import DaumMap from './DaumMapController';
+import { getUniqueId, getManufacturer } from 'react-native-device-info';
 
 const data = {id: 5};
 
