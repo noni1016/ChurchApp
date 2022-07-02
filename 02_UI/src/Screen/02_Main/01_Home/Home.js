@@ -6,7 +6,7 @@ import { UserData } from '~/Context/User';
 import Geolocation from 'react-native-geolocation-service';
 import {NativeModules, Button} from 'react-native';
 import DaumMap from './DaumMapController';
-import { getUniqueId, getManufacturer } from 'react-native-device-info';
+import { getUniqueId, getManufacturer, isEmulator } from 'react-native-device-info';
 
 const data = {id: 5};
 
@@ -36,6 +36,9 @@ const Home = () => {
     },[])
     
     const onPress = async () => {
+        isEmulator().then((device) => {
+           console.log(device);
+          });
     }
     
     return (
@@ -48,7 +51,7 @@ const Home = () => {
             <Text> ============================== </Text>
             </>
         ) : (<Text>Loading...</Text>)}
-        {/* <DaumMap
+        <DaumMap
                     initialRegion={{
                         latitude: location.latitude,
                         longitude: location.longitude,
@@ -56,7 +59,7 @@ const Home = () => {
                     }}
                     mapType={"Standard"}
                     style={{ width: 400, height: 400, backgroundColor: 'transparent'}}
-        /> */}
+        />
 
         <Button title="Click" color="#841584" onPress={onPress} />
         {userData != null && <View>

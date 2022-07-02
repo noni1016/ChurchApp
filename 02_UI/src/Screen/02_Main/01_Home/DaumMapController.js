@@ -8,6 +8,7 @@ import {
 	PermissionsAndroid,
 	View,
 } from 'react-native';
+import { isEmulator } from 'react-native-device-info';
 
 
 let REST_API_KEY 	= "";
@@ -26,7 +27,7 @@ export default class DaumMapView extends Component {
 
 		this.state = {
 			permissionGranted: false,
-
+			emul: true,
 		};
 	}
 
@@ -51,10 +52,12 @@ export default class DaumMapView extends Component {
 		} else {
 			this.setState({ permissionGranted: true, });
 		}
+
+		isEmulator().then((res) => {this.setState({emul: res})});
 	}
 
 	render () {
-		if (this.state.permissionGranted) {
+		if (this.state.permissionGranted && !this.state.emul) {
 			return (
 				<DaumMap
 					{...this.props}
@@ -66,6 +69,7 @@ export default class DaumMapView extends Component {
 					onRegionChange={this._onRegionChange}
 					onUpdateCurrentLocation={this._onUpdateCurrentLocation}
 					onUpdateCurrentHeading={this._onUpdateCurrentHeading} />
+				// <View></View>
 			);
 		} else {
 			return (
