@@ -109,6 +109,7 @@ const EditChurmmunity = ({route, navigation}) => {
     const [createType, setCreateType] = useState(1);
     const [imgSrc, setImgSrc] = useState(undefined);
     const [textInput, setTextInput] = useState('');
+    const [content, setContent] = useState({name: '', mainImg: '', location: '', location_ll: {x: 0, y: 0}, description: ''});
 
     /* react-native-image-picker 라이브러리 사용 옵션 */
     const options = {
@@ -150,12 +151,18 @@ const EditChurmmunity = ({route, navigation}) => {
             navigation.setOptions({title: '모임 정보 수정'});
             setImgSrc({uri: domain + '/' + route.params.editData.mainImg});
             setTextInput(route.params.editData.description);
+            setContent(route.params.editData);
         }
         else if (edit === 2 && route.params.editData) /* 번개 모임 수정 모드 */
         {
             navigation.setOptions({title: '번개 모임 수정'});
         }
     }, [edit, route.params.editData])
+
+    // Debugging 용 useEffect
+    // useEffect(() => {
+    //     console.log(content.name);
+    // }, [content.name]);
 
     return (        
         <ScrollView>
@@ -165,7 +172,8 @@ const EditChurmmunity = ({route, navigation}) => {
                 <TouchableOpacity onPress={() => setCreateType(2)}><TypeSelectBtn isSelected={createType == 2}>번개</TypeSelectBtn></TouchableOpacity>
             </TypeSelectBtnsBox>)}
             <OptionName>모임 이름</OptionName>
-            <TitleInput>{editData ? editData.name : ''}</TitleInput>
+            <TitleInput maxLength={20} value={content.name} placeholder={'최대 20자'} onChangeText={(v)=>{setContent((current) => {let newContent = {...current}; newContent.name = v; return newContent})}} />
+            <View style={{flexDirection:'row-reverse'}}><Text style={{color: 'gray', backgroundColor: 'transparent'}}>{content.name ? content.name.length : 0} / 20</Text></View>
             <OptionName>모임 대표 이미지</OptionName>
             {imgSrc == undefined && <PlusBtnBox onPress={() => { showCameraRoll(); }}>
                 <PlusText>+</PlusText>
@@ -184,8 +192,9 @@ const EditChurmmunity = ({route, navigation}) => {
                     autoCorrect={false}
                     placeholder="모임 설명은 모임 메인 페이지에 표시됩니다."
                     returnKeyType="done"
-                    onChangeText={setTextInput}
-                    value={textInput}
+                    maxLength={200}
+                    onChangeText={(v) => {setContent((current) => {let newContent = {...current}; newContent.description = v; return newContent})}}
+                    value={content.description}
                 />
             </DescInputBox>
             <OptionName>모임 지역</OptionName>
