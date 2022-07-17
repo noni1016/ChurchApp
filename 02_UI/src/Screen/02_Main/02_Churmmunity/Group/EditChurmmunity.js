@@ -10,6 +10,7 @@ import Icon from 'react-native-vector-icons/AntDesign';
 import TagBox from '~/Components/TagBox';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import moment from 'moment';
+import { create } from 'react-test-renderer';
 
 
 const OptionName = Styled.Text`
@@ -240,16 +241,20 @@ const EditChurmmunity = ({route, navigation}) => {
                 {content.keyword ? content.keyword.map((v, i) => <TagBox text={v} color="blue" onPressDelBtn={() => setContent((current) => {let newContent = {...current}; newContent.keyword.splice(i, 1); return newContent})}/>) : null}
             </KeywordView>
 
-            <OptionName>모임 시간</OptionName>
-            <TouchableOpacity style={{marginLeft: 10, marginBottom: 10}} onPress={() => setDatePickerVisibility(true)}>
-                <Text>{content.dateTime ? content.dateTime : '여기를 눌러 시간을 설정하세요'}</Text>
-            </TouchableOpacity>
-            <DateTimePickerModal
-                isVisible={isDatePickerVisible}
-                mode="datetime"
-                onConfirm={(date) => {setContent((current) => {let newContent = {...current}; newContent.dateTime=moment(date.toUTCString()).format('YYYY.MM.DD HH:mm'); return newContent;}); setDatePickerVisibility(false);}}
-                onCancel={() => setDatePickerVisibility(false)}
-            />
+            {createType == 2 ? 
+            (<>
+                <OptionName>모임 시간</OptionName>
+                <TouchableOpacity style={{marginLeft: 10, marginBottom: 10}} onPress={() => setDatePickerVisibility(true)}>
+                    <Text>{content.dateTime ? content.dateTime : '여기를 눌러 시간을 설정하세요'}</Text>
+                </TouchableOpacity>
+                <DateTimePickerModal
+                    isVisible={isDatePickerVisible}
+                    mode="datetime"
+                    onConfirm={(date) => {setContent((current) => {let newContent = {...current}; newContent.dateTime=moment(date.toUTCString()).format('YYYY.MM.DD HH:mm'); return newContent;}); setDatePickerVisibility(false);}}
+                    onCancel={() => setDatePickerVisibility(false)}
+                />
+            </>)
+            : null}
 
 
             <OptionName>모임 지역</OptionName>
