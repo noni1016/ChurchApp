@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { View, Text, Dimensions, ScrollView, Image, TouchableOpacity } from 'react-native';
+import { View, Text, ScrollView, Image, TouchableOpacity, Touchable } from 'react-native';
 import Styled from 'styled-components/native';
 import { DomainContext } from '~/Context/Domain';
 import { UserData } from '~/Context/User';
@@ -8,7 +8,8 @@ import ImageSize from 'react-native-image-size';
 import CharacterCountLimit from '~/Components/CharacterCountLimit';
 import Icon from 'react-native-vector-icons/AntDesign';
 import TagBox from '~/Components/TagBox';
-
+import DateTimePickerModal from "react-native-modal-datetime-picker";
+import moment from 'moment';
 
 
 const OptionName = Styled.Text`
@@ -128,8 +129,9 @@ const EditChurmmunity = ({route, navigation}) => {
     const [createType, setCreateType] = useState(1);
     const [imgSrc, setImgSrc] = useState(undefined);
     const [textInput, setTextInput] = useState('');
-    const [content, setContent] = useState({name: '', mainImg: '', location: '', location_ll: {x: 0, y: 0}, description: '', keyword: []});
+    const [content, setContent] = useState({name: '', mainImg: '', location: '', location_ll: {x: 0, y: 0}, description: '', keyword: [], dateTime: ''});
     const [keyword, setKeyword] = useState('');
+    const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 
     /* react-native-image-picker 라이브러리 사용 옵션 */
     const options = {
@@ -185,9 +187,12 @@ const EditChurmmunity = ({route, navigation}) => {
 
     // Debugging 용 useEffect
     useEffect(() => {
-        if (content.keyword)
-            console.log(content.keyword);
-    }, [content]);
+        if (content.dateTime)
+        {
+            console.log(moment(content.dateTime).format('YYYY.MM.DD HH:mm:ss'))
+        }
+            // console.log(content.dateTime);
+    }, [content.dateTime]);
 
     return (        
         <ScrollView>
@@ -224,11 +229,7 @@ const EditChurmmunity = ({route, navigation}) => {
                 />
             </DescInputBox>
             <CharacterCountLimit curLength={content.description ? content.description.length : 0} maxLength={200} />
-            <OptionName>모임 지역</OptionName>
-            <PlusBtnBox onPress={() => {alert('네이버 지도 연결하자')}}>
-                <PlusText>+</PlusText>
-                <Text>네이버 지도</Text>
-            </PlusBtnBox>
+
 
             <OptionName>검색 키워드</OptionName>
             <View style={{flexDirection: "row", alignItems: "center"}}>
@@ -238,6 +239,25 @@ const EditChurmmunity = ({route, navigation}) => {
             <KeywordView>
                 {content.keyword ? content.keyword.map((v, i) => <TagBox text={v} color="blue" onPressDelBtn={() => setContent((current) => {let newContent = {...current}; newContent.keyword.splice(i, 1); return newContent})}/>) : null}
             </KeywordView>
+
+            <OptionName>모임 시간</OptionName>
+            <TouchableOpacity style={{marginLeft: 10, marginBottom: 10}} onPress={() => setDatePickerVisibility(true)}>
+                <Text>{content.dateTime ? content.dateTime : '여기를 눌러 시간을 설정하세요'}</Text>
+            </TouchableOpacity>
+            <DateTimePickerModal
+                isVisible={isDatePickerVisible}
+                mode="datetime"
+                onConfirm={(date) => {setContent((current) => {let newContent = {...current}; newContent.dateTime=moment(date.toUTCString()).format('YYYY.MM.DD HH:mm'); return newContent;}); setDatePickerVisibility(false);}}
+                onCancel={() => setDatePickerVisibility(false)}
+            />
+
+
+            <OptionName>모임 지역</OptionName>
+            <PlusBtnBox onPress={() => {alert('네이버 지도 연결하자')}}>
+                <PlusText>+</PlusText>
+                <Text>네이버 지도</Text>
+            </PlusBtnBox>
+
             <SendBtnBox>
                 <SendBtn style={{backgroundColor: 'blue'}} onPress={() => putChurmmunity()}>
                     <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 18 }}>게시</Text>
