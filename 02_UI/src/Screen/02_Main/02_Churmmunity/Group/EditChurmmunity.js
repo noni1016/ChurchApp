@@ -6,6 +6,8 @@ import { UserData } from '~/Context/User';
 import {launchImageLibrary} from 'react-native-image-picker';
 import ImageSize from 'react-native-image-size';
 import CharacterCountLimit from '~/Components/CharacterCountLimit';
+import Icon from 'react-native-vector-icons/AntDesign';
+import TagBox from '~/Components/TagBox';
 
 
 
@@ -39,6 +41,15 @@ const TypeSelectBtn = Styled.Text`
 
 const TitleInput = Styled.TextInput`
     width: 90%;
+    background-color: transparent;
+    padding: 0px;
+    margin: 10px 10px 10px 20px; //상 우 하 좌
+    border-bottom-width: 1px;
+    font-size: 18px;
+`;
+
+const KeywordInput = Styled.TextInput`
+    width: 80%;
     background-color: transparent;
     padding: 0px;
     margin: 10px 10px 10px 20px; //상 우 하 좌
@@ -86,6 +97,13 @@ const DescInput = Styled.TextInput`
     text-align-vertical: top;
 `;
 
+const KeywordView = Styled.View`
+    flex-direction: row;
+    flex-wrap: wrap;
+    background-color : transparent;
+    margin: 0px 10px 20px 10px; //상 우 하 좌
+`;
+
 const SendBtnBox = Styled.View`
     flex-direction: row;
     justify-content: center;
@@ -110,7 +128,8 @@ const EditChurmmunity = ({route, navigation}) => {
     const [createType, setCreateType] = useState(1);
     const [imgSrc, setImgSrc] = useState(undefined);
     const [textInput, setTextInput] = useState('');
-    const [content, setContent] = useState({name: '', mainImg: '', location: '', location_ll: {x: 0, y: 0}, description: ''});
+    const [content, setContent] = useState({name: '', mainImg: '', location: '', location_ll: {x: 0, y: 0}, description: '', keyword: []});
+    const [keyword, setKeyword] = useState('');
 
     /* react-native-image-picker 라이브러리 사용 옵션 */
     const options = {
@@ -160,10 +179,15 @@ const EditChurmmunity = ({route, navigation}) => {
         }
     }, [edit, route.params.editData])
 
+    const addKeyword = () => {
+        setContent((current) => {let newContent = {...current}; newContent.keyword.push(keyword); return newContent});
+    };
+
     // Debugging 용 useEffect
-    // useEffect(() => {
-    //     console.log(content.name);
-    // }, [content.name]);
+    useEffect(() => {
+        if (content.keyword)
+            console.log(content.keyword);
+    }, [content]);
 
     return (        
         <ScrollView>
@@ -173,7 +197,7 @@ const EditChurmmunity = ({route, navigation}) => {
                 <TouchableOpacity onPress={() => setCreateType(2)}><TypeSelectBtn isSelected={createType == 2}>번개</TypeSelectBtn></TouchableOpacity>
             </TypeSelectBtnsBox>)}
             <OptionName>모임 이름</OptionName>
-            <TitleInput maxLength={20} value={content.name} placeholder={'최대 20자'} onChangeText={(v)=>{setContent((current) => {let newContent = {...current}; newContent.name = v; return newContent})}} />
+            <TitleInput color="black" placeholderTextColor="gray" maxLength={20} value={content.name} placeholder={'최대 20자'} onChangeText={(v)=>{setContent((current) => {let newContent = {...current}; newContent.name = v; return newContent})}} />
             <CharacterCountLimit curLength={content.name ? content.name.length : 0} maxLength={20} />
             <OptionName>모임 대표 이미지</OptionName>
             {imgSrc == undefined && <PlusBtnBox onPress={() => { showCameraRoll(); }}>
@@ -196,6 +220,7 @@ const EditChurmmunity = ({route, navigation}) => {
                     maxLength={200}
                     onChangeText={(v) => {setContent((current) => {let newContent = {...current}; newContent.description = v; return newContent})}}
                     value={content.description}
+                    color="black" placeholderTextColor="gray"
                 />
             </DescInputBox>
             <CharacterCountLimit curLength={content.description ? content.description.length : 0} maxLength={200} />
@@ -204,6 +229,15 @@ const EditChurmmunity = ({route, navigation}) => {
                 <PlusText>+</PlusText>
                 <Text>네이버 지도</Text>
             </PlusBtnBox>
+
+            <OptionName>검색 키워드</OptionName>
+            <View style={{flexDirection: "row", alignItems: "center"}}>
+                <KeywordInput color="black" placeholderTextColor="gray" multiline={false} maxLength={20} value={keyword} placeholder={'최대 20자'} onChangeText={(v)=>{setKeyword(v)}} onSubmitEditing={() => addKeyword()}/>
+                <Icon name="pluscircle" size={26} onPress={() => addKeyword()} />
+            </View>
+            <KeywordView>
+                {content.keyword ? content.keyword.map((v, i) => <TagBox text={v} color="blue" onPressDelBtn={() => setContent((current) => {let newContent = {...current}; newContent.keyword.splice(i, 1); return newContent})}/>) : null}
+            </KeywordView>
             <SendBtnBox>
                 <SendBtn style={{backgroundColor: 'blue'}} onPress={() => putChurmmunity()}>
                     <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 18 }}>게시</Text>
