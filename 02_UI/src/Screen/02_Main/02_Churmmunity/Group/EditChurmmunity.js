@@ -5,6 +5,7 @@ import { DomainContext } from '~/Context/Domain';
 import { UserData } from '~/Context/User';
 import {launchImageLibrary} from 'react-native-image-picker';
 import ImageSize from 'react-native-image-size';
+import CharacterCountLimit from '~/Components/CharacterCountLimit';
 
 
 
@@ -173,7 +174,7 @@ const EditChurmmunity = ({route, navigation}) => {
             </TypeSelectBtnsBox>)}
             <OptionName>모임 이름</OptionName>
             <TitleInput maxLength={20} value={content.name} placeholder={'최대 20자'} onChangeText={(v)=>{setContent((current) => {let newContent = {...current}; newContent.name = v; return newContent})}} />
-            <View style={{flexDirection:'row-reverse'}}><Text style={{color: 'gray', backgroundColor: 'transparent'}}>{content.name ? content.name.length : 0} / 20</Text></View>
+            <CharacterCountLimit curLength={content.name ? content.name.length : 0} maxLength={20} />
             <OptionName>모임 대표 이미지</OptionName>
             {imgSrc == undefined && <PlusBtnBox onPress={() => { showCameraRoll(); }}>
                 <PlusText>+</PlusText>
@@ -197,6 +198,7 @@ const EditChurmmunity = ({route, navigation}) => {
                     value={content.description}
                 />
             </DescInputBox>
+            <CharacterCountLimit curLength={content.description ? content.description.length : 0} maxLength={200} />
             <OptionName>모임 지역</OptionName>
             <PlusBtnBox onPress={() => {alert('네이버 지도 연결하자')}}>
                 <PlusText>+</PlusText>
