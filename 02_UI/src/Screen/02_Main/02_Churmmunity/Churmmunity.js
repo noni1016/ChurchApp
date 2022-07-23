@@ -18,6 +18,7 @@ import EditMembers from './Group/EditMembers';
 
 import { UserData, UserContextProvider } from '~/Context/User';
 import {DomainContext, DomainContextProvider} from '~/Context/Domain';
+import SearchLocate from '~/Screen/03_Map/SearchLocate';
 
 
 const Stack = createStackNavigator();
@@ -146,6 +147,10 @@ const NoniNavi = () => {
                     title: '멤버 관리',
                 }}
              />
+             <Stack.Screen
+                name="SearchLocate"
+                component={SearchLocate}
+            />
         </Stack.Navigator>
     )
 }
