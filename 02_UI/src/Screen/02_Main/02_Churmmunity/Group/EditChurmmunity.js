@@ -125,7 +125,7 @@ const SendBtn = Styled.TouchableOpacity`
 
 const EditChurmmunity = ({route, navigation}) => {
     const domain = useContext(DomainContext);
-    const edit = route.params.edit;
+    const edit = route.params.edit ? route.params.edit : 0;
     const editData = route.params.editData;
     const [createType, setCreateType] = useState(1);
     const [imgSrc, setImgSrc] = useState(undefined);
@@ -162,12 +162,81 @@ const EditChurmmunity = ({route, navigation}) => {
     }
 
     const putChurmmunity = () => {
-        alert('Submit Button Pressed!');
+        if (edit === 0)
+        {
+            // 유효성 검사
+            if (content.name == '') {
+                alert('모임 이름을 입력해주세요'); 
+                return;
+            } else if (imgSrc == null) {
+                alert('모임 대표 이미지를 추가해주세요');
+                return;
+            } else if (content.description == '') {
+                alert('모임 설명을 입력해주세요');
+                return;
+            } else if (createType == 2 && content.dateTime == '') {
+                alert('모임 시간을 입력해주세요');
+                return;
+            } // 모임 지역 입력 추가
+
+            // 대표 이미지 먼저 업로드
+            let res = updateImg();
+            
+            // if (res) updateGroupInfo(res);
+        }
+        // alert('Submit Button Pressed!');
     }    
     const delChurmmunity = () => {
         alert('Delete Button Pressed!');
     }
-    
+
+    const updateImg = () => {
+        let Res = undefined;
+        let fetchReq = ``;
+        let fetchMethod = ``;
+
+        if (edit == false) { // AddMode
+            fetchReq = `${domain}/Group/${createType}`;
+            fetchMethod = `POST`;
+        }
+
+        console.log('fetchReq : ' + fetchReq);
+
+        const fd = new FormData();
+        fd.append('name', content.name);
+        fd.append('location', content.location);
+        fd.append('location_ll', content.location_ll);
+        fd.append('dd', content);
+        fd.append('file', {
+            uri: imgSrc.uri,
+            type: imgSrc.type,
+            name: imgSrc.fileName,
+            data: imgSrc.data
+        });
+
+        console.log(fd);
+
+        fetch(fetchReq, {
+            method: fetchMethod,
+            body: fd,
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'multipart/form-data',
+            }
+        }).then(res => res.json()).then(res => {
+            console.log(res);
+            if (res.fileName) {
+                console.log(res.fileName);
+                Res = res.fileName;
+            } else {
+                Res = undefined;
+            }
+        })
+
+        return Res;
+    }
+
+
     useEffect(() => {
         if (edit === 1 && route.params.editData) /* 클럽 모임 수정 모드 */
         {
@@ -183,7 +252,8 @@ const EditChurmmunity = ({route, navigation}) => {
     }, [edit, route.params.editData])
 
     const addKeyword = () => {
-        setContent((current) => {let newContent = {...current}; newContent.keyword.push(keyword); return newContent});
+        setContent((current) => {let newContent = {...current}; newContent.keyword.push(keyword.replace(/(\s*)/g, "")); return newContent});
+        setKeyword('');
     };
 
     // Debugging 용 useEffect
@@ -234,7 +304,7 @@ const EditChurmmunity = ({route, navigation}) => {
 
             <OptionName>검색 키워드</OptionName>
             <View style={{flexDirection: "row", alignItems: "center"}}>
-                <KeywordInput color="black" placeholderTextColor="gray" multiline={false} maxLength={20} value={keyword} placeholder={'최대 20자'} onChangeText={(v)=>{setKeyword(v)}} onSubmitEditing={() => addKeyword()}/>
+                <KeywordInput color="black" placeholderTextColor="gray" multiline={false} maxLength={10} value={keyword} placeholder={'최대 10자'} onChangeText={(v)=>{setKeyword(v)}} onSubmitEditing={() => addKeyword()}/>
                 <Icon name="pluscircle" size={26} onPress={() => addKeyword()} />
             </View>
             <KeywordView>
