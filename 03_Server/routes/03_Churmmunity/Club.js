@@ -6,6 +6,7 @@ const fs = require('fs');
 ////////////////////////////////////////////////////////////Setings
 // sql connection
 const conn = require('../../config/database');
+const path = require('path');
 var fileName = '';
 var imgUpload = false;
 
