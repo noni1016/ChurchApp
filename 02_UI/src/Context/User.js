@@ -9,7 +9,7 @@ const KakaoAuthData = createContext({
 
 const TryGetKakao = createContext({
         tryGetKakao : false,
-        setKakaoFlag: () => {},
+        setTryGetKakaoFlag: () => {},
     });
 
 //회원 정보
@@ -20,12 +20,12 @@ const UserData =  createContext({
 
 const UserContextProvider = ({children}) => {
     const [kakaoAuthData, setKakaoAuthData] = useState(null);
-    const [tryGetKakao, setKakaoFlag] = useState(false);
+    const [tryGetKakao, setTryGetKakaoFlag] = useState(false);
     const [userData, setUserData] = useState(null);
 
     return (
         <KakaoAuthData.Provider value = {{kakaoAuthData, setKakaoAuthData}}>
-        <TryGetKakao.Provider value = {{tryGetKakao, setKakaoFlag}}>
+        <TryGetKakao.Provider value = {{tryGetKakao, setTryGetKakaoFlag}}>
         <UserData.Provider value = {{userData, setUserData}}>
             {children}
         </UserData.Provider>

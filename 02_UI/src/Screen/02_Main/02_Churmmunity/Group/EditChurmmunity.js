@@ -1,11 +1,16 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { View, Text, Dimensions, ScrollView, Image, TouchableOpacity } from 'react-native';
+import { View, Text, ScrollView, Image, TouchableOpacity, Touchable } from 'react-native';
 import Styled from 'styled-components/native';
 import { DomainContext } from '~/Context/Domain';
 import { UserData } from '~/Context/User';
 import {launchImageLibrary} from 'react-native-image-picker';
 import ImageSize from 'react-native-image-size';
-
+import CharacterCountLimit from '~/Components/CharacterCountLimit';
+import Icon from 'react-native-vector-icons/AntDesign';
+import TagBox from '~/Components/TagBox';
+import DateTimePickerModal from "react-native-modal-datetime-picker";
+import moment from 'moment';
+import { create } from 'react-test-renderer';
 
 
 const OptionName = Styled.Text`
@@ -38,6 +43,15 @@ const TypeSelectBtn = Styled.Text`
 
 const TitleInput = Styled.TextInput`
     width: 90%;
+    background-color: transparent;
+    padding: 0px;
+    margin: 10px 10px 10px 20px; //상 우 하 좌
+    border-bottom-width: 1px;
+    font-size: 18px;
+`;
+
+const KeywordInput = Styled.TextInput`
+    width: 80%;
     background-color: transparent;
     padding: 0px;
     margin: 10px 10px 10px 20px; //상 우 하 좌
@@ -85,6 +99,13 @@ const DescInput = Styled.TextInput`
     text-align-vertical: top;
 `;
 
+const KeywordView = Styled.View`
+    flex-direction: row;
+    flex-wrap: wrap;
+    background-color : transparent;
+    margin: 0px 10px 20px 10px; //상 우 하 좌
+`;
+
 const SendBtnBox = Styled.View`
     flex-direction: row;
     justify-content: center;
@@ -109,6 +130,9 @@ const EditChurmmunity = ({route, navigation}) => {
     const [createType, setCreateType] = useState(1);
     const [imgSrc, setImgSrc] = useState(undefined);
     const [textInput, setTextInput] = useState('');
+    const [content, setContent] = useState({name: '', mainImg: '', location: '', location_ll: {x: 0, y: 0}, description: '', keyword: [], dateTime: ''});
+    const [keyword, setKeyword] = useState('');
+    const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 
     /* react-native-image-picker 라이브러리 사용 옵션 */
     const options = {
@@ -150,12 +174,26 @@ const EditChurmmunity = ({route, navigation}) => {
             navigation.setOptions({title: '모임 정보 수정'});
             setImgSrc({uri: domain + '/' + route.params.editData.mainImg});
             setTextInput(route.params.editData.description);
+            setContent(route.params.editData);
         }
         else if (edit === 2 && route.params.editData) /* 번개 모임 수정 모드 */
         {
             navigation.setOptions({title: '번개 모임 수정'});
         }
     }, [edit, route.params.editData])
+
+    const addKeyword = () => {
+        setContent((current) => {let newContent = {...current}; newContent.keyword.push(keyword); return newContent});
+    };
+
+    // Debugging 용 useEffect
+    useEffect(() => {
+        if (content.dateTime)
+        {
+            console.log(moment(content.dateTime).format('YYYY.MM.DD HH:mm:ss'))
+        }
+            // console.log(content.dateTime);
+    }, [content.dateTime]);
 
     return (        
         <ScrollView>
@@ -165,7 +203,8 @@ const EditChurmmunity = ({route, navigation}) => {
                 <TouchableOpacity onPress={() => setCreateType(2)}><TypeSelectBtn isSelected={createType == 2}>번개</TypeSelectBtn></TouchableOpacity>
             </TypeSelectBtnsBox>)}
             <OptionName>모임 이름</OptionName>
-            <TitleInput>{editData ? editData.name : ''}</TitleInput>
+            <TitleInput color="black" placeholderTextColor="gray" maxLength={20} value={content.name} placeholder={'최대 20자'} onChangeText={(v)=>{setContent((current) => {let newContent = {...current}; newContent.name = v; return newContent})}} />
+            <CharacterCountLimit curLength={content.name ? content.name.length : 0} maxLength={20} />
             <OptionName>모임 대표 이미지</OptionName>
             {imgSrc == undefined && <PlusBtnBox onPress={() => { showCameraRoll(); }}>
                 <PlusText>+</PlusText>
@@ -184,15 +223,46 @@ const EditChurmmunity = ({route, navigation}) => {
                     autoCorrect={false}
                     placeholder="모임 설명은 모임 메인 페이지에 표시됩니다."
                     returnKeyType="done"
-                    onChangeText={setTextInput}
-                    value={textInput}
+                    maxLength={200}
+                    onChangeText={(v) => {setContent((current) => {let newContent = {...current}; newContent.description = v; return newContent})}}
+                    value={content.description}
+                    color="black" placeholderTextColor="gray"
                 />
             </DescInputBox>
+            <CharacterCountLimit curLength={content.description ? content.description.length : 0} maxLength={200} />
+
+
+            <OptionName>검색 키워드</OptionName>
+            <View style={{flexDirection: "row", alignItems: "center"}}>
+                <KeywordInput color="black" placeholderTextColor="gray" multiline={false} maxLength={20} value={keyword} placeholder={'최대 20자'} onChangeText={(v)=>{setKeyword(v)}} onSubmitEditing={() => addKeyword()}/>
+                <Icon name="pluscircle" size={26} onPress={() => addKeyword()} />
+            </View>
+            <KeywordView>
+                {content.keyword ? content.keyword.map((v, i) => <TagBox text={v} color="blue" onPressDelBtn={() => setContent((current) => {let newContent = {...current}; newContent.keyword.splice(i, 1); return newContent})}/>) : null}
+            </KeywordView>
+
+            {createType == 2 ? 
+            (<>
+                <OptionName>모임 시간</OptionName>
+                <TouchableOpacity style={{marginLeft: 10, marginBottom: 10}} onPress={() => setDatePickerVisibility(true)}>
+                    <Text>{content.dateTime ? content.dateTime : '여기를 눌러 시간을 설정하세요'}</Text>
+                </TouchableOpacity>
+                <DateTimePickerModal
+                    isVisible={isDatePickerVisible}
+                    mode="datetime"
+                    onConfirm={(date) => {setContent((current) => {let newContent = {...current}; newContent.dateTime=moment(date.toUTCString()).format('YYYY.MM.DD HH:mm'); return newContent;}); setDatePickerVisibility(false);}}
+                    onCancel={() => setDatePickerVisibility(false)}
+                />
+            </>)
+            : null}
+
+
             <OptionName>모임 지역</OptionName>
-            <PlusBtnBox onPress={() => {alert('네이버 지도 연결하자')}}>
+            <PlusBtnBox onPress={() => {{navigation.navigate('SearchLocate', {navigation: navigation})}}}>
                 <PlusText>+</PlusText>
                 <Text>네이버 지도</Text>
             </PlusBtnBox>
+
             <SendBtnBox>
                 <SendBtn style={{backgroundColor: 'blue'}} onPress={() => putChurmmunity()}>
                     <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 18 }}>게시</Text>
