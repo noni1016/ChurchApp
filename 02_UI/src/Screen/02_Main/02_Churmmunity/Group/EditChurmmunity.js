@@ -258,7 +258,7 @@ const EditChurmmunity = ({route, navigation}) => {
 
 
             <OptionName>모임 지역</OptionName>
-            <PlusBtnBox onPress={() => {alert('네이버 지도 연결하자')}}>
+            <PlusBtnBox onPress={() => {{navigation.navigate('SearchLocate', {navigation: navigation})}}}>
                 <PlusText>+</PlusText>
                 <Text>네이버 지도</Text>
             </PlusBtnBox>
