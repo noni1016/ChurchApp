@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import React, { Component } from 'react';
+import React, { useState, Component } from 'react';
 import {
 	requireNativeComponent,
 	findNodeHandle,
@@ -7,11 +7,14 @@ import {
 	Platform,
 	PermissionsAndroid,
 	View,
+	Text,
 } from 'react-native';
 import { isEmulator } from 'react-native-device-info';
 
 
 let REST_API_KEY 	= "";
+let latit =  0;
+let longit = 0;
 const DaumMapManager= Platform.OS === 'ios' ? NativeModules.DaumMapManager : NativeModules.DaumMapModule;
 const DaumMap 		= requireNativeComponent('DaumMap', DaumMapView, {
 	nativeOnly: {
@@ -73,9 +76,12 @@ export default class DaumMapView extends Component {
 			);
 		} else {
 			return (
-				<View style={{ flex: 1, }}>
-					{this.props.permissionDeniedView}
-				</View>
+				<>
+					<Text> ============================== </Text>
+					<Text>Latitude: {latit}</Text>
+					<Text>Longitude: {longit}</Text>
+					<Text> ============================== </Text>
+				</>
 			);
 		}
 	}
@@ -161,6 +167,9 @@ export default class DaumMapView extends Component {
 	// 좌표 → 행정구역정보 변환
 	// https://developers.kakao.com/docs/restapi/local#좌표-행정구역정보-변환
 	static getCoordToRegionArea (latitude, longitude, input_coord="WGS84", output_coord="WGS84", lang="ko") {
+		latit =  latitude;
+		longit = longitude;
+
 		if (REST_API_KEY == "") {
 			return new Promise(function(resolve, reject) {
 				reject({ "message": "Daum Rest API Key가 필요합니다." });
