@@ -3,7 +3,7 @@ var router = express.Router();
 const multer = require('multer');
 const fs = require('fs');
 const util = require('util');
-const bodyParser = require('body-parser');
+
 
 
 
@@ -38,17 +38,29 @@ router.post('/:type', (req, res) => {
         }
 
         console.log(req.file.filename);
+        console.log(req.body);
 
         if (req.params.type == '1') // Club
         {
             console.log('Create Club');
+            // sql = `INSERT INTO Club (name, mainImg, location, description) VALUES ('${req.body.name}', '${req.file.filename}', '${req.body.location}', '${req.body.description}')` ;
+            sql = `INSERT INTO Club (name, mainImg, location, description) VALUES ('${req.body.name}', 'GroupImg/${req.file.filename}', '군포시 수리산로', '${req.body.description}')` ;
         } else if (req.params.type == '2') // Spot
         {
             console.log('Create Spot');
         }
 
-        res.send({fileName: `${req.file.filename}`});
-        
+        console.log(sql);
+        conn.query(sql, function (error, rows, fields) { // sql 쿼리 수행
+            if (!error) {
+                // console.log(rows);
+                // console.log('query success')
+                res.send({fileName: `${req.file.filename}`});
+            } else {
+                console.log('query error : ' + error);
+            }
+        });
+
     });
 
 })

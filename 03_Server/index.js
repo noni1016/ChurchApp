@@ -12,12 +12,13 @@
 
 // imports
 const express = require('express'); //require == import 인듯? express 웹프레임워크를 이용해 서버를 만든다.
+const bodyParser = require('body-parser');
 const app = express();
 const port = 7009; // localhost:7009 포트에 서버를 열어둠
 app.use(express.json()); // express 에서 json 을 받아오려면 express.json() 모듈을 사용해야 함 (안될경우 BodyParser 를 추가로 사용)
 app.use(express.static('public')); //public 폴더 접근 할 수 있게 설정
-
-
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: false})); // https://blog.naver.com/bunggl/221699257359
 // sql connection
 const conn = require('./config/database');
 
