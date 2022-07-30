@@ -194,6 +194,13 @@ const EditChurmmunity = ({route, navigation}) => {
         let Res = undefined;
         let fetchReq = ``;
         let fetchMethod = ``;
+        let keywordString = ``;
+        // 키워드를 하나의 string 으로 만들기
+        content.keyword.map((v, i) => {
+            keywordString += (v + ',')
+        })
+
+        console.log(keywordString);
 
         if (edit == false) { // AddMode
             fetchReq = `${domain}/Group/${createType}`;
@@ -205,8 +212,11 @@ const EditChurmmunity = ({route, navigation}) => {
         const fd = new FormData();
         fd.append('name', content.name);
         fd.append('location', content.location);
-        fd.append('location_ll', content.location_ll);
-        fd.append('dd', content);
+        fd.append('location_ll_x', content.location_ll.x);
+        fd.append('location_ll_y', content.location_ll.y);
+        fd.append('dateTime', content.dateTime);
+        fd.append('description', content.description);
+        fd.append('keyword', keywordString);
         fd.append('file', {
             uri: imgSrc.uri,
             type: imgSrc.type,
