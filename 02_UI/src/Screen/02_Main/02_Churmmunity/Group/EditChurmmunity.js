@@ -125,6 +125,7 @@ const SendBtn = Styled.TouchableOpacity`
 
 const EditChurmmunity = ({route, navigation}) => {
     const domain = useContext(DomainContext);
+    const {userData} = useContext(UserData);
     const edit = route.params.edit ? route.params.edit : 0;
     const editData = route.params.editData;
     const [createType, setCreateType] = useState(1);
@@ -179,19 +180,15 @@ const EditChurmmunity = ({route, navigation}) => {
                 return;
             } // 모임 지역 입력 추가
 
-            // 대표 이미지 먼저 업로드
-            let res = updateImg();
-            
-            // if (res) updateGroupInfo(res);
+            sendGroupInfo();            
         }
-        // alert('Submit Button Pressed!');
-    }    
+    };   
+
     const delChurmmunity = () => {
         alert('Delete Button Pressed!');
     }
 
-    const updateImg = () => {
-        let Res = undefined;
+    const sendGroupInfo = () => {
         let fetchReq = ``;
         let fetchMethod = ``;
         let keywordString = ``;
@@ -217,6 +214,7 @@ const EditChurmmunity = ({route, navigation}) => {
         fd.append('dateTime', content.dateTime);
         fd.append('description', content.description);
         fd.append('keyword', keywordString);
+        fd.append('userId', userData.id);
         fd.append('file', {
             uri: imgSrc.uri,
             type: imgSrc.type,
@@ -234,16 +232,15 @@ const EditChurmmunity = ({route, navigation}) => {
                 'Content-Type': 'multipart/form-data',
             }
         }).then(res => res.json()).then(res => {
-            console.log(res);
-            if (res.fileName) {
-                console.log(res.fileName);
-                Res = res.fileName;
+            // console.log(res);
+            if (res) {
+                navigation.navigate('ClubPage', {club : res, navigation: navigation});
             } else {
-                Res = undefined;
-            }
-        })
+                console.log('Call Noni');
+            } 
+        })      
 
-        return Res;
+        
     }
 
 
