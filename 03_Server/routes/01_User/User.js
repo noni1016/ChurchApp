@@ -9,7 +9,7 @@ const conn = require('../../config/database');
 ////////////////////////////////////////////////////////////Churmmunity
 // User's Club
 router.get('/:userId/Club', (req, res) => {
-    let sql = `SELECT ClubView.id, ClubView.name, ClubView.mainImg, ClubView.location, ClubView.location_ll, ClubView.description, ClubView.numMember
+    let sql = `SELECT ClubView.*
     FROM ClubView, ClubUser, User
     WHERE ClubUser.userId = ${req.params.userId}
         AND ClubUser.userId = User.id
