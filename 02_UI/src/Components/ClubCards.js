@@ -6,7 +6,7 @@ import ClubCard from '~/Components/ClubCard';
 
 const ClubCardBox = Styled.View`
   flex-direction: column;
-  height: 350px;
+  height: 320px;
   background-color: #FFFFFF;
   margin: 20px 0px 0px 0px; //상 우 하 좌
 `;

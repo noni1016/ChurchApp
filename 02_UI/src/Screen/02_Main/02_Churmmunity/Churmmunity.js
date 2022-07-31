@@ -41,7 +41,7 @@ var initMyLightData = [{ id: 0, name: `로딩중`, mainImg: `WinLockImages/a48b6
 ];
 
 
-const NoniMain = ({navigation}) => {
+const ChurmmunityMain = ({navigation}) => {
 
     const domain = useContext(DomainContext);
     var [myClubs, setMyClubs] = useState([initClub]);
@@ -76,13 +76,13 @@ const NoniMain = ({navigation}) => {
 
 };
 
-const NoniNavi = () => {
+const ChurmmunityStackNavi = () => {
     const { userData, setUserData } = useContext(UserData);
     return (
         <Stack.Navigator>
             <Stack.Screen
-                name={userData.name + " / " + userData.id + " / " + userData.church}
-                component={NoniMain}
+                name={'ChurmmunityMain'}
+                component={ChurmmunityMain}
                 options={({navigation}) => ({
                     headerShown: true,
                     headerRight: () => (
@@ -159,7 +159,7 @@ const NoniNavi = () => {
 const Churmmunity = () => {
 
     return (
-        <NoniNavi />
+        <ChurmmunityStackNavi />
     );
 };
 

@@ -60,6 +60,7 @@ const ClubLocation = Styled.Text`
 const MainImageBox = Styled.View`
     flex-direction: row;
     width: ${Dimensions.get('window').width * 0.9}px;
+    height: 200px;
     justify-content: center;
     align-items: center;
     /* background-color: #0000FF;     */
@@ -98,7 +99,8 @@ const ClubCard = ({club}) => {
     return (
         <ClubCardBox width='90%'>
             <MainImageBox>
-                <Image style={{backgroundColor: '#FFFFFF', width: resizedWidth, height: resizedHeight, resizeMode: 'contain'}} source={url ? {uri: url } : null} />
+                {/* <Image style={{backgroundColor: '#FFFFFF', width: resizedWidth, height: resizedHeight, resizeMode: 'contain'}} source={url ? {uri: url } : null} /> */}
+                <Image style={{backgroundColor: '#FFFFFF', width: '100%', height: '100%', resizeMode: 'cover'}} source={url ? {uri: url } : null} />
             </MainImageBox>
             <ClubTitleAndNumMem>
                 <ClubTitle>{club.name}</ClubTitle>
