@@ -10,7 +10,6 @@ import Icon from 'react-native-vector-icons/AntDesign';
 import TagBox from '~/Components/TagBox';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import moment from 'moment';
-import { create } from 'react-test-renderer';
 
 
 const OptionName = Styled.Text`
@@ -163,25 +162,22 @@ const EditChurmmunity = ({route, navigation}) => {
     }
 
     const putChurmmunity = () => {
-        if (edit === 0)
-        {
-            // 유효성 검사
-            if (content.name == '') {
-                alert('모임 이름을 입력해주세요'); 
-                return;
-            } else if (imgSrc == null) {
-                alert('모임 대표 이미지를 추가해주세요');
-                return;
-            } else if (content.description == '') {
-                alert('모임 설명을 입력해주세요');
-                return;
-            } else if (createType == 2 && content.dateTime == '') {
-                alert('모임 시간을 입력해주세요');
-                return;
-            } // 모임 지역 입력 추가
+        // 유효성 검사
+        if (content.name == '') {
+            alert('모임 이름을 입력해주세요');
+            return;
+        } else if (imgSrc == null) {
+            alert('모임 대표 이미지를 추가해주세요');
+            return;
+        } else if (content.description == '') {
+            alert('모임 설명을 입력해주세요');
+            return;
+        } else if (createType == 2 && content.dateTime == '') {
+            alert('모임 시간을 입력해주세요');
+            return;
+        } // 모임 지역 입력 추가
 
-            sendGroupInfo();            
-        }
+        sendGroupInfo();            
     };   
 
     const delChurmmunity = () => {
@@ -202,6 +198,9 @@ const EditChurmmunity = ({route, navigation}) => {
         if (edit == false) { // AddMode
             fetchReq = `${domain}/Group/${createType}`;
             fetchMethod = `POST`;
+        } else { // edit club, spot
+            fetchReq = `${domain}/Group/${createType}/${editData.id}`;
+            fetchMethod = `PUT`;
         }
 
         console.log('fetchReq : ' + fetchReq);
@@ -215,12 +214,16 @@ const EditChurmmunity = ({route, navigation}) => {
         fd.append('description', content.description);
         fd.append('keyword', keywordString);
         fd.append('userId', userData.id);
-        fd.append('file', {
-            uri: imgSrc.uri,
-            type: imgSrc.type,
-            name: imgSrc.fileName,
-            data: imgSrc.data
-        });
+        if (imgSrc.data)
+        {
+            fd.append('file', {
+                uri: imgSrc.uri,
+                type: imgSrc.type,
+                name: imgSrc.fileName,
+                data: imgSrc.data
+            });    
+        }
+
 
         console.log(fd);
 
@@ -232,7 +235,7 @@ const EditChurmmunity = ({route, navigation}) => {
                 'Content-Type': 'multipart/form-data',
             }
         }).then(res => res.json()).then(res => {
-            // console.log(res);
+            console.log(res);
             if (res) {
                 navigation.navigate('ClubPage', {club : res, navigation: navigation});
             } else {
@@ -250,6 +253,15 @@ const EditChurmmunity = ({route, navigation}) => {
             navigation.setOptions({title: '모임 정보 수정'});
             setImgSrc({uri: domain + '/' + route.params.editData.mainImg});
             setTextInput(route.params.editData.description);
+            if (route.params.editData.keyword == undefined) route.params.editData.keyword = [];
+            else { // 220731 keyword 가 Array(0) [] 이야..
+                // console.log('keyword');
+                // console.log(route.params.editData.keyword);
+                let arr = route.params.editData.keyword.split(',');
+                arr.pop();
+                route.params.editData.keyword = arr;
+            }
+            if (route.params.editData.location_ll == undefined) route.params.editData.location_ll = {x: 0, y: 0};
             setContent(route.params.editData);
         }
         else if (edit === 2 && route.params.editData) /* 번개 모임 수정 모드 */
@@ -315,7 +327,7 @@ const EditChurmmunity = ({route, navigation}) => {
                 <Icon name="pluscircle" size={26} onPress={() => addKeyword()} />
             </View>
             <KeywordView>
-                {content.keyword ? content.keyword.map((v, i) => <TagBox text={v} color="blue" onPressDelBtn={() => setContent((current) => {let newContent = {...current}; newContent.keyword.splice(i, 1); return newContent})}/>) : null}
+                {content.keyword ? content.keyword.map((v, i) => <TagBox key={i} text={v} color="blue" onPressDelBtn={() => setContent((current) => {let newContent = {...current}; newContent.keyword.splice(i, 1); return newContent})}/>) : null}
             </KeywordView>
 
             {createType == 2 ? 
