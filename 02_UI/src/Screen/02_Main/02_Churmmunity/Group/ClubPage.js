@@ -32,6 +32,10 @@ const TabContainer = Styled.SafeAreaView`
   background-color: skyblue;
 `;
 
+const Footer = Styled.View`
+    height: 200px;
+`;
+
 const ClubPage = ({route, navigation}) => {
     const domain = useContext(DomainContext);
     const {userData} = useContext(UserData);
@@ -130,6 +134,7 @@ const ClubPage = ({route, navigation}) => {
                 {tabIdx == 0 && <ClubPageHome data={data} members={members} isMember={isMember} isLeader={isLeader} setMember={(value)=>{setMember(value)}} navigation={navigation}/>}
                 {tabIdx == 1 && <Feeds club={data} feedAdded={refresh} navigation={navigation}/>}
                 {tabIdx == 2 && <Photos club={data}>사진</Photos>}
+                <Footer/>
             </ScrollView>
             {tabIdx == 1 && <AddBtn OnPressMethod={() => {navigation.navigate('EditFeed', {edit: false, club: data, navigation: navigation});}}/>}
         </View>
