@@ -166,7 +166,7 @@ const EditChurmmunity = ({route, navigation}) => {
         if (content.name == '') {
             alert('모임 이름을 입력해주세요');
             return;
-        } else if (imgSrc == null) {
+        } else if (imgSrc == null || imgSrc == undefined) {
             alert('모임 대표 이미지를 추가해주세요');
             return;
         } else if (content.description == '') {
@@ -214,13 +214,14 @@ const EditChurmmunity = ({route, navigation}) => {
         fd.append('description', content.description);
         fd.append('keyword', keywordString);
         fd.append('userId', userData.id);
-        if (imgSrc.data)
+        if (imgSrc.fileSize)
         {
             fd.append('file', {
                 uri: imgSrc.uri,
                 type: imgSrc.type,
                 name: imgSrc.fileName,
-                data: imgSrc.data
+                // data: imgSrc.data
+                fileSize: imgSrc.fileSize,
             });    
         }
 
