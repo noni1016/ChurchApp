@@ -166,7 +166,7 @@ const EditChurmmunity = ({route, navigation}) => {
         if (content.name == '') {
             alert('모임 이름을 입력해주세요');
             return;
-        } else if (imgSrc == null) {
+        } else if (imgSrc == null || imgSrc == undefined) {
             alert('모임 대표 이미지를 추가해주세요');
             return;
         } else if (content.description == '') {
@@ -214,13 +214,14 @@ const EditChurmmunity = ({route, navigation}) => {
         fd.append('description', content.description);
         fd.append('keyword', keywordString);
         fd.append('userId', userData.id);
-        if (imgSrc.data)
+        if (imgSrc.fileSize)
         {
             fd.append('file', {
                 uri: imgSrc.uri,
                 type: imgSrc.type,
                 name: imgSrc.fileName,
-                data: imgSrc.data
+                // data: imgSrc.data
+                fileSize: imgSrc.fileSize,
             });    
         }
 
@@ -254,9 +255,7 @@ const EditChurmmunity = ({route, navigation}) => {
             setImgSrc({uri: domain + '/' + route.params.editData.mainImg});
             setTextInput(route.params.editData.description);
             if (route.params.editData.keyword == undefined) route.params.editData.keyword = [];
-            else { // 220731 keyword 가 Array(0) [] 이야..
-                // console.log('keyword');
-                // console.log(route.params.editData.keyword);
+            else if (route.params.editData.keyword.constructor == String) { 
                 let arr = route.params.editData.keyword.split(',');
                 arr.pop();
                 route.params.editData.keyword = arr;
