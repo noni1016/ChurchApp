@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { View, Text, ScrollView, Image, TouchableOpacity, Touchable } from 'react-native';
+import { View, Text, ScrollView, Image, TouchableOpacity, Alert } from 'react-native';
 import Styled from 'styled-components/native';
 import { DomainContext } from '~/Context/Domain';
 import { UserData } from '~/Context/User';
@@ -181,7 +181,22 @@ const EditChurmmunity = ({route, navigation}) => {
     };   
 
     const delChurmmunity = () => {
-        alert('Delete Button Pressed!');
+        Alert.alert('모임 해산', '정말 모임을 해산할까요? 모든 추억이 삭제됩니다..!',
+        [
+            {
+                text: "예",
+                onPress: () => fetch(`${domain}/Group/${createType}/${editData.id}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type' : 'application/json'
+                    },
+                }).then((res) => res.json()).then((res) => {alert(`${editData.id} Group 삭제`); navigation.navigate('ChurmmunityMain', {navigation: navigation})}),
+            },
+            {
+                text: "아니요",
+                onPress: () => console.log("취소"),
+            }
+        ]);
     }
 
     const sendGroupInfo = () => {
