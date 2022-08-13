@@ -42,7 +42,7 @@ router.post('/:type', async (req, res) => {
         {
             console.log('Create Club');
             // sql = `INSERT INTO Club (name, mainImg, location, description) VALUES ('${req.body.name}', '${req.file.filename}', '${req.body.location}', '${req.body.description}')` ;
-            sql1 = `INSERT INTO Club (name, mainImg, location, description, keyword) VALUES ('${req.body.name}', 'GroupImg/${req.file.filename}', '군포시 수리산로', '${req.body.description}', '${req.body.keyword}')` ;
+            sql1 = `INSERT INTO Club (name, mainImg, location, location_ll, description, keyword) VALUES ('${req.body.name}', 'GroupImg/${req.file.filename}', '군포시 수리산로', ST_GeomFromText('POINT(${req.body.location_ll_y} ${req.body.location_ll_x})', 4326), '${req.body.description}', '${req.body.keyword}')` ;
             console.log(sql1);
             try {
                 await conn.beginTransaction();
@@ -140,7 +140,45 @@ router.put('/:type/:id', async (req, res) => {
 
     });
 
+});
+
+router.delete('/:type/:groupId/', async (req, res) => {
+    let table = '';
+    let imgSrc = '';
+
+    if (req.params.type == '1') table = 'Club';
+    else if (req.params.type == '2') table = 'Spot';
+    else res.send({result: false});
+
+    let sql1 = `SELECT mainImg from ${table} WHERE id=${req.params.groupId}`;
+    let sql2 = `DELETE FROM ${table} WHERE id=${req.params.groupId}`;
+    console.log(sql1);
+    console.log(sql2);
+    try {
+        await conn.beginTransaction();
+        await conn.query(sql1, async (error, rows) => {
+            imgSrc = rows[0].mainImg;
+            await conn.query(sql2, (error, rows) => {
+                if (imgSrc)
+                {
+                    fs.unlink(`./public/${imgSrc}`, (err) => {
+                        err ? console.log(imgSrc) : console.log(`${imgSrc}를 정상적으로 삭제했습니다`);
+                      })
+                }
+                conn.commit();
+                res.send({ result: true });
+            });
+        });
+
+    } catch (err) {
+        console.log(err)
+        await conn.rollback()
+        res.send({ result: false });
+    }
+    
 })
+
+
 
 
 module.exports = router;
