@@ -254,9 +254,7 @@ const EditChurmmunity = ({route, navigation}) => {
             setImgSrc({uri: domain + '/' + route.params.editData.mainImg});
             setTextInput(route.params.editData.description);
             if (route.params.editData.keyword == undefined) route.params.editData.keyword = [];
-            else { // 220731 keyword 가 Array(0) [] 이야..
-                // console.log('keyword');
-                // console.log(route.params.editData.keyword);
+            else if (route.params.editData.keyword.constructor == String) { 
                 let arr = route.params.editData.keyword.split(',');
                 arr.pop();
                 route.params.editData.keyword = arr;
