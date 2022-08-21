@@ -27,6 +27,12 @@ const Title = Styled.Text`
     font-family: 'DoHyeon-Regular';
 `;
 
+const Side = Styled.View`
+    justify-content: flex-end;
+    flex-direction: row;
+    margin: 0px 5px 0px 0px;
+`;
+
 const TabContainer = Styled.SafeAreaView`
   flex-direction: row;
   background-color: skyblue;
@@ -113,8 +119,10 @@ const ClubPage = ({route, navigation}) => {
                 <Title>
                     {data.name}
                 </Title>
+                <Side>
                 <Icon2 name="notification" size={26} onPress={() =>alert('공지사항버튼')} />
                 {isLeader && <Icon1 name="settings-outline" size={26} onPress={() => navigation.navigate('EditChurmmunity', {edit: 1, editData: data, navigation: navigation})} />}
+                </Side>          
             </Header>
             <ScrollView>
                 <Image style={{ backgroundColor: '#000000', width: resizedWidth, height: resizedHeight, resizeMode: 'contain' }} source={url ? {uri: url } : null} />
