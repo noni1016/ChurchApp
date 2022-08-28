@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import {View,Text} from 'react-native';
+import {View,Text, ActivityIndicator, ScrollView, Button} from 'react-native';
 import Styled from 'styled-components/native';
+import ClubCard from '~/Components/ClubCard';
 
 import Icon from 'react-native-vector-icons/Ionicons';
 import Icon2 from 'react-native-vector-icons/MaterialIcons';
+import { FlatList } from 'react-native-gesture-handler';
 
 const Header = Styled.View`
     flex-direction: row;
@@ -20,17 +22,77 @@ const SearchBar = Styled.TextInput`
     font-size: 18px;
 `;
 
+const Title = Styled.Text`
+    color: black;
+    font-size: 30px;
+    font-family: 'DoHyeon-Regular';
+    margin-bottom: 10px;
+    width: 100%;
+`;
+
+const Separator = Styled.View`
+    margin-vertical: 20px;
+`;
+
+
+
+
+
+const tempClubs = [
+    { id: 0, name: `로딩중`, mainImg: `WinLockImages/a48b65589f2727feb93b12693ffeccb5d4aa1c0b6bbc1dff4d503ff28eba5a4c.jpg`, location: `수원시 영통구 매탄4동 10`, numMember: 10 },
+    { id: 1, name: `로딩중`, mainImg: `WinLockImages/a48b65589f2727feb93b12693ffeccb5d4aa1c0b6bbc1dff4d503ff28eba5a4c.jpg`, location: `수원시 영통구 매탄4동 10`, numMember: 10 },
+    { id: 2, name: `로딩중`, mainImg: `WinLockImages/a48b65589f2727feb93b12693ffeccb5d4aa1c0b6bbc1dff4d503ff28eba5a4c.jpg`, location: `수원시 영통구 매탄4동 10`, numMember: 10 },
+    { id: 3, name: `로딩중`, mainImg: `WinLockImages/a48b65589f2727feb93b12693ffeccb5d4aa1c0b6bbc1dff4d503ff28eba5a4c.jpg`, location: `수원시 영통구 매탄4동 10`, numMember: 10 },
+    { id: 3, name: `로딩중`, mainImg: `WinLockImages/a48b65589f2727feb93b12693ffeccb5d4aa1c0b6bbc1dff4d503ff28eba5a4c.jpg`, location: `수원시 영통구 매탄4동 10`, numMember: 10 },
+    { id: 3, name: `로딩중`, mainImg: `WinLockImages/a48b65589f2727feb93b12693ffeccb5d4aa1c0b6bbc1dff4d503ff28eba5a4c.jpg`, location: `수원시 영통구 매탄4동 10`, numMember: 10 },
+    { id: 3, name: `로딩중`, mainImg: `WinLockImages/a48b65589f2727feb93b12693ffeccb5d4aa1c0b6bbc1dff4d503ff28eba5a4c.jpg`, location: `수원시 영통구 매탄4동 10`, numMember: 10 },
+];
 
 const SearchGroups = ({route, navigation}) => {
 
-    
+    const [clubs, setClubs] = useState(tempClubs);
+    const [showingClubs, SetShowingClubs] = useState(tempClubs);
+
+    /* 검색 메인 창에는 상위 두 개의 결과만 표시 */
+    useEffect(() => {
+        if (clubs.length > 2) {
+            SetShowingClubs(clubs.slice(0,2));
+        } else {
+            SetShowingClubs(clubs);
+        }
+    }, [clubs])    
+
+
 
     return (
-        <Header>
-            <Icon name="arrow-back" size={26} flex={1} onPress={() => navigation.goBack()} />
-            <SearchBar />
-            <Icon2 name="search" size={26} flex={2} onPress={() => alert('Search!')} />
-        </Header>
+        <ScrollView>
+            <View style={{ alignItems: 'center' }}>
+                <Header>
+                    <Icon name="arrow-back" size={26} flex={1} onPress={() => navigation.goBack()} />
+                    <SearchBar placeholder='공동체, 번개 모임 검색' onSubmitEditing={() => alert('Search!')} />
+                    <Icon2 name="filter-alt" size={26} flex={2} onPress={() => alert('Filter!')} />
+                    <Icon2 name="search" size={26} flex={2} onPress={() => alert('Search!')} />
+                </Header>
+                <Title>공동체 {clubs.length} 개</Title>
+
+                {showingClubs.map((v, i) => (
+                    <>
+                        <ClubCard club={v} style={{ marginBottom: '10px' }} />
+                        <View style={{ height: 20, width: '100%', backgroundColor: 'transparent' }} />
+                    </>))}
+
+                <View style={{ width: "90%" }}>
+                    <Button title="더 보기" onPress={() => { navigation.navigate('ShowMoreClubs', { title: `공동체 검색 결과 ${clubs.length} 개`, clubs: clubs, navigation: navigation }); }} />
+                </View>
+
+                <Separator />
+
+                <Title>번개 {clubs.length} 개</Title>
+                <View style={{ width: "90%" }}>
+                    <Button title="더 보기" onPress={() => alert('번개 모임 더보기')} />
+                </View>
+            </View>
+        </ScrollView>
     );
 };
 

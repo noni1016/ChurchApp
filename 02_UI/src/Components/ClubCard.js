@@ -8,17 +8,18 @@ import ImageSize from 'react-native-image-size';
 
 
 const ClubCardBox = Styled.View`
+    width: 90%;
     flex-direction: column;
     justify-content: center;
     align-items: flex-start; 
-    background-color: #FFFFFF;
+    /* background-color: #0000FF; */
 `;
 
 const ClubTitleAndNumMem = Styled.View`
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    /* background-color: #FF0000; */    
+    /* background-color: #FF0000;     */
     margin: 5px 0px 0px 0px; //상 우 하 좌
 `;
 
@@ -97,7 +98,7 @@ const ClubCard = ({club}) => {
 
 
     return (
-        <ClubCardBox width='90%'>
+        <ClubCardBox>
             <MainImageBox>
                 {/* <Image style={{backgroundColor: '#FFFFFF', width: resizedWidth, height: resizedHeight, resizeMode: 'contain'}} source={url ? {uri: url } : null} /> */}
                 <Image style={{backgroundColor: '#FFFFFF', width: '100%', height: '100%', resizeMode: 'cover'}} source={url ? {uri: url } : null} />
