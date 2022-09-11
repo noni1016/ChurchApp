@@ -122,6 +122,12 @@ const SendBtn = Styled.TouchableOpacity`
     border-radius: 10px;
 `;
 
+const CommonBtn = Styled.TouchableOpacity`
+background-color: green;
+width: 20%;
+border-bottom-width: 3px;
+`;
+
 
 const EditChurmmunity = ({route, navigation}) => {
     const domain = useContext(DomainContext);
@@ -379,7 +385,6 @@ const EditChurmmunity = ({route, navigation}) => {
 
 
             <OptionName>모임 지역</OptionName>
-            
             {((content.location == null || content.location_ll == null) ||
                 (content.location_ll != null && content.location_ll.y == null && content.location_ll.x == null)) && 
                 <PlusBtnBox onPress={() => {{navigation.navigate('SearchLocate', {callBackFunc : setLocate, navigation: navigation})}}}>
@@ -388,15 +393,21 @@ const EditChurmmunity = ({route, navigation}) => {
                 </PlusBtnBox>}
 
             {(content.location_ll != null && 
-            (content.location_ll.y != null && content.location_ll.y != null)) &&
+            (content.location_ll.y != null && content.location_ll.y != null)) && (
+            <>
                <DaumMap currentRegion={{
                 latitude: parseFloat(content.location_ll.y),
                 longitude: parseFloat(content.location_ll.x),
                 zoomLevel: 5,
                }}
                 mapType={"Standard"}
-                style={{ width: 400, height: 400, backgroundColor: 'transparent' }}/>
-            }                
+                style={{ width: 400, height: 400, backgroundColor: 'transparent' }}/> 
+
+                <CommonBtn onPress={() => {{navigation.navigate('SearchLocate', {callBackFunc : setLocate, navigation: navigation})}}}>
+                    <PlusText>+</PlusText>
+                    <Text>지역 수정</Text>
+                </CommonBtn>
+            </>  )}
             
             <SendBtnBox>
                 <SendBtn style={{backgroundColor: 'blue'}} onPress={() => putChurmmunity()}>
