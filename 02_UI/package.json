@@ -21,6 +21,7 @@
     "babel-plugin-root-import": "6.6.0",
     "moment": "^2.29.4",
     "react": "17.0.1",
+    "react-hook-form": "^7.35.0",
     "react-native": "0.64.0",
     "react-native-action-sheet": "^2.2.0",
     "react-native-actions-sheet": "^0.5.8",
