@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import {View,Text, ActivityIndicator, ScrollView, Button} from 'react-native';
 import Styled from 'styled-components/native';
+import { useForm, Controller } from "react-hook-form";
 import ClubCard from '~/Components/ClubCard';
 import TagBox from '~/Components/TagBox';
 
@@ -62,6 +63,7 @@ const SearchGroups = ({route, navigation}) => {
 
     const [clubs, setClubs] = useState(tempClubs);
     const [showingClubs, SetShowingClubs] = useState(tempClubs);
+    const { control, handleSubmit } = useForm();
 
     /* 검색 메인 창에는 상위 두 개의 결과만 표시 */
     useEffect(() => {
@@ -69,8 +71,13 @@ const SearchGroups = ({route, navigation}) => {
             SetShowingClubs(clubs.slice(0,2));
         } else {
             SetShowingClubs(clubs);
-        }
+        }   
     }, [clubs])    
+
+    /* 서버에서 검색 데이터 받아오기 */
+    const getSearchResult = (data) => {
+        alert(data.search);       
+    }
 
 
 
@@ -78,10 +85,20 @@ const SearchGroups = ({route, navigation}) => {
         <ScrollView>
             <View style={{ alignItems: 'center' }}>
                 <Header>
+
                     <Icon name="arrow-back" size={26} flex={1} onPress={() => navigation.goBack()} />
-                    <SearchBar placeholder='공동체, 번개 모임 검색' onSubmitEditing={() => alert('Search!')} />
+                    <Controller
+                        control={control}
+                        rules={{required: true}}
+                        name="search"
+                        defaultValue={""}
+                        render={({ field: {onChange, value}}) => (
+                            <SearchBar placeholder='공동체, 번개 모임 검색' onChangeText={onChange} value={value} onSubmitEditing={(text) => getSearchResult(text)} />
+                        )}
+                    />
+                    {/* <SearchBar placeholder='공동체, 번개 모임 검색' name='search' onSubmitEditing={(text) => getSearchResult(text)} /> */}
                     <Icon2 name="filter-alt" size={26} flex={2} onPress={() => alert('Filter!')} />
-                    <Icon2 name="search" size={26} flex={2} onPress={() => alert('Search!')} />
+                    <Icon2 name="search" size={26} flex={2} onPress={handleSubmit(getSearchResult)} />
                 </Header>
                 
                 {clubs == null && 
