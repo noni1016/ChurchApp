@@ -42,7 +42,7 @@ router.post('/:type', async (req, res) => {
         {
             console.log('Create Club');
             // sql = `INSERT INTO Club (name, mainImg, location, description) VALUES ('${req.body.name}', '${req.file.filename}', '${req.body.location}', '${req.body.description}')` ;
-            sql1 = `INSERT INTO Club (name, mainImg, location, location_ll, description, keyword) VALUES ('${req.body.name}', 'GroupImg/${req.file.filename}', '군포시 수리산로', ST_GeomFromText('POINT(${req.body.location_ll_y} ${req.body.location_ll_x})', 4326), '${req.body.description}', '${req.body.keyword}')` ;
+            sql1 = `INSERT INTO Club (name, mainImg, location, location_ll, description, keyword) VALUES ('${req.body.name}', 'GroupImg/${req.file.filename}', '${req.body.location}', ST_GeomFromText('POINT(${req.body.location_ll_x} ${req.body.location_ll_y})', 4326), '${req.body.description}', '${req.body.keyword}')` ;
             console.log(sql1);
             try {
                 await conn.beginTransaction();
@@ -112,7 +112,7 @@ router.put('/:type/:id', async (req, res) => {
                         imgSrc = 'GroupImg/' + req.file.filename;
                     }
 
-                    sql2 = `UPDATE Club SET name = '${req.body.name}', mainImg = '${imgSrc}', location = '군포시 수리산로', location_ll = ST_GeomFromText('POINT(${req.body.location_ll_y} ${req.body.location_ll_x})', 4326), description = '${req.body.description}', keyword = '${req.body.keyword}' WHERE id = ${req.params.id}`;
+                    sql2 = `UPDATE Club SET name = '${req.body.name}', mainImg = '${imgSrc}', location = '${req.body.location}', location_ll = ST_GeomFromText('POINT(${req.body.location_ll_x} ${req.body.location_ll_y})', 4326), description = '${req.body.description}', keyword = '${req.body.keyword}' WHERE id = ${req.params.id}`;
                     console.log(sql2);
                     await conn.query(sql2, (error, rows) => {
                         sql3 = `SELECT * FROM ClubView WHERE id = ${req.params.id}`;
