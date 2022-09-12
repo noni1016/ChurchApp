@@ -78,8 +78,8 @@ export default class DaumMapView extends Component {
 			return (
 				<>
 					<Text> ============================== </Text>
-					<Text>Latitude: {latit}</Text>
-					<Text>Longitude: {longit}</Text>
+					<Text>Latitude: {this.props.currentRegion.latitude}</Text>
+					<Text>Longitude: {this.props.currentRegion.longitude}</Text>
 					<Text> ============================== </Text>
 				</>
 			);
@@ -410,7 +410,9 @@ function requestDaumAPI (url, option) {
 			}
 		})
 		.then((responseJson) => {
-			if (!errorFlag) success(responseJson);
+			if (!errorFlag){
+				success(responseJson);
+			} 
 		})
 		.catch((error) => {
 			errorFlag = true;

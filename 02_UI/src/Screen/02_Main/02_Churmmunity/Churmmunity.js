@@ -19,6 +19,7 @@ import EditMembers from './Group/EditMembers';
 import { UserData, UserContextProvider } from '~/Context/User';
 import {DomainContext, DomainContextProvider} from '~/Context/Domain';
 import SearchLocate from '~/Screen/03_Map/SearchLocate';
+import SearchGroups from './SearchGroups';
 
 
 const Stack = createStackNavigator();
@@ -87,7 +88,7 @@ const ChurmmunityStackNavi = () => {
                     headerShown: true,
                     headerRight: () => (
                         <HeaderButtonsContainer>
-                            <Icon name="search" size={26} onPress={() => alert('This is a search button!')} />
+                            <Icon name="search" size={26} onPress={() => navigation.navigate('SearchGroups', {navigation: navigation})} />
                             <Icon name="add" size={26} onPress={() => navigation.navigate('EditChurmmunity', {navigation: navigation})} />
                         </HeaderButtonsContainer>
                     )
@@ -150,6 +151,13 @@ const ChurmmunityStackNavi = () => {
              <Stack.Screen
                 name="SearchLocate"
                 component={SearchLocate}
+            />
+            <Stack.Screen
+                name="SearchGroups"
+                component={SearchGroups}
+                options={{
+                    headerShown: false,
+                }}
             />
         </Stack.Navigator>
     )

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { View, Text, ScrollView, Image, TouchableOpacity, Touchable } from 'react-native';
+import { View, Text, ScrollView, Image, TouchableOpacity, Alert } from 'react-native';
 import Styled from 'styled-components/native';
 import { DomainContext } from '~/Context/Domain';
 import { UserData } from '~/Context/User';
@@ -8,6 +8,7 @@ import ImageSize from 'react-native-image-size';
 import CharacterCountLimit from '~/Components/CharacterCountLimit';
 import Icon from 'react-native-vector-icons/AntDesign';
 import TagBox from '~/Components/TagBox';
+import DaumMap from '~/Screen/03_Map/DaumMapController';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import moment from 'moment';
 
@@ -121,6 +122,12 @@ const SendBtn = Styled.TouchableOpacity`
     border-radius: 10px;
 `;
 
+const CommonBtn = Styled.TouchableOpacity`
+background-color: green;
+width: 20%;
+border-bottom-width: 3px;
+`;
+
 
 const EditChurmmunity = ({route, navigation}) => {
     const domain = useContext(DomainContext);
@@ -130,10 +137,23 @@ const EditChurmmunity = ({route, navigation}) => {
     const [createType, setCreateType] = useState(1);
     const [imgSrc, setImgSrc] = useState(undefined);
     const [textInput, setTextInput] = useState('');
-    const [content, setContent] = useState({name: '', mainImg: '', location: '', location_ll: {x: 0, y: 0}, description: '', keyword: [], dateTime: ''});
+    const [content, setContent] = useState({name: '', mainImg: '', location: '', location_ll: {x: null, y: null}, description: '', keyword: [], dateTime: ''});
     const [keyword, setKeyword] = useState('');
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+    const [locate, setLocate]=useState([0,0]);
 
+    useEffect(() => {
+        if(locate[0] != 0 && locate[1] != 0)
+        {
+            setContent((current) => 
+            {
+                let newContent = {...current}; 
+                newContent.location_ll.x = locate[0]; 
+                newContent.location_ll.y = locate[1];
+                return newContent
+            })
+        }
+    }, [locate])
     /* react-native-image-picker 라이브러리 사용 옵션 */
     const options = {
         title: 'Load Photo',
@@ -160,7 +180,7 @@ const EditChurmmunity = ({route, navigation}) => {
             }
         });
     }
-
+    
     const putChurmmunity = () => {
         // 유효성 검사
         if (content.name == '') {
@@ -181,7 +201,22 @@ const EditChurmmunity = ({route, navigation}) => {
     };   
 
     const delChurmmunity = () => {
-        alert('Delete Button Pressed!');
+        Alert.alert('모임 해산', '정말 모임을 해산할까요? 모든 추억이 삭제됩니다..!',
+        [
+            {
+                text: "예",
+                onPress: () => fetch(`${domain}/Group/${createType}/${editData.id}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type' : 'application/json'
+                    },
+                }).then((res) => res.json()).then((res) => {alert(`${editData.id} Group 삭제`); navigation.navigate('ChurmmunityMain', {navigation: navigation})}),
+            },
+            {
+                text: "아니요",
+                onPress: () => console.log("취소"),
+            }
+        ]);
     }
 
     const sendGroupInfo = () => {
@@ -260,8 +295,12 @@ const EditChurmmunity = ({route, navigation}) => {
                 arr.pop();
                 route.params.editData.keyword = arr;
             }
-            if (route.params.editData.location_ll == undefined) route.params.editData.location_ll = {x: 0, y: 0};
+            //if (route.params.editData.location_ll == undefined) route.params.editData.location_ll = {x: 0, y: 0};
             setContent(route.params.editData);
+            console.log("--------------------------------");
+            console.log(route.params.editData.location);
+            console.log(route.params.editData.location_ll);
+            console.log("--------------------------------");
         }
         else if (edit === 2 && route.params.editData) /* 번개 모임 수정 모드 */
         {
@@ -346,11 +385,30 @@ const EditChurmmunity = ({route, navigation}) => {
 
 
             <OptionName>모임 지역</OptionName>
-            <PlusBtnBox onPress={() => {{navigation.navigate('SearchLocate', {navigation: navigation})}}}>
-                <PlusText>+</PlusText>
-                <Text>네이버 지도</Text>
-            </PlusBtnBox>
+            {((content.location == null || content.location_ll == null) ||
+                (content.location_ll != null && content.location_ll.y == null && content.location_ll.x == null)) && 
+                <PlusBtnBox onPress={() => {{navigation.navigate('SearchLocate', {callBackFunc : setLocate, navigation: navigation})}}}>
+                    <PlusText>+</PlusText>
+                    <Text>지역 추가</Text>
+                </PlusBtnBox>}
 
+            {(content.location_ll != null && 
+            (content.location_ll.y != null && content.location_ll.y != null)) && (
+            <>
+               <DaumMap currentRegion={{
+                latitude: parseFloat(content.location_ll.y),
+                longitude: parseFloat(content.location_ll.x),
+                zoomLevel: 5,
+               }}
+                mapType={"Standard"}
+                style={{ width: 400, height: 400, backgroundColor: 'transparent' }}/> 
+
+                <CommonBtn onPress={() => {{navigation.navigate('SearchLocate', {callBackFunc : setLocate, navigation: navigation})}}}>
+                    <PlusText>+</PlusText>
+                    <Text>지역 수정</Text>
+                </CommonBtn>
+            </>  )}
+            
             <SendBtnBox>
                 <SendBtn style={{backgroundColor: 'blue'}} onPress={() => putChurmmunity()}>
                     <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 18 }}>게시</Text>

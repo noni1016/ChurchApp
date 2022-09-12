@@ -17,6 +17,13 @@ width: 20%;
 border-bottom-width: 3px;
 `;
 
+const ChangeBtn = Styled.TouchableOpacity`
+background-color: blue;
+width: 15%;
+height: 15%;
+border-bottom-width: 3px;
+`;
+
 //맵 데이터 -- 전역으로 쓸 필요가 있을까
 const MapData = createContext({
     mapData : {
@@ -41,9 +48,9 @@ const UserContextProvider = ({children}) => {
     )
 }
 
-const SearchLocate = ()=>{
+const SearchLocate = ({route, navigation})=>{
 
-    let defaultLocation = {latitude: 37.0, longitude: 128.0};
+    let defaultLocation = {latitude: 1000.0, longitude: 1000.0};
     let serchRigion = "지역";
 
     const [location, setLocation] = useState(defaultLocation);
@@ -114,6 +121,17 @@ const SearchLocate = ()=>{
                 }>
                     <Text> Search Locate </Text>
                 </SearchBtn>
+                
+                <ChangeBtn onPress={() => {
+                    if (location.longitude == 1000.0 && location.latitude == 1000.0)
+                        <Text> Default Loacate! need search! </Text>
+
+                    if (location.longitude != 1000.0 && location.latitude != 1000.0) {
+                        route.params.callBackFunc([location.longitude, location.latitude]);
+                        navigation.goBack();
+                    }
+                }}>
+                </ChangeBtn>
             </View>
             
             <DaumMap currentRegion={{

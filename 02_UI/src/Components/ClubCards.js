@@ -74,7 +74,7 @@ const ClubCards = ({title, orgDatas, navigation}) => {
                 <Title>{title}</Title>
                 <ShowMore
                     onPress={() => {
-                        navigation.navigate('ShowMoreClubs', {clubs: datas, navigation: navigation});
+                        navigation.navigate('ShowMoreClubs', {title: '내 모임', clubs: datas, navigation: navigation});
                     }}>></ShowMore>
             </Header>
                 <ScrollView 
