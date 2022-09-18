@@ -179,6 +179,24 @@ router.delete('/:type/:groupId/', async (req, res) => {
 })
 
 
+router.get('/Search/:searchKey/:long/:lat', (req, res) => {
+
+    let long = req.params.long ? Number(req.params.long) : 127;
+    let lat = req.params.lat ? Number(req.params.lat) : 37;
+
+    // Ref : [ST_Distance_Sphere 함수|https://tzara.tistory.com/45]
+    let sql1 = `SELECT * FROM ClubView WHERE (name LIKE '%${req.params.searchKey}%' OR location LIKE '%${req.params.searchKey}%' OR description LIKE '%${req.params.searchKey}%' OR keyword LIKE '%${req.params.searchKey}%') ORDER BY ST_Distance_Sphere(location_ll, point(${long}, ${lat})), numMember`;
+
+    conn.query(sql1, function (error, rows, fields) {
+        if (!error) {
+            console.log(rows);
+            res.send(rows);
+        } else {
+            console.log('query error : ' + error);
+        }
+    });
+})
+
 
 
 module.exports = router;
