@@ -127,7 +127,8 @@ const SearchLocate = ({route, navigation})=>{
                         <Text> Default Loacate! need search! </Text>
 
                     if (location.longitude != 1000.0 && location.latitude != 1000.0) {
-                        route.params.callBackFunc([location.longitude, location.latitude]);
+                        route.params.setLocateProcess([location.longitude, location.latitude]);
+                        route.params.setRegionProcess(region);
                         navigation.goBack();
                     }
                 }}>

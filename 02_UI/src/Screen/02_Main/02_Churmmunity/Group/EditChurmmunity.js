@@ -140,7 +140,20 @@ const EditChurmmunity = ({route, navigation}) => {
     const [content, setContent] = useState({name: '', mainImg: '', location: '', location_ll: {x: null, y: null}, description: '', keyword: [], dateTime: ''});
     const [keyword, setKeyword] = useState('');
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
-    const [locate, setLocate]=useState([0,0]);
+    const [locate, setLocate] = useState([0,0]);
+    const [region, setRegion] = useState('');
+
+    useEffect(() => {
+        if(region != '')
+        {
+            setContent((current) => 
+            {
+                let newContent = {...current}; 
+                newContent.location = region; 
+                return newContent
+            })
+        }
+    }, [region])
 
     useEffect(() => {
         if(locate[0] != 0 && locate[1] != 0)
@@ -387,7 +400,7 @@ const EditChurmmunity = ({route, navigation}) => {
             <OptionName>모임 지역</OptionName>
             {((content.location == null || content.location_ll == null) ||
                 (content.location_ll != null && content.location_ll.y == null && content.location_ll.x == null)) && 
-                <PlusBtnBox onPress={() => {{navigation.navigate('SearchLocate', {callBackFunc : setLocate, navigation: navigation})}}}>
+                <PlusBtnBox onPress={() => {{navigation.navigate('SearchLocate', {setLocateProcess : setLocate, setRegionProcess : setRegion, navigation: navigation})}}}>
                     <PlusText>+</PlusText>
                     <Text>지역 추가</Text>
                 </PlusBtnBox>}
@@ -403,7 +416,7 @@ const EditChurmmunity = ({route, navigation}) => {
                 mapType={"Standard"}
                 style={{ width: 400, height: 400, backgroundColor: 'transparent' }}/> 
 
-                <CommonBtn onPress={() => {{navigation.navigate('SearchLocate', {callBackFunc : setLocate, navigation: navigation})}}}>
+                <CommonBtn onPress={() => {{navigation.navigate('SearchLocate', {setLocateProcess : setLocate, setRegionProcess : setRegion, navigation: navigation})}}}>
                     <PlusText>+</PlusText>
                     <Text>지역 수정</Text>
                 </CommonBtn>
