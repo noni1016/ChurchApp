@@ -5,6 +5,7 @@ import {DomainContext} from '~/Context/Domain';
 import {UserData} from '~/Context/User';
 import GroupMemProfile from './GroupMemProfile';
 import Icon from 'react-native-vector-icons/Ionicons';
+import DaumMap from '~/Screen/03_Map/DaumMapController';
 
 const Container = Styled.View`
     padding: 10px 10px 0px 10px; //상 우 하 좌
@@ -86,6 +87,13 @@ const ClubPageHome = ({data, members, isMember, isLeader, setMember, navigation}
         <Container>
             <Title>{data.name}</Title>
             <Desc>{data.description}</Desc>
+            <DaumMap currentRegion={{
+                latitude: parseFloat(data.location_ll.y),
+                longitude: parseFloat(data.location_ll.x),
+                zoomLevel: 5,
+               }}
+                mapType={"Standard"}
+                style={{ width: 400, height: 400, backgroundColor: 'transparent' }}/> 
             {button}
             <NumGroupMemCont>
                 <Text fontSize={18}>멤버 {numClubMem} 명</Text>
