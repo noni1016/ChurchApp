@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useContext } from 'react';
 import {View,Text, ActivityIndicator, ScrollView, Button, TouchableOpacity} from 'react-native';
 import Styled from 'styled-components/native';
-import { useForm, Controller } from "react-hook-form";
+import { useForm, Controller, useFieldArray } from "react-hook-form";
 import ClubCard from '~/Components/ClubCard';
 import TagBox from '~/Components/TagBox';
+import AsyncStorage from '@react-native-community/async-storage';
 
 import Icon from 'react-native-vector-icons/Ionicons';
 import Icon2 from 'react-native-vector-icons/MaterialIcons';
-import { FlatList } from 'react-native-gesture-handler';
 
 import { UserData, UserContextProvider } from '~/Context/User';
 import {DomainContext, DomainContextProvider} from '~/Context/Domain';
@@ -59,15 +59,33 @@ const SearchGroups = ({route, navigation}) => {
     const domain = useContext(DomainContext);
 
     const [clubs, setClubs] = useState();
-    const [showingClubs, SetShowingClubs] = useState();
-    const { control, handleSubmit } = useForm();
+    const [showingClubs, setShowingClubs] = useState();
+    const [searchHistory, setSearchHistory] = useState([]);
+    const { control, handleSubmit, register, setValue } = useForm();
+
+    /* 페이지 로드할때 기기에 저장된 검색어 이력 가져옴 */
+    useEffect(() => {
+        AsyncStorage.getItem('searchHistory', (err, res) => {
+            console.log(res);
+            if (res) setSearchHistory(JSON.parse(res));
+        });
+        // console.log(value);
+        // if (value && value.length > 0) {
+        //     setSearchHistory(value);            
+        // }
+
+    }, [])
+
+    useEffect(() => {
+        console.log(searchHistory);
+    }, [searchHistory])
 
     /* 검색 메인 창에는 상위 두 개의 결과만 표시 */
     useEffect(() => {
         if (clubs && clubs.length > 2) {
-            SetShowingClubs(clubs.slice(0,2));
+            setShowingClubs(clubs.slice(0,2));
         } else {
-            SetShowingClubs(clubs);
+            setShowingClubs(clubs);
         }   
     }, [clubs])    
 
@@ -76,6 +94,33 @@ const SearchGroups = ({route, navigation}) => {
         fetch(`${domain}/Group/Search/${data.search}/127/37`)
         .then(res => res.json())
         .then(res => {console.log(res); setClubs(res)});
+
+        // 검색어 히스토리로 저장
+        // 이전에 검색한 기록이 있으면 지우고 최상위에 넣기
+        // 길이가 길면 가장 과거값 삭제
+        let find = -1;
+        for (let i = 0; i < searchHistory.length; i++)
+        {
+            if (searchHistory[i] == data.search)
+            {
+                find = i;
+                break;
+            }
+        }
+
+        if (find != -1)
+        {
+            searchHistory.splice(find, 1);
+        }
+
+        searchHistory.push(data.search);
+
+        if (searchHistory.length > 20)
+        {
+            searchHistory.shift();
+        }
+
+        AsyncStorage.setItem('searchHistory', JSON.stringify(searchHistory));
     }
 
 
@@ -88,21 +133,27 @@ const SearchGroups = ({route, navigation}) => {
                     <Icon name="arrow-back" size={26} flex={1} onPress={() => navigation.goBack()} />
                     <Controller
                         control={control}
-                        rules={{required: true, minLength: 2}}
+                        rules={{required: true, minLength: 1}}
                         name="search"
                         defaultValue={""}
                         render={({ field: {onChange, value}}) => (
                             <SearchBar placeholder='공동체, 번개 모임 검색' onChangeText={onChange} value={value} onSubmitEditing={handleSubmit(getSearchResult)} />
                         )}
+                        {...register("search")}
                     />
                     <Icon2 name="filter-alt" size={26} flex={2} onPress={() => alert('Filter!')} />
                     <Icon2 name="search" size={26} flex={2} onPress={handleSubmit(getSearchResult)} />
                 </Header>
                 
-                {/* {clubs == null && 
+                {clubs == null &&
                 <KeywordView>
-                    {tempSearchHistory ? tempSearchHistory.map((v, i) => <TagBox key={i} text={v} color="blue" onPressDelBtn={() => setContent((current) => {let newContent = {...current}; newContent.keyword.splice(i, 1); return newContent})}/>) : null}
-                </KeywordView>} */}
+                    {searchHistory ? searchHistory.slice(0).reverse().map((v, i) => 
+                        <TagBox key={i} text={v} color="blue" 
+                            onPressDelBtn={() => setSearchHistory((current) => {let newItem = [...current]; newItem.splice(newItem.length - i - 1, 1); return newItem})}
+                            onPressText={() => setValue("search", v)}
+                            />) : null
+                        }
+                </KeywordView>}
 
                 {showingClubs && <>
                 
