@@ -11,6 +11,7 @@ import Icon2 from 'react-native-vector-icons/MaterialIcons';
 
 import { UserData, UserContextProvider } from '~/Context/User';
 import {DomainContext, DomainContextProvider} from '~/Context/Domain';
+import UserDataStorage from '~/Context/UserDataStorage';
 
 /*
     Ref : https://react-hook-form.com/api/useform/register#options
@@ -65,20 +66,12 @@ const SearchGroups = ({route, navigation}) => {
 
     /* 페이지 로드할때 기기에 저장된 검색어 이력 가져옴 */
     useEffect(() => {
-        AsyncStorage.getItem('searchHistory', (err, res) => {
-            console.log(res);
-            if (res) setSearchHistory(JSON.parse(res));
-        });
-        // console.log(value);
-        // if (value && value.length > 0) {
-        //     setSearchHistory(value);            
-        // }
-
+        UserDataStorage.get('searchHistory').then(setSearchHistory);
+        // AsyncStorage.getItem('searchHistory', (err, res) => {
+        //     console.log(res);
+        //     if (res) setSearchHistory(JSON.parse(res));
+        // });
     }, [])
-
-    useEffect(() => {
-        console.log(searchHistory);
-    }, [searchHistory])
 
     /* 검색 메인 창에는 상위 두 개의 결과만 표시 */
     useEffect(() => {
@@ -120,7 +113,8 @@ const SearchGroups = ({route, navigation}) => {
             searchHistory.shift();
         }
 
-        AsyncStorage.setItem('searchHistory', JSON.stringify(searchHistory));
+        UserDataStorage.set('searchHistory', searchHistory);
+        // AsyncStorage.setItem('searchHistory', JSON.stringify(searchHistory));
     }
 
 
