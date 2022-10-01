@@ -214,12 +214,12 @@ router.post('/Feed', (req, res) => {
     let sql = ``;
     if (imgUpload)
     {
-        sql = `INSERT INTO Feed (clubId, authorId, location, time, contentImg, contentText) VALUES ('${req.body.clubId}', '${req.body.authorId}', "${req.body.location}", '${req.body.time}', '/FeedImg/${fileName}', "${req.body.contentText}")`;
+        sql = `INSERT INTO Feed (clubId, authorId, location, time, contentImg, contentText, notice) VALUES ('${req.body.clubId}', '${req.body.authorId}', "${req.body.location}", '${req.body.time}', '/FeedImg/${fileName}', "${req.body.contentText}", "${req.body.notice}")`;
         imgUpload = false;
     }
     else
     {
-        sql = `INSERT INTO Feed (clubId, authorId, location, time, contentText) VALUES ('${req.body.clubId}', '${req.body.authorId}', "${req.body.location}", '${req.body.time}', "${req.body.contentText}")`;
+        sql = `INSERT INTO Feed (clubId, authorId, location, time, contentText, notice) VALUES ('${req.body.clubId}', '${req.body.authorId}', "${req.body.location}", '${req.body.time}', "${req.body.contentText}", "${req.body.notice}")`;
     }
     console.log(sql);
     conn.query(sql, function (error, rows, fields) { // sql 쿼리 수행
@@ -300,6 +300,47 @@ router.delete('/:clubId/Feed/:feedId', async (req, res) => {
     
 })
 
+
+// Get Notices
+router.get('/:clubId/Notices', (req, res) => {
+    let sql = `SELECT * FROM Feed WHERE clubId = ${req.params.clubId} AND notice = true ORDER BY time DESC`
+    console.log(sql);
+    conn.query(sql, function (error, rows, fields) { // sql 쿼리 수행
+        if (!error) {
+            // console.log(rows);
+            res.send(rows);
+        } else {
+            console.log('query error : ' + error);
+        }
+    });
+})
+
+// // Get Notice Comments
+// router.get('/:clubId/Notice/:noticeId/Comments', (req, res) => {
+//     let sql = `SELECT * FROM Comment WHERE feedId = ${req.params.feedId} ORDER BY time DESC`
+//     console.log(sql);
+//     conn.query(sql, function (error, rows, fields) { // sql 쿼리 수행
+//         if (!error) {
+//             res.send(rows);
+//         } else {
+//             console.log('query error : ' + error);
+//         }
+//     });
+// })
+
+// // Get Notice Images
+// router.get('/:clubId/Imgs', (req, res) => {
+//     let sql = `SELECT contentImg FROM Feed WHERE clubId = ${req.params.clubId} AND contentImg != 'NULL' ORDER BY time DESC`
+//     console.log(sql);
+//     conn.query(sql, function (error, rows, fields) { // sql 쿼리 수행
+//         if (!error) {
+//             // console.log(rows);
+//             res.send(rows);
+//         } else {
+//             console.log('query error : ' + error);
+//         }
+//     });
+// })
 
 
 module.exports = router;
