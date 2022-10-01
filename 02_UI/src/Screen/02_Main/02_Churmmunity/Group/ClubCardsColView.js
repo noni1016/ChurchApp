@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { View, FlatList } from 'react-native';
+import { View, FlatList, TouchableOpacity } from 'react-native';
 import Styled from 'styled-components/native';
 import ClubCard from '~/Components/ClubCard';
 
@@ -35,7 +35,11 @@ const ClubCardsColView = ({route, navigation}) => {
                     return `myData-${index}`;
                 }}
                 renderItem={({ item, index }) => (
-                    <ClubCard club={item}></ClubCard>
+                    <TouchableOpacity onPress = {() => {
+                        navigation.navigate('ClubPage', {club : item, navigation: navigation});
+                    }}>
+                        <ClubCard club={item}></ClubCard>
+                    </TouchableOpacity>
                 )}
                 ItemSeparatorComponent={FlatListItemSeparator}
             />

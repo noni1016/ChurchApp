@@ -1,13 +1,21 @@
-import React, { useState, useEffect } from 'react';
-import {View,Text, ActivityIndicator, ScrollView, Button} from 'react-native';
+import React, { useState, useEffect, useContext } from 'react';
+import {View,Text, ActivityIndicator, ScrollView, Button, TouchableOpacity} from 'react-native';
 import Styled from 'styled-components/native';
-import { useForm, Controller } from "react-hook-form";
+import { useForm, Controller, useFieldArray } from "react-hook-form";
 import ClubCard from '~/Components/ClubCard';
 import TagBox from '~/Components/TagBox';
+import AsyncStorage from '@react-native-community/async-storage';
 
 import Icon from 'react-native-vector-icons/Ionicons';
 import Icon2 from 'react-native-vector-icons/MaterialIcons';
-import { FlatList } from 'react-native-gesture-handler';
+
+import { UserData, UserContextProvider } from '~/Context/User';
+import {DomainContext, DomainContextProvider} from '~/Context/Domain';
+import UserDataStorage from '~/Context/UserDataStorage';
+
+/*
+    Ref : https://react-hook-form.com/api/useform/register#options
+*/
 
 const Header = Styled.View`
     flex-direction: row;
@@ -45,38 +53,68 @@ const KeywordView = Styled.View`
 `;
 
 
-
-
-const tempClubs = [
-    { id: 0, name: `로딩중`, mainImg: `WinLockImages/a48b65589f2727feb93b12693ffeccb5d4aa1c0b6bbc1dff4d503ff28eba5a4c.jpg`, location: `수원시 영통구 매탄4동 10`, numMember: 10 },
-    { id: 1, name: `로딩중`, mainImg: `WinLockImages/a48b65589f2727feb93b12693ffeccb5d4aa1c0b6bbc1dff4d503ff28eba5a4c.jpg`, location: `수원시 영통구 매탄4동 10`, numMember: 10 },
-    { id: 2, name: `로딩중`, mainImg: `WinLockImages/a48b65589f2727feb93b12693ffeccb5d4aa1c0b6bbc1dff4d503ff28eba5a4c.jpg`, location: `수원시 영통구 매탄4동 10`, numMember: 10 },
-    { id: 3, name: `로딩중`, mainImg: `WinLockImages/a48b65589f2727feb93b12693ffeccb5d4aa1c0b6bbc1dff4d503ff28eba5a4c.jpg`, location: `수원시 영통구 매탄4동 10`, numMember: 10 },
-    { id: 3, name: `로딩중`, mainImg: `WinLockImages/a48b65589f2727feb93b12693ffeccb5d4aa1c0b6bbc1dff4d503ff28eba5a4c.jpg`, location: `수원시 영통구 매탄4동 10`, numMember: 10 },
-    { id: 3, name: `로딩중`, mainImg: `WinLockImages/a48b65589f2727feb93b12693ffeccb5d4aa1c0b6bbc1dff4d503ff28eba5a4c.jpg`, location: `수원시 영통구 매탄4동 10`, numMember: 10 },
-    { id: 3, name: `로딩중`, mainImg: `WinLockImages/a48b65589f2727feb93b12693ffeccb5d4aa1c0b6bbc1dff4d503ff28eba5a4c.jpg`, location: `수원시 영통구 매탄4동 10`, numMember: 10 },
-];
-
-const tempSearchHistory = ['이거', '저거', '으아'];
+// const tempSearchHistory = ['이거', '저거', '으아'];
 
 const SearchGroups = ({route, navigation}) => {
 
-    const [clubs, setClubs] = useState(tempClubs);
-    const [showingClubs, SetShowingClubs] = useState(tempClubs);
-    const { control, handleSubmit } = useForm();
+    const domain = useContext(DomainContext);
+
+    const [clubs, setClubs] = useState();
+    const [showingClubs, setShowingClubs] = useState();
+    const [searchHistory, setSearchHistory] = useState([]);
+    const { control, handleSubmit, register, setValue } = useForm();
+
+    /* 페이지 로드할때 기기에 저장된 검색어 이력 가져옴 */
+    useEffect(() => {
+        UserDataStorage.get('searchHistory').then(setSearchHistory);
+        // AsyncStorage.getItem('searchHistory', (err, res) => {
+        //     console.log(res);
+        //     if (res) setSearchHistory(JSON.parse(res));
+        // });
+    }, [])
 
     /* 검색 메인 창에는 상위 두 개의 결과만 표시 */
     useEffect(() => {
         if (clubs && clubs.length > 2) {
-            SetShowingClubs(clubs.slice(0,2));
+            setShowingClubs(clubs.slice(0,2));
         } else {
-            SetShowingClubs(clubs);
+            setShowingClubs(clubs);
         }   
     }, [clubs])    
 
     /* 서버에서 검색 데이터 받아오기 */
     const getSearchResult = (data) => {
-        alert(data.search);       
+        fetch(`${domain}/Group/Search/${data.search}/127/37`)
+        .then(res => res.json())
+        .then(res => {console.log(res); setClubs(res)});
+
+        // 검색어 히스토리로 저장
+        // 이전에 검색한 기록이 있으면 지우고 최상위에 넣기
+        // 길이가 길면 가장 과거값 삭제
+        let find = -1;
+        for (let i = 0; i < searchHistory.length; i++)
+        {
+            if (searchHistory[i] == data.search)
+            {
+                find = i;
+                break;
+            }
+        }
+
+        if (find != -1)
+        {
+            searchHistory.splice(find, 1);
+        }
+
+        searchHistory.push(data.search);
+
+        if (searchHistory.length > 20)
+        {
+            searchHistory.shift();
+        }
+
+        UserDataStorage.set('searchHistory', searchHistory);
+        // AsyncStorage.setItem('searchHistory', JSON.stringify(searchHistory));
     }
 
 
@@ -89,32 +127,39 @@ const SearchGroups = ({route, navigation}) => {
                     <Icon name="arrow-back" size={26} flex={1} onPress={() => navigation.goBack()} />
                     <Controller
                         control={control}
-                        rules={{required: true}}
+                        rules={{required: true, minLength: 1}}
                         name="search"
                         defaultValue={""}
                         render={({ field: {onChange, value}}) => (
-                            <SearchBar placeholder='공동체, 번개 모임 검색' onChangeText={onChange} value={value} onSubmitEditing={(text) => getSearchResult(text)} />
+                            <SearchBar placeholder='공동체, 번개 모임 검색' onChangeText={onChange} value={value} onSubmitEditing={handleSubmit(getSearchResult)} />
                         )}
+                        {...register("search")}
                     />
-                    {/* <SearchBar placeholder='공동체, 번개 모임 검색' name='search' onSubmitEditing={(text) => getSearchResult(text)} /> */}
                     <Icon2 name="filter-alt" size={26} flex={2} onPress={() => alert('Filter!')} />
                     <Icon2 name="search" size={26} flex={2} onPress={handleSubmit(getSearchResult)} />
                 </Header>
                 
-                {clubs == null && 
+                {clubs == null &&
                 <KeywordView>
-                    {tempSearchHistory ? tempSearchHistory.map((v, i) => <TagBox key={i} text={v} color="blue" onPressDelBtn={() => setContent((current) => {let newContent = {...current}; newContent.keyword.splice(i, 1); return newContent})}/>) : null}
+                    {searchHistory ? searchHistory.slice(0).reverse().map((v, i) => 
+                        <TagBox key={i} text={v} color="blue" 
+                            onPressDelBtn={() => setSearchHistory((current) => {let newItem = [...current]; newItem.splice(newItem.length - i - 1, 1); return newItem})}
+                            onPressText={() => setValue("search", v)}
+                            />) : null
+                        }
                 </KeywordView>}
 
-                {clubs && <>
+                {showingClubs && <>
                 
                     <Title>공동체 {clubs.length} 개</Title>
 
                     {showingClubs.map((v, i) => (
-                        <>
+                        <TouchableOpacity onPress = {() => {
+                            navigation.navigate('ClubPage', {club : v, navigation: navigation});
+                        }}>
                             <ClubCard club={v} style={{ marginBottom: '10px' }} />
                             <View style={{ height: 20, width: '100%', backgroundColor: 'transparent' }} />
-                        </>))}
+                        </TouchableOpacity>))}
 
                     <View style={{ width: "90%" }}>
                         <Button title="더 보기" onPress={() => { navigation.navigate('ShowMoreClubs', { title: `공동체 검색 결과 ${clubs.length} 개`, clubs: clubs, navigation: navigation }); }} />
@@ -123,7 +168,7 @@ const SearchGroups = ({route, navigation}) => {
                 }
                 <Separator />
 
-                {clubs && <><Title>번개 {clubs ? clubs.length : 0} 개</Title>
+                {showingClubs && <><Title>번개 {clubs ? clubs.length : 0} 개</Title>
                 <View style={{ width: "90%" }}>
                     <Button title="더 보기" onPress={() => alert('번개 모임 더보기')} />
                 </View>
