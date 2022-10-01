@@ -8,8 +8,10 @@ import AddBtn from '~/Components/AddBtn';
 const GroupNotification = ({route, navigation}) => {
     const domain = useContext(DomainContext);
     const club = route.params.club;
+    const isLeader = route.params.isLeader;
     let [clubNotices, setClubNotices] = useState([]);
     let [reload, setReload] = useState(false);
+    const {userData} = useContext(UserData);
 
     useEffect(() => {
         navigation.setOptions({title: `공지사항`});
@@ -28,8 +30,7 @@ const GroupNotification = ({route, navigation}) => {
                 <Feed club={club} feed={data} key={index} onFeedChange={() => setReload(true)} navigation={navigation} />
             ))}
             </ScrollView>
-            <AddBtn OnPressMethod={() => {navigation.navigate('EditFeed', {edit: false, isNotice: true, club: club, navigation: navigation});}}/>
-            <Text>blabla</Text>
+            {isLeader && <AddBtn OnPressMethod={() => {navigation.navigate('EditFeed', {edit: false, isNotice: true, club: club, navigation: navigation});}}/>}
         </>
     )
 }
