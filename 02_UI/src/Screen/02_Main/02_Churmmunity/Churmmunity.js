@@ -20,6 +20,7 @@ import { UserData, UserContextProvider } from '~/Context/User';
 import {DomainContext, DomainContextProvider} from '~/Context/Domain';
 import SearchLocate from '~/Screen/03_Map/SearchLocate';
 import SearchGroups from './SearchGroups';
+import GroupNotification from '~/Screen/02_Main/02_Churmmunity/Group/GroupNotification';
 
 
 const Stack = createStackNavigator();
@@ -158,6 +159,10 @@ const ChurmmunityStackNavi = () => {
                 options={{
                     headerShown: false,
                 }}
+            />
+            <Stack.Screen
+                name="GroupNotification"
+                component={GroupNotification}
             />
         </Stack.Navigator>
     )

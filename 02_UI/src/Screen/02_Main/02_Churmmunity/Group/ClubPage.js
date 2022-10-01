@@ -114,13 +114,13 @@ const ClubPage = ({route, navigation}) => {
    
 
     return (
-        <View>
+        <>
             <Header>
                 <Title>
                     {data.name}
                 </Title>
                 <Side>
-                <Icon2 name="notification" size={26} onPress={() =>alert('공지사항버튼')} />
+                <Icon2 name="notification" size={26} onPress={() => navigation.navigate('GroupNotification', {club: data})} />
                 {isLeader && <Icon1 name="settings-outline" size={26} onPress={() => navigation.navigate('EditChurmmunity', {edit: 1, editData: data, navigation: navigation})} />}
                 </Side>          
             </Header>
@@ -145,7 +145,7 @@ const ClubPage = ({route, navigation}) => {
                 <Footer/>
             </ScrollView>
             {tabIdx == 1 && <AddBtn OnPressMethod={() => {navigation.navigate('EditFeed', {edit: false, club: data, navigation: navigation});}}/>}
-        </View>
+        </>
     )
 };
 
