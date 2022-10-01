@@ -231,7 +231,8 @@ const EditFeed = ({route, navigation}) => {
             method: fetchMethod,
             body : JSON.stringify({clubId: club.id, authorId: userData.id, location: location, time: sendDate, contentText: textInput, notice : isNotice}),
             headers: {'Content-Type': 'application/json'}
-        }).then(res => res.json()).then(res => {navigation.navigate('ClubPage', {tabIdx: 1, edit: true, navigation: navigation});})
+        }).then(res => res.json()).then(res => {navigation.goBack();})
+        // }).then(res => res.json()).then(res => {navigation.navigate('ClubPage', {tabIdx: 1, edit: true, navigation: navigation});})
     }
 
     // Camera Roll

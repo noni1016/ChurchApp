@@ -4,6 +4,7 @@ import {DomainContext} from '~/Context/Domain';
 import {UserData} from '~/Context/User';
 import Feed from '~/Components/Feed';
 import AddBtn from '~/Components/AddBtn';
+import { useIsFocused } from '@react-navigation/native';
 
 const GroupNotification = ({route, navigation}) => {
     const domain = useContext(DomainContext);
@@ -12,6 +13,7 @@ const GroupNotification = ({route, navigation}) => {
     let [clubNotices, setClubNotices] = useState([]);
     let [reload, setReload] = useState(false);
     const {userData} = useContext(UserData);
+    const isFocused = useIsFocused();
 
     useEffect(() => {
         navigation.setOptions({title: `공지사항`});
@@ -21,7 +23,7 @@ const GroupNotification = ({route, navigation}) => {
     useEffect(() => {
         console.log(`${domain}/Club/${club.id}/Notices`);
         fetch(`${domain}/Club/${club.id}/Notices`).then(res => res.json()).then(res => {setClubNotices(res);});
-    }, [club, reload])
+    }, [club, reload, isFocused])
 
     return (
         <>
