@@ -6,6 +6,7 @@ import {UserData} from '~/Context/User';
 import GroupMemProfile from './GroupMemProfile';
 import Icon from 'react-native-vector-icons/Ionicons';
 import DaumMap from '~/Screen/03_Map/DaumMapController';
+import { useIsFocused } from '@react-navigation/native';
 
 const Container = Styled.View`
     padding: 10px 10px 0px 10px; //상 우 하 좌
@@ -55,6 +56,7 @@ const ClubPageHome = ({data, members, isMember, isLeader, setMember, navigation}
     const domain = useContext(DomainContext);    
     const {userData, setUserData} = useContext(UserData);
     var [numClubMem, setNumClubMem] = useState(0);
+    const isFocused = useIsFocused();
 
     var [button, setButton] = useState((<JoinBtn onPress={()=>{alert('로딩중')}}>
                     <JoinBtnText>가입하기</JoinBtnText>
@@ -87,7 +89,7 @@ const ClubPageHome = ({data, members, isMember, isLeader, setMember, navigation}
         <Container>
             <Title>{data.name}</Title>
             <Desc>{data.description}</Desc>
-            {data.location_ll && <DaumMap currentRegion={{
+            {isFocused && data.location_ll && <DaumMap currentRegion={{
                 latitude: parseFloat(data.location_ll.y),
                 longitude: parseFloat(data.location_ll.x),
                 zoomLevel: 5,

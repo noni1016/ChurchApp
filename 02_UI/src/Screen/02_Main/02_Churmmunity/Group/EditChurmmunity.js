@@ -11,6 +11,7 @@ import TagBox from '~/Components/TagBox';
 import DaumMap from '~/Screen/03_Map/DaumMapController';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import moment from 'moment';
+import { useIsFocused } from '@react-navigation/native';
 
 
 const OptionName = Styled.Text`
@@ -142,6 +143,7 @@ const EditChurmmunity = ({route, navigation}) => {
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
     const [locate, setLocate] = useState([0,0]);
     const [region, setRegion] = useState('');
+    const isFocused = useIsFocused();
 
     useEffect(() => {
         if(region != '')
@@ -408,13 +410,13 @@ const EditChurmmunity = ({route, navigation}) => {
             {(content.location_ll != null && 
             (content.location_ll.y != null && content.location_ll.y != null)) && (
             <>
-               <DaumMap currentRegion={{
+               {isFocused && <DaumMap currentRegion={{
                 latitude: parseFloat(content.location_ll.y),
                 longitude: parseFloat(content.location_ll.x),
                 zoomLevel: 5,
                }}
                 mapType={"Standard"}
-                style={{ width: 400, height: 400, backgroundColor: 'transparent' }}/> 
+                style={{ width: 400, height: 400, backgroundColor: 'transparent' }}/> }
 
                 <CommonBtn onPress={() => {{navigation.navigate('SearchLocate', {setLocateProcess : setLocate, setRegionProcess : setRegion, navigation: navigation})}}}>
                     <PlusText>+</PlusText>
