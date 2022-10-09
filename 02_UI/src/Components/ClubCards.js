@@ -62,7 +62,7 @@ const DataIndicator = Styled.View`
 `;
 
 
-const ClubCards = ({title, orgDatas, navigation}) => {
+const ClubCards = ({title, orgDatas, stackNavi, tabNavi}) => {
 
     const [indicatorIdx, setIndicatorIdx] = useState(0);
     var datas = orgDatas.length > 8 ? orgDatas.slice(0,7) : orgDatas;
@@ -74,7 +74,7 @@ const ClubCards = ({title, orgDatas, navigation}) => {
                 <Title>{title}</Title>
                 <ShowMore
                     onPress={() => {
-                        navigation.navigate('ShowMoreClubs', {title: '내 모임', clubs: datas, navigation: navigation});
+                        stackNavi.navigate('ShowMoreClubs', {title: '내 모임', clubs: datas, tabNavi: tabNavi});
                     }}>></ShowMore>
             </Header>
                 <ScrollView 
@@ -89,7 +89,7 @@ const ClubCards = ({title, orgDatas, navigation}) => {
                     }}>
                         {datas.map((data, index) => (
                             <Body activeOpacity={1} key={index} onPress = {() => {
-                                navigation.navigate('ClubPage', {club : data, navigation: navigation});}}>
+                                stackNavi.navigate('ClubPage', {club : data, tabNavi: tabNavi});}}>
                                 <ClubCard club={data} />
                             </Body>
                         ))}

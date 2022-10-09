@@ -36,7 +36,7 @@ const BottomTabNavi = () => {
             />
             <BottomTab.Screen
                 name="Profile"
-                component={Profile}
+                children={(navigation) => <Profile navigation={navigation}/>}
                 options={{
                     tabBarIcon: ({ color }) => <Icon name="account-box" color={color} size={26} />
                 }}
