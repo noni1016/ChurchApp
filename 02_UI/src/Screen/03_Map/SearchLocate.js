@@ -144,6 +144,15 @@ const SearchLocate = ({route, navigation})=>{
                 }}
                     mapType={"Standard"}
                     style={{ width: 400, height: 400, backgroundColor: 'transparent' }}
+
+                    markers={[{
+                        latitude: parseFloat(data.location_ll.y),
+                        longitude: parseFloat(data.location_ll.x),
+                        pinColor: "red",
+                        pinColorSelect: "yellow",
+                        title: "marker test",
+                        draggable: true,
+                    }]}
                 />}
         </>
     )

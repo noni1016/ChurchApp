@@ -90,12 +90,24 @@ const ClubPageHome = ({data, members, isMember, isLeader, setMember, stackNavi, 
             <Title>{data.name}</Title>
             <Desc>{data.description}</Desc>
             {isFocused && data.location_ll && <DaumMap currentRegion={{
-                latitude: parseFloat(data.location_ll.y),
-                longitude: parseFloat(data.location_ll.x),
-                zoomLevel: 5,
-               }}
+                    latitude: parseFloat(data.location_ll.y),
+                    longitude: parseFloat(data.location_ll.x),
+                    zoomLevel: 5,
+                }}
+
                 mapType={"Standard"}
-                style={{ width: 400, height: 400, backgroundColor: 'transparent' }}/> }
+                style={{ width: 400, height: 400, backgroundColor: 'transparent' }}
+                
+                markers={[{
+                    latitude: parseFloat(data.location_ll.y),
+                    longitude: parseFloat(data.location_ll.x),
+                    pinColor: "red",
+                    pinColorSelect: "yellow",
+                    title: "marker test",
+                    draggable: false,
+                }]}
+                
+                /> }
             {button}
             <NumGroupMemCont>
                 <Text fontSize={18}>멤버 {numClubMem} 명</Text>
