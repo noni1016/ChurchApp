@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useContext} from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, ScrollView, Image } from 'react-native';
 import styled from 'styled-components/native';
 import {DomainContext} from '~/Context/Domain';
 import {UserData} from '~/Context/User';
@@ -18,6 +18,20 @@ const HeaderButtonsContainer = styled.View`
     justify-content: space-evenly;
     width: 120px;
 `;
+
+const HeaderBox = styled.View`
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
+    height: 100px;
+    background-color: transparent;
+`;
+
+const HeaderTextArea = styled.View`
+    flex-direction: column;
+    justify-content: space-between;
+`;
+
 
 const ProfileMain = ({navigation, route}) => {
     const domain = useContext(DomainContext);
@@ -46,9 +60,16 @@ const ProfileMain = ({navigation, route}) => {
     }, [member])
 
     return (
-        <>
-            <Text>{member.name}</Text>
-        </>
+        <ScrollView style={{padding: 10}}>
+            <HeaderBox>
+                <Image style={{ width: 70, height: 70, flex: 1, resizeMode: 'contain' }} source={{ uri: userData.photo + "?cache="+Math.random() }} />
+                <HeaderTextArea style={{ flex: 3 }}>
+                    <Text style={{ fontWeight: 'bold'}}>{member.name}</Text>
+                    {member.description ? <Text>{member.description}</Text> : <Text>자기소개 없음</Text>}
+                    <Text>{member.church}</Text>
+                </HeaderTextArea>
+            </HeaderBox>
+        </ScrollView>
     )
 }
 
