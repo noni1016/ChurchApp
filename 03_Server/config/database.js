@@ -1,7 +1,7 @@
 
 var mysql = require('mysql'); // mysql javascript library 가져옴
 var db_info = {
-    host: '175.212.209.93', // mysql host 주소 입력. http 빼야함 test : wwwproject.iptime.org
+    host: '121.139.124.10', // mysql host 주소 입력. http 빼야함 test : wwwproject.iptime.org
     //host: '172.30.1.27', // 내부망
     port: '3306', // mysql port 입력
     user: 'sjaCoders',

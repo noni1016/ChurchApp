@@ -315,32 +315,4 @@ router.get('/:clubId/Notices', (req, res) => {
     });
 })
 
-// // Get Notice Comments
-// router.get('/:clubId/Notice/:noticeId/Comments', (req, res) => {
-//     let sql = `SELECT * FROM Comment WHERE feedId = ${req.params.feedId} ORDER BY time DESC`
-//     console.log(sql);
-//     conn.query(sql, function (error, rows, fields) { // sql 쿼리 수행
-//         if (!error) {
-//             res.send(rows);
-//         } else {
-//             console.log('query error : ' + error);
-//         }
-//     });
-// })
-
-// // Get Notice Images
-// router.get('/:clubId/Imgs', (req, res) => {
-//     let sql = `SELECT contentImg FROM Feed WHERE clubId = ${req.params.clubId} AND contentImg != 'NULL' ORDER BY time DESC`
-//     console.log(sql);
-//     conn.query(sql, function (error, rows, fields) { // sql 쿼리 수행
-//         if (!error) {
-//             // console.log(rows);
-//             res.send(rows);
-//         } else {
-//             console.log('query error : ' + error);
-//         }
-//     });
-// })
-
-
 module.exports = router;
