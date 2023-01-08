@@ -21,7 +21,7 @@ const Name = styled.Text`
     font-family: 'DoHyeon-Regular';    
 `;
 
-const GroupMemProfile = ({member}) => {
+const GroupMemProfile = ({member, onPress}) => {
 
     const domain = useContext(DomainContext);
     var [url, setUrl] = useState('');
@@ -31,7 +31,7 @@ const GroupMemProfile = ({member}) => {
     }, [])
 
     return (
-        <Container>
+        <Container onPress={onPress}>
             <Image style={{ backgroundColor: 'transparent', width: 70, height: 70, resizeMode: 'contain' }} source={url ? {uri: url } : null} />
             <NameCont>
                 <Name>{member.name}</Name>

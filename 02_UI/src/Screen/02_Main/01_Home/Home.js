@@ -8,11 +8,12 @@ import { getUniqueId, getManufacturer, isEmulator } from 'react-native-device-in
 
 const data = {id: 5};
 
-const Home = () => {
+const Home = ({navigation}) => {
     const { CalendarModule, KakaoMapModule, DaumMapModule } = NativeModules;
     const { userData, setUserData } = useContext(UserData);
     return (
         <>
+        <Button title="안녕" onPress={() => navigation.navigate('Profile')}/>
         <Button title="Click" color="#841584" onPress={console.log("click test")} />
         {userData != null && <View>
             <Image style={{ width: '100%', height: '100%', resizeMode: 'contain' }} source={{ uri: userData.photo + "?cache="+Math.random() }} />

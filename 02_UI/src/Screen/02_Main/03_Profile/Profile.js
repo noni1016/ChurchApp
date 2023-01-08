@@ -1,208 +1,95 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { View, Text, Image } from 'react-native';
-import { UserData, KakaoAuthData, TryGetKakao, UserContextProvider } from '~/Context/User';
-import Auth from '~/Screen/01_Auth/Auth';
-import Styled from 'styled-components/native';
-import { DomainContext } from '~/Context/Domain';
-import {launchImageLibrary} from 'react-native-image-picker';
+import React, {useState, useEffect, useContext} from 'react';
+import { View, Text, ScrollView, Image } from 'react-native';
+import styled from 'styled-components/native';
+import {DomainContext} from '~/Context/Domain';
+import {UserData} from '~/Context/User';
 import {
-  KakaoOAuthToken,
-  KakaoProfile,
-  getProfile as getKakaoProfile,
-  login,
-  logout,
-  unlink,
-} from '@react-native-seoul/kakao-login';
+    createStackNavigator,
+} from '@react-navigation/stack';
 
-const TestView = Styled.View`
-    width: 100%;
-    height: 50%;
-`;
+import Icon1 from 'react-native-vector-icons/Ionicons';
+import Icon2 from 'react-native-vector-icons/AntDesign';
 
-const ChangableStringData = Styled.View`
+const tempUser = {id: 4, name: "짱쎄", photo: 'Profile/짱쎄.jpg', role: 'user'};
+const Stack = createStackNavigator();
+
+const HeaderButtonsContainer = styled.View`
     flex-direction: row;
-    width: 80%;
-    height: 18%;
-    //padding: 25px;
-    margin: 0px 0px 3px 20% //상 우 하 좌
+    justify-content: space-evenly;
+    width: 120px;
 `;
 
-const Input = Styled.TextInput`
-background-color: yellow;
-width: 60%;
-border-bottom-width: 3px;
+const HeaderBox = styled.View`
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
+    height: 100px;
+    background-color: transparent;
 `;
 
-const UserInfoChangeBtn = Styled.TouchableOpacity`
-background-color: green;
-width: 20%;
-border-bottom-width: 3px;
+const HeaderTextArea = styled.View`
+    flex-direction: column;
+    justify-content: space-between;
 `;
 
-const ChangePhoto = Styled.TouchableOpacity`
-height: 20%;
-background-color: transparent;
-margin: 0px 0px 10px 0px //상 우 하 좌
-`
 
-const Button = Styled.TouchableOpacity`
-height: 25px;
-width: 20%;
-background-color: #FF0000;
-align-items : center;
-margin: 0px 0px 0px 80% //상 우 하 좌
-`
-const Profile = () => {
-  const domain = useContext(DomainContext);
-  const { userData, setUserData} = useContext(UserData);
-  const { kakaoAuthData, setKakaoAuthData } = useContext(KakaoAuthData);
-  const { tryGetKakao, setTryGetKakaoFlag } = useContext(TryGetKakao);
-  const [logOutResult, setLogOutResult] = useState(null);
-  const [imgSrc, setImgSrc] = useState(undefined);
+const ProfileMain = ({navigation, route}) => {
+    const domain = useContext(DomainContext);
+    const {userData} = useContext(UserData);
+    const [member, setMember] = useState(route ? route.params.member : userData);
 
-  let [nickName, setNickName] = useState('');
-  let [churchName, setChurchName] = useState('');
-  
-  /* react-native-image-picker 라이브러리 사용 옵션 */
-  const options = {
-    title: 'Load Photo',
-    customButton: [
-        { name: 'button_id_1', title: 'CustomButton 1'},
-        { name: 'button_id_2', title: 'CustomButton 2'},
-    ],
-    storageOptions: {
-        skipBackup: true,
-        path: 'images',
-    }
+    useEffect(() => {
+        setMember(route != undefined ? route.params.member : userData);
+    }, [])
+
+    useEffect(() => {
+        if (member)
+        {
+            navigation.setOptions({
+                title: member.name,
+                headerShown: true,
+                headerRight: () => (
+                    <HeaderButtonsContainer>
+                        {userData.id != member.id && <Icon2 name="notification" size={26} onPress={() => alert('신고하기')} />}
+                        <Icon2 name="message1" size={26} onPress={() => alert('채팅')} />
+                        {userData.id == member.id && <Icon1 name="settings-outline" size={26} onPress={() => alert('프로필 수정')} />}
+                    </HeaderButtonsContainer>
+                )
+            });
+        }
+    }, [member])
+
+    return (
+        <ScrollView style={{padding: 10}}>
+            <HeaderBox>
+                <Image style={{ width: 70, height: 70, flex: 1, resizeMode: 'contain' }} source={{ uri: userData.photo + "?cache="+Math.random() }} />
+                <HeaderTextArea style={{ flex: 3 }}>
+                    <Text style={{ fontWeight: 'bold'}}>{member.name}</Text>
+                    {member.description ? <Text>{member.description}</Text> : <Text>자기소개 없음</Text>}
+                    <Text>{member.church}</Text>
+                </HeaderTextArea>
+            </HeaderBox>
+        </ScrollView>
+    )
 }
 
-  const NickNameTextHandler = (value) => {
-    setNickName(value);
+const ProfileStackNavi = ({tabNavi}) => {
+    return (
+      <Stack.Navigator>
+        <Stack.Screen
+            name={'ProfileMain'}
+            children={({navigation}) => <ProfileMain navigation={navigation} tabNavi={tabNavi} />}        
+        />
+
+      </Stack.Navigator>  
+    );
 }
 
-const ChurchNameTextHandler = (value) => {
-    setChurchName(value);
-}
-
-  const signOutWithKakao = async () => {
-    const message = await logout();
-    setLogOutResult(message);
-
-    //성공하면 auth호출해야함. 성공 실패 어캐구분?
-    setUserData(null);
-    setKakaoAuthData(null);
-    setTryGetKakaoFlag(false);
-  };
-
-  useEffect(() => {
-    if (imgSrc) {
-      console.log("=====photo change=====");
-      console.log(imgSrc.uri);
-      const imageData = new FormData();
-      imageData.append('file', {
-        uri: imgSrc.uri,
-        type: imgSrc.type,
-        name: imgSrc.fileName,
-        data: imgSrc.data
-      });
-
-      let fetchHeader = {
-        Accept: 'application/json',
-        'Content-Type': 'multipart/form-data',
-      }
-      reqChangeUserInfo(fetchHeader, "photo", imageData)
-    }}, [imgSrc]);
-
-  const showCameraRoll = () => {
-    //뒤로가기눌러서 취소했을때 처리 필요
-    launchImageLibrary(options, (response) => {
-      if (response.error) {
-        console.log('LaunchCamera Error: ', response.error);
-      }
-      else {
-        console.log('ImageSrc: ' + JSON.stringify(response.assets));
-        console.log('ImageSrc: ' + response.assets[0].uri);
-        setImgSrc(response.assets[0]);
-      }
-    });
-  }
-
-const reqChangeUserInfo = (fetchHeader, changeType, changeValue) => {
-    console.log(changeType, changeValue);
-    console.log(userData.id);
-
-    fetch(`${domain}/User/${userData.id}/${changeType}`, {
-      method: 'PUT',
-      body: changeValue,
-      headers: fetchHeader
-    }).then(res => res.json()).then(res => {
-      alert(res);
-      GetUser(kakaoAuthData.id);
-    }).catch(e => {
-      console.log("[ChangeFail]");
-      console.log(e.json())
-    });
-  };
-
-  const GetUser = (kakao_id) => {
-    //console.log(kakao_id); //kakaoAuthData와 같음
-    fetch(domain + '/User/Domain/kakao/' + kakao_id).then(res => res.json()).then(res => {
-      let userInfo = res[0];
-      userInfo.photo = domain + '/' + res[0].photo;
-      setUserData(userInfo);
-    });
-  };
-
-  return (
-    <>
-      {userData != null && <View>
-        <Button style={{ width: '20%', height: '7%', resizeMode: 'contain', allign: 'flex-end' }} onPress={() => signOutWithKakao()}>
-          <Text>Logout</Text>
-        </Button>
-
-        <ChangePhoto onPress={() => {showCameraRoll();}}>
-           <Image style={{ width: '100%', height: '100%', resizeMode: 'contain' }} source={{ uri: userData.photo + "?cache="+Math.random() }} />
-        </ChangePhoto>
-
-        <TestView>
-          <ChangableStringData>
-            <Input
-              autoFocus={false}
-              autoCapitalize="none"
-              autoCorrect={false}
-              placeholder={userData.name}
-              returnKeyType="done"
-              onChangeText={NickNameTextHandler}
-              value={nickName}
-            />
-
-            <UserInfoChangeBtn onPress={() => reqChangeUserInfo({'Content-Type': 'application/json'},"name", JSON.stringify({ data: nickName}))}>
-              <Text> Name Change </Text>
-            </UserInfoChangeBtn>
-          </ChangableStringData>
-
-          <ChangableStringData>
-            <Input
-              autoFocus={false}
-              autoCapitalize="none"
-              autoCorrect={false}
-              placeholder={userData.church}
-              returnKeyType="done"
-              onChangeText={ChurchNameTextHandler}
-              value={churchName}
-            />
-
-            <UserInfoChangeBtn onPress={() => reqChangeUserInfo({'Content-Type': 'application/json'}, "church", JSON.stringify({ data: churchName}))}>
-              <Text> Curch Change </Text>
-            </UserInfoChangeBtn>
-          </ChangableStringData>
-        </TestView>
-      </View>}
-
-      {userData == null && kakaoAuthData == null && tryGetKakao == false && <Auth />}
-    </>
-  );
+const Profile = ({navigation}) => {
+    return (
+        <ProfileStackNavi tabNavi={navigation}/>
+    )
 };
 
 
-export default Profile;
+export {Profile as default, ProfileMain} ;

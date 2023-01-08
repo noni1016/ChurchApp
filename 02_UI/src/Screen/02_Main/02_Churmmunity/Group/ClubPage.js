@@ -114,13 +114,13 @@ const ClubPage = ({route, navigation}) => {
    
 
     return (
-        <View>
+        <>
             <Header>
                 <Title>
                     {data.name}
                 </Title>
                 <Side>
-                <Icon2 name="notification" size={26} onPress={() =>alert('공지사항버튼')} />
+                <Icon2 name="notification" size={26} onPress={() => navigation.navigate('GroupNotification', {club: data, isLeader: isLeader})} />
                 {isLeader && <Icon1 name="settings-outline" size={26} onPress={() => navigation.navigate('EditChurmmunity', {edit: 1, editData: data, navigation: navigation})} />}
                 </Side>          
             </Header>
@@ -139,13 +139,13 @@ const ClubPage = ({route, navigation}) => {
                         />
                     ))}
                 </TabContainer>
-                {tabIdx == 0 && <ClubPageHome data={data} members={members} isMember={isMember} isLeader={isLeader} setMember={(value)=>{setMember(value)}} navigation={navigation}/>}
+                {tabIdx == 0 && <ClubPageHome data={data} members={members} isMember={isMember} isLeader={isLeader} setMember={(value)=>{setMember(value)}} stackNavi={navigation} tabNavi={route.params.tabNavi}/>}
                 {tabIdx == 1 && <Feeds club={data} feedAdded={refresh} navigation={navigation}/>}
                 {tabIdx == 2 && <Photos club={data}>사진</Photos>}
                 <Footer/>
             </ScrollView>
             {tabIdx == 1 && <AddBtn OnPressMethod={() => {navigation.navigate('EditFeed', {edit: false, club: data, navigation: navigation});}}/>}
-        </View>
+        </>
     )
 };
 

@@ -6,6 +6,7 @@ import {UserData} from '~/Context/User';
 import GroupMemProfile from './GroupMemProfile';
 import Icon from 'react-native-vector-icons/Ionicons';
 import DaumMap from '~/Screen/03_Map/DaumMapController';
+import { useIsFocused } from '@react-navigation/native';
 
 const Container = Styled.View`
     padding: 10px 10px 0px 10px; //상 우 하 좌
@@ -51,10 +52,11 @@ const NumGroupMemCont = Styled.View`
 `;
 
 
-const ClubPageHome = ({data, members, isMember, isLeader, setMember, navigation}) => {
+const ClubPageHome = ({data, members, isMember, isLeader, setMember, stackNavi, tabNavi}) => {
     const domain = useContext(DomainContext);    
     const {userData, setUserData} = useContext(UserData);
     var [numClubMem, setNumClubMem] = useState(0);
+    const isFocused = useIsFocused();
 
     var [button, setButton] = useState((<JoinBtn onPress={()=>{alert('로딩중')}}>
                     <JoinBtnText>가입하기</JoinBtnText>
@@ -87,19 +89,35 @@ const ClubPageHome = ({data, members, isMember, isLeader, setMember, navigation}
         <Container>
             <Title>{data.name}</Title>
             <Desc>{data.description}</Desc>
-            <DaumMap currentRegion={{
-                latitude: parseFloat(data.location_ll.y),
-                longitude: parseFloat(data.location_ll.x),
-                zoomLevel: 5,
-               }}
+            {isFocused && data.location_ll && <DaumMap currentRegion={{
+                    latitude: parseFloat(data.location_ll.y),
+                    longitude: parseFloat(data.location_ll.x),
+                    zoomLevel: 5,
+                }}
+
                 mapType={"Standard"}
-                style={{ width: 400, height: 400, backgroundColor: 'transparent' }}/> 
+                style={{ width: 400, height: 400, backgroundColor: 'transparent' }}
+                
+                markers={[{
+                    latitude: parseFloat(data.location_ll.y),
+                    longitude: parseFloat(data.location_ll.x),
+                    pinColor: "red",
+                    pinColorSelect: "yellow",
+                    title: "marker test",
+                    draggable: false,
+                }]}
+                
+                /> }
             {button}
             <NumGroupMemCont>
                 <Text fontSize={18}>멤버 {numClubMem} 명</Text>
-                {isLeader && <Icon name="settings-outline" size={18} onPress={() => navigation.navigate('EditMembers', {group: data, members: members, navigation: navigation})} />}
+                {isLeader && <Icon name="settings-outline" size={18} onPress={() => stackNavi.navigate('EditMembers', {group: data, members: members, navigation: stackNavi})} />}
             </NumGroupMemCont>
-            {members.map((member, index) => (<GroupMemProfile key={index.toString()} member={member} />))}
+            {members.map((member, index) => (<GroupMemProfile key={index.toString()} member={member} onPress={() => {
+                if (member.id == userData.id) tabNavi.navigate('Profile', {member: member});
+                else stackNavi.navigate('Profile', {member: member});
+            }} /> ))}
+            {/* {members.map((member, index) => (<GroupMemProfile key={index.toString()} member={member} onPress={() => tabNavi.navigate('Profile')} />))} */}
         </Container>
     )
 }

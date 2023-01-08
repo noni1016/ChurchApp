@@ -6,8 +6,8 @@ import Styled from 'styled-components/native';
 
 const Container = Styled.TouchableOpacity`
     position: absolute;
-    right: 20px;
-    top: ${Dimensions.get('window').height - 120}px;
+    right: 20px;    
+    bottom: 10px;
     width: 50px;
     height: 50px;
     background-color: skyblue;
@@ -21,19 +21,13 @@ const Container = Styled.TouchableOpacity`
     align-items: center;
 `;
 
-// const Container = Styled.View`
-//     position: absolute;
-//     right: 30px;
-//     top: ${Dimensions.get('window').height - 100}px;
-// `;
-
 const PlusMark = Styled.Text`
     font-size: 30px;
     color: white;
 `;
 
-
 const AddBtn = ({OnPressMethod}) => {
+    console.log(Dimensions.get('window').height);
     return (
         <Container onPress={OnPressMethod} >
             <PlusMark>+</PlusMark>

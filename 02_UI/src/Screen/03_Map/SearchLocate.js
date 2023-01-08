@@ -4,6 +4,7 @@ import { View, Text, Image } from 'react-native';
 import Styled from 'styled-components/native';
 import DaumMap from './DaumMapController';
 import Geolocation from 'react-native-geolocation-service';
+import { useIsFocused } from '@react-navigation/native';
 
 const Input = Styled.TextInput`
 background-color: yellow;
@@ -49,6 +50,7 @@ const UserContextProvider = ({children}) => {
 }
 
 const SearchLocate = ({route, navigation})=>{
+    const isFocused = useIsFocused();
 
     let defaultLocation = {latitude: 1000.0, longitude: 1000.0};
     let serchRigion = "지역";
@@ -135,14 +137,23 @@ const SearchLocate = ({route, navigation})=>{
                 </ChangeBtn>
             </View>
             
-            <DaumMap currentRegion={{
+            {isFocused && <DaumMap currentRegion={{
                     latitude: parseFloat(location.latitude),
                     longitude: parseFloat(location.longitude),
                     zoomLevel: 5,
                 }}
                     mapType={"Standard"}
                     style={{ width: 400, height: 400, backgroundColor: 'transparent' }}
-                />
+
+                    markers={[{
+                        latitude: parseFloat(data.location_ll.y),
+                        longitude: parseFloat(data.location_ll.x),
+                        pinColor: "red",
+                        pinColorSelect: "yellow",
+                        title: "marker test",
+                        draggable: true,
+                    }]}
+                />}
         </>
     )
 }

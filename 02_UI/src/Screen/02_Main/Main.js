@@ -2,6 +2,7 @@
 import React, { useContext } from 'react';
 import {Text} from 'react-native';
 import Styled from 'styled-components/native';
+import Icon2 from 'react-native-vector-icons/AntDesign';
 
 //import Navigation modules
 import 'react-native-gesture-handler' //react-navigation 사용하기 위해 최상위에 필요한 모듈
@@ -12,8 +13,9 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 
 //import custom screens
 import Home from '~/Screen/02_Main/01_Home/Home';
-import Churmmunity from './02_Churmmunity/Churmmunity';
-import Profile from './03_Profile/Profile';
+import Churmmunity from '~/Screen/02_Main/02_Churmmunity/Churmmunity';
+import Profile from '~/Screen/02_Main/03_Profile/Profile';
+import Default from '~/Screen/99_Etc/Default';
 
 const BottomTab = createBottomTabNavigator();
 
@@ -35,8 +37,15 @@ const BottomTabNavi = () => {
                 }}
             />
             <BottomTab.Screen
+                name="Chat"
+                children={(navigation) => <Default navigation={navigation}/>}
+                options={{
+                    tabBarIcon: ({ color }) => <Icon2 name="message1" size={26}/>
+                }}
+            />  
+            <BottomTab.Screen
                 name="Profile"
-                component={Profile}
+                children={(navigation) => <Profile navigation={navigation}/>}
                 options={{
                     tabBarIcon: ({ color }) => <Icon name="account-box" color={color} size={26} />
                 }}

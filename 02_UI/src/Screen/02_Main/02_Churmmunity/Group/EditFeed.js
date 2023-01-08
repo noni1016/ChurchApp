@@ -118,6 +118,7 @@ const EditFeed = ({route, navigation}) => {
     const edit = route.params.edit;
     console.log('edit:', edit);
     const club = route.params.club;
+    const isNotice = route.params.isNotice ? 1 : 0;
     const {userData} = useContext(UserData);
     const [userProfileImgUrl, SetUserProfileImgUrl] = useState(null);
     const [textInput, setTextInput] = useState('');
@@ -228,9 +229,10 @@ const EditFeed = ({route, navigation}) => {
 
         fetch(fetchReq, {
             method: fetchMethod,
-            body : JSON.stringify({clubId: club.id, authorId: userData.id, location: location, time: sendDate, contentText: textInput}),
+            body : JSON.stringify({clubId: club.id, authorId: userData.id, location: location, time: sendDate, contentText: textInput, notice : isNotice}),
             headers: {'Content-Type': 'application/json'}
-        }).then(res => res.json()).then(res => {navigation.navigate('ClubPage', {tabIdx: 1, edit: true, navigation: navigation});})
+        }).then(res => res.json()).then(res => {navigation.goBack();})
+        // }).then(res => res.json()).then(res => {navigation.navigate('ClubPage', {tabIdx: 1, edit: true, navigation: navigation});})
     }
 
     // Camera Roll

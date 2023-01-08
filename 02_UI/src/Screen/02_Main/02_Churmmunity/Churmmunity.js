@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { ScrollView } from 'react-native';
+import { ScrollView, Button } from 'react-native';
 import styled from 'styled-components/native';
 
 import {
@@ -20,6 +20,8 @@ import { UserData, UserContextProvider } from '~/Context/User';
 import {DomainContext, DomainContextProvider} from '~/Context/Domain';
 import SearchLocate from '~/Screen/03_Map/SearchLocate';
 import SearchGroups from './SearchGroups';
+import GroupNotification from '~/Screen/02_Main/02_Churmmunity/Group/GroupNotification';
+import {ProfileMain} from '~/Screen/02_Main/03_Profile/Profile';
 
 
 const Stack = createStackNavigator();
@@ -42,8 +44,7 @@ var initMyLightData = [{ id: 0, name: `로딩중`, mainImg: `WinLockImages/a48b6
 ];
 
 
-const ChurmmunityMain = ({navigation}) => {
-
+const ChurmmunityMain = ({navigation, tabNavi}) => {
     const domain = useContext(DomainContext);
     var [myClubs, setMyClubs] = useState([initClub]);
     var [myLightDatas, setMyLightDatas] = useState([initMyLightData]);
@@ -66,8 +67,8 @@ const ChurmmunityMain = ({navigation}) => {
 
     return (
         <ScrollView>
-            <ClubCards title={'내 모임'} orgDatas={myClubs} navigation={navigation}/>
-            <ClubCards title={'오늘의 모임'} orgDatas={recClubs} navigation={navigation}/>
+            <ClubCards title={'내 모임'} orgDatas={myClubs} stackNavi={navigation} tabNavi={tabNavi}/>
+            <ClubCards title={'오늘의 모임'} orgDatas={recClubs} stackNavi={navigation} tabNavi={tabNavi}/>
             {/* <LightCardContainer datas={myLightDatas}/> */}
             {/* <RecLightContainer orgDatas={recLights}/> */}
             <EmptyArea />
@@ -77,13 +78,13 @@ const ChurmmunityMain = ({navigation}) => {
 
 };
 
-const ChurmmunityStackNavi = () => {
+const ChurmmunityStackNavi = ({tabNavi}) => {
     const { userData, setUserData } = useContext(UserData);
     return (
         <Stack.Navigator>
             <Stack.Screen
                 name={'ChurmmunityMain'}
-                component={ChurmmunityMain}
+                children={({navigation}) => <ChurmmunityMain navigation={navigation} tabNavi={tabNavi} />}
                 options={({navigation}) => ({
                     headerShown: true,
                     headerRight: () => (
@@ -159,15 +160,23 @@ const ChurmmunityStackNavi = () => {
                     headerShown: false,
                 }}
             />
+            <Stack.Screen
+                name="GroupNotification"
+                component={GroupNotification}
+            />
+            <Stack.Screen
+                name="Profile"
+                component={ProfileMain}
+            />
         </Stack.Navigator>
     )
 }
 
 
-const Churmmunity = () => {
+const Churmmunity = ({navigation}) => {
 
     return (
-        <ChurmmunityStackNavi />
+        <ChurmmunityStackNavi tabNavi={navigation}/>
     );
 };
 
