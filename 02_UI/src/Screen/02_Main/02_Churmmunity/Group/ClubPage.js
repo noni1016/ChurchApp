@@ -139,7 +139,7 @@ const ClubPage = ({route, navigation}) => {
                         />
                     ))}
                 </TabContainer>
-                {tabIdx == 0 && <ClubPageHome data={data} members={members} isMember={isMember} isLeader={isLeader} setMember={(value)=>{setMember(value)}} stackNavi={navigation} tabNavi={route.params.tabNavi}/>}
+                {tabIdx == 0 && <ClubPageHome data={data} members={members} isMember={isMember} isLeader={isLeader} setMember={(value)=>{setMember(value)}} stackNavi={navigation}/>}
                 {tabIdx == 1 && <Feeds club={data} feedAdded={refresh} navigation={navigation}/>}
                 {tabIdx == 2 && <Photos club={data}>사진</Photos>}
                 <Footer/>

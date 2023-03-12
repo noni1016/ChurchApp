@@ -7,6 +7,7 @@ import GroupMemProfile from './GroupMemProfile';
 import Icon from 'react-native-vector-icons/Ionicons';
 import DaumMap from '~/Screen/03_Map/DaumMapController';
 import { useIsFocused } from '@react-navigation/native';
+import { TabNavi } from '~/Context/Navi';
 
 const Container = Styled.View`
     padding: 10px 10px 0px 10px; //상 우 하 좌
@@ -52,11 +53,12 @@ const NumGroupMemCont = Styled.View`
 `;
 
 
-const ClubPageHome = ({data, members, isMember, isLeader, setMember, stackNavi, tabNavi}) => {
+const ClubPageHome = ({data, members, isMember, isLeader, setMember, stackNavi}) => {
     const domain = useContext(DomainContext);    
     const {userData, setUserData} = useContext(UserData);
     var [numClubMem, setNumClubMem] = useState(0);
     const isFocused = useIsFocused();
+    const {tabNavi} = useContext(TabNavi);
 
     var [button, setButton] = useState((<JoinBtn onPress={()=>{alert('로딩중')}}>
                     <JoinBtnText>가입하기</JoinBtnText>
@@ -117,7 +119,6 @@ const ClubPageHome = ({data, members, isMember, isLeader, setMember, stackNavi, 
                 if (member.id == userData.id) tabNavi.navigate('Profile', {member: member});
                 else stackNavi.navigate('Profile', {member: member});
             }} /> ))}
-            {/* {members.map((member, index) => (<GroupMemProfile key={index.toString()} member={member} onPress={() => tabNavi.navigate('Profile')} />))} */}
         </Container>
     )
 }

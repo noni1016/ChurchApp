@@ -1,5 +1,5 @@
 //import basic modules
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import {Text} from 'react-native';
 import Styled from 'styled-components/native';
 import Icon2 from 'react-native-vector-icons/AntDesign';
@@ -17,9 +17,13 @@ import Churmmunity from '~/Screen/02_Main/02_Churmmunity/Churmmunity';
 import Profile from '~/Screen/02_Main/03_Profile/Profile';
 import Default from '~/Screen/99_Etc/Default';
 
+// import contexts
+import {NaviContextProvider} from '~/Context/Navi';
+
 const BottomTab = createBottomTabNavigator();
 
 const BottomTabNavi = () => {
+
     return (
         <BottomTab.Navigator>
             <BottomTab.Screen
@@ -56,11 +60,13 @@ const BottomTabNavi = () => {
 
 
 const  Main = () => {
-    return (
 
+    return (
+        <NaviContextProvider>
             <NavigationContainer>
                 <BottomTabNavi />
             </NavigationContainer>
+        </NaviContextProvider>
         
     );
 };
