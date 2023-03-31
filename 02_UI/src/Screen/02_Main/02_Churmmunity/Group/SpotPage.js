@@ -31,6 +31,25 @@ const Side = Styled.View`
 const TabContainer = Styled.SafeAreaView`
   flex-direction: row;
   background-color: skyblue;
+  justify-content: space-between;
+`;
+
+const JoinBtn = Styled.TouchableOpacity`
+    position: absolute;
+    top: 0%;
+    left: 35%;
+    background-color: rgba(44, 136, 217, 1);
+    color: white;
+    width: 30%;
+    height: 100%;
+    font-size: 30px;
+    font-weight: bold;
+    justify-content: center;
+    align-items: center;
+    font-size: 27px;
+    font-family: 'DoHyeon-Regular';
+    border: 3px solid black;
+    border-radius: 5px;
 `;
 
 const tempSpot = {id: 1, name: '막무가내 리코더 합주', mainImg: 'GroupImg/1659157815604.jpg', location: '올림픽공원 나홀로나무 앞', location_ll: null, description: `인적 드물고 경치 좋은 곳에서 리코더 뿝뿝 하실 분들~!
@@ -46,7 +65,7 @@ const SpotPage = ({navigation}) => {
     var [members, setMembers] = useState([]);
     var [isMember, setIsMember] = useState(false);
     var [isLeader, setIsLeader] = useState(false);
-    var tabs = ['번개 정보', '참가자'];
+    var tabs = ['번개 정보        ', '        참가자'];
     const [tabIdx, setTabIdx] = useState(0); 
 
     /* 첫 마운팅때 Group 상단 사진 url 설정 */
@@ -109,7 +128,10 @@ const SpotPage = ({navigation}) => {
                             }}
                         />
                     ))}
+                    <JoinBtn><Text style={{fontSize: 20, fontFamily: 'DoHyeon-Regular', color: 'white'}}>함께하기</Text></JoinBtn>
                 </TabContainer>
+                {tabIdx == 0 && <Text>번개정보</Text>}
+                {tabIdx == 1 && <Text>참가자</Text>}
             </ScrollView>
         </>
     )
