@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 const multer = require('multer');
 const fs = require('fs');
+const domain = 'http://121.139.124.10:7009';
 
 ////////////////////////////////////////////////////////////sql connection
 const conn = require('../../config/database');
@@ -98,7 +99,7 @@ router.put('/:userId/photo', putUserImg.single('file'), async (req, res, next) =
     console.log('Photo change');
     
     let queryRes = false;
-    let sql = `UPDATE User SET photo = 'Profile/${fileName}' WHERE id = ${req.params.userId}`;
+    let sql = `UPDATE User SET photo = '${domain}/Profile/${fileName}' WHERE id = ${req.params.userId}`;
     console.log(sql);
     conn.query(sql, function (error, rows, fields) { // sql 쿼리 수행
         if (!error) {
