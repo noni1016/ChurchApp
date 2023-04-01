@@ -6,6 +6,7 @@ import {UserData} from '~/Context/User';
 import Tab from '~/Components/Tab';
 import ImageSize from 'react-native-image-size';
 import Icon2 from 'react-native-vector-icons/AntDesign';
+import SpotPageHome from '~/Components/SpotPageHome';
 
 const Header = Styled.View`
     flex-direction: row;
@@ -52,7 +53,7 @@ const JoinBtn = Styled.TouchableOpacity`
     border-radius: 5px;
 `;
 
-const tempSpot = {id: 1, name: '막무가내 리코더 합주', mainImg: 'GroupImg/1659157815604.jpg', location: '올림픽공원 나홀로나무 앞', location_ll: null, description: `인적 드물고 경치 좋은 곳에서 리코더 뿝뿝 하실 분들~!
+const tempSpot = {id: 1, name: '막무가내 리코더 합주', mainImg: 'GroupImg/1659157815604.jpg', location: '올림픽공원 나홀로나무 앞', location_ll: {x:126.93415099999976, y: 37.354753799999926}, description: `인적 드물고 경치 좋은 곳에서 리코더 뿝뿝 하실 분들~! \n
 찬양 연주 같이 해요`, keyword: ['리코더', '합주', '악기', '연주'], time: '220501 Sun 7:30 PM'};
 
 const SpotPage = ({navigation}) => {
@@ -130,7 +131,7 @@ const SpotPage = ({navigation}) => {
                     ))}
                     <JoinBtn><Text style={{fontSize: 20, fontFamily: 'DoHyeon-Regular', color: 'white'}}>함께하기</Text></JoinBtn>
                 </TabContainer>
-                {tabIdx == 0 && <Text>번개정보</Text>}
+                {tabIdx == 0 && <SpotPageHome data={data} members={members} isLeader={isLeader} stackNavi={navigation} />}
                 {tabIdx == 1 && <Text>참가자</Text>}
             </ScrollView>
         </>
