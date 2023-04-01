@@ -22,6 +22,7 @@ import SearchLocate from '~/Screen/03_Map/SearchLocate';
 import SearchGroups from './SearchGroups';
 import GroupNotification from '~/Screen/02_Main/02_Churmmunity/Group/GroupNotification';
 import {ProfileMain} from '~/Screen/02_Main/03_Profile/Profile';
+import {TabNavi} from '~/Context/Navi';
 
 
 const Stack = createStackNavigator();
@@ -44,7 +45,7 @@ var initMyLightData = [{ id: 0, name: `로딩중`, mainImg: `WinLockImages/a48b6
 ];
 
 
-const ChurmmunityMain = ({navigation, tabNavi}) => {
+const ChurmmunityMain = ({navigation}) => {
     const domain = useContext(DomainContext);
     var [myClubs, setMyClubs] = useState([initClub]);
     var [myLightDatas, setMyLightDatas] = useState([initMyLightData]);
@@ -67,8 +68,8 @@ const ChurmmunityMain = ({navigation, tabNavi}) => {
 
     return (
         <ScrollView>
-            <ClubCards title={'내 모임'} orgDatas={myClubs} stackNavi={navigation} tabNavi={tabNavi}/>
-            <ClubCards title={'오늘의 모임'} orgDatas={recClubs} stackNavi={navigation} tabNavi={tabNavi}/>
+            <ClubCards title={'내 모임'} orgDatas={myClubs} stackNavi={navigation}/>
+            <ClubCards title={'오늘의 모임'} orgDatas={recClubs} stackNavi={navigation}/>
             {/* <LightCardContainer datas={myLightDatas}/> */}
             {/* <RecLightContainer orgDatas={recLights}/> */}
             <EmptyArea />
@@ -78,13 +79,13 @@ const ChurmmunityMain = ({navigation, tabNavi}) => {
 
 };
 
-const ChurmmunityStackNavi = ({tabNavi}) => {
+const ChurmmunityStackNavi = () => {
     const { userData, setUserData } = useContext(UserData);
     return (
         <Stack.Navigator>
             <Stack.Screen
                 name={'ChurmmunityMain'}
-                children={({navigation}) => <ChurmmunityMain navigation={navigation} tabNavi={tabNavi} />}
+                children={({navigation}) => <ChurmmunityMain navigation={navigation} />}
                 options={({navigation}) => ({
                     headerShown: true,
                     headerRight: () => (
@@ -175,8 +176,14 @@ const ChurmmunityStackNavi = ({tabNavi}) => {
 
 const Churmmunity = ({navigation}) => {
 
-    return (
-        <ChurmmunityStackNavi tabNavi={navigation}/>
+    const {setTabNavi} = useContext(TabNavi);
+
+    useEffect(() => {
+        setTabNavi(navigation);
+    }, [navigation])
+
+    return (        
+        <ChurmmunityStackNavi/>
     );
 };
 

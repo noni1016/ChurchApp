@@ -52,7 +52,7 @@ const AuthPage = () => {
         console.log(res);
         console.log(userInfo);
   
-        userInfo.photo = domain + '/' + res[0].photo;
+        userInfo.photo = res[0].photo; //domain + '/' + res[0].photo;
         setUserData(userInfo);
   
   
