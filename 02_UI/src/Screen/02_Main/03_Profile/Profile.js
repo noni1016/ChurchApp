@@ -145,13 +145,13 @@ const reqChangeUserInfo = (fetchHeader, changeType, changeValue) => {
                 </HeaderTextArea>
             </HeaderBox>
 
-            {/* {<DaumMap currentRegion={{
-                latitude: parseFloat(content.location_ll.y),
-                longitude: parseFloat(content.location_ll.x),
+            <DaumMap currentRegion={{
+                latitude: parseFloat(100),
+                longitude: parseFloat(100),
                 zoomLevel: 5,
                }}
                 mapType={"Standard"}
-                style={{ width: 400, height: 400, backgroundColor: 'transparent' }}/> } */}
+                style={{ width: 400, height: 400, backgroundColor: 'transparent' }}/>
 
         </ScrollView>
     )
