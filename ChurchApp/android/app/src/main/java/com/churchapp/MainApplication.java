@@ -56,7 +56,30 @@ public class MainApplication extends Application implements ReactApplication {
     ReactFeatureFlags.useTurboModules = BuildConfig.IS_NEW_ARCHITECTURE_ENABLED;
     SoLoader.init(this, /* native exopackage */ false);
     initializeFlipper(this, getReactNativeHost().getReactInstanceManager());
+    // getHashKey();
   }
+
+// private void getHashKey(){
+//     PackageInfo packageInfo = null;
+//     try {
+//       packageInfo = getPackageManager().getPackageInfo(getPackageName(), PackageManager.GET_SIGNATURES);
+//     } catch (PackageManager.NameNotFoundException e) {
+//       e.printStackTrace();
+//     }
+//     if (packageInfo == null)
+//       Log.e("KeyHash", "KeyHash:null");
+
+//     for (Signature signature : packageInfo.signatures) {
+//       try {
+//         MessageDigest md = MessageDigest.getInstance("SHA");
+//         md.update(signature.toByteArray());
+//         Log.d("KeyHash", Base64.encodeToString(md.digest(), Base64.DEFAULT));
+//       } catch (NoSuchAlgorithmException e) {
+//         Log.e("KeyHash", "Unable to get MessageDigest. signature=" + signature, e);
+//       }
+//     }
+//   }
+
 
   /**
    * Loads Flipper in React Native templates. Call this in the onCreate method with something like

@@ -1,9 +1,9 @@
 import React, {useState, useEffect, useContext, createRef} from 'react';
 import { View, FlatList, Text, Dimensions, ScrollView, Image, TouchableOpacity, Alert} from 'react-native';
 import Styled from 'styled-components/native';
-import {DomainContext} from '~/Context/Domain';
+import {DomainContext} from '@/Context/Domain';
 import ImageSize from 'react-native-image-size';
-import Photo from '~/Components/Photo'
+import Photo from '@/Components/Photo'
 
 const PhotosBox = Styled.View`
     flex-direction: row;

@@ -1,9 +1,9 @@
 import React, {useState, useEffect, useContext} from 'react';
 import { Text, Dimensions, ScrollView, Image, NativeSyntheticEvent, NativeScrollEvent } from 'react-native';
 import styled from 'styled-components/native';
-import {DataContext} from '~/Context/Data';
+import {DataContext} from '@/Context/Data';
 
-import ClubCard from '~/Components/ClubCard';
+import ClubCard from '@/Components/ClubCard';
 
 const MyGroupContainer = styled.View`
   flex-direction: column;

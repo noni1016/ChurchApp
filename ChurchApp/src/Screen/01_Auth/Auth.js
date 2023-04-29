@@ -1,5 +1,5 @@
-// import JoinPage from './JoinPage';
-// import Main from '@/Screen/02_Main/Main';
+import JoinPage from './JoinPage';
+import Main from '@/Screen/02_Main/Main';
 import { View, Text, Image } from 'react-native';
 import Styled from 'styled-components/native';
 import React, { useState, useEffect, useContext } from 'react';
@@ -123,8 +123,8 @@ useEffect(() => {
           <Image source={require(`@/Assets/Images/kakao_login_medium_narrow.png`)} />
         </KaKaoBtn>}
       </Screen>}
-      {/* {tryGetKakao && userData == null && <JoinPage />} */}
-      {/* {tryGetKakao && userData != null && <Main />} */}
+      {tryGetKakao && userData == null && <JoinPage />}
+      {tryGetKakao && userData != null && <Main />}
     </>
   );
 };

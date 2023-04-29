@@ -1,7 +1,7 @@
 import React, {useState, useEffect, useContext} from 'react';
 import { View, Text, Dimensions, ScrollView, Image, Alert} from 'react-native';
-import {DomainContext} from '~/Context/Domain';
-import {UserData} from '~/Context/User';
+import {DomainContext} from '@/Context/Domain';
+import {UserData} from '@/Context/User';
 import Styled from 'styled-components/native';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import Entypo from 'react-native-vector-icons/Entypo';
