@@ -52,12 +52,20 @@ const ChangePhoto = styled.TouchableOpacity`
  margin: 0px 10px 0px 0px //상 우 하 좌
  `;
 
+ const CommonBtn = styled.TouchableOpacity`
+background-color: green;
+width: 20%;
+border-bottom-width: 3px;
+`;
+
 const ProfileMain = ({navigation, route}) => {
     const domain = useContext(DomainContext);
     const {userData} = useContext(UserData);
     const [member, setMember] = useState(route ? route.params.member : userData);
     const [imgSrc, setImgSrc] = useState('');
-
+    const [locate, setLocate] = useState([0,0]);
+    const [region, setRegion] = useState('');
+    
     useEffect(() => {
         setMember(route != undefined ? route.params.member : userData);
     }, [])
@@ -144,7 +152,11 @@ const reqChangeUserInfo = (fetchHeader, changeType, changeValue) => {
                     <Text>{member.church}</Text>
                 </HeaderTextArea>
             </HeaderBox>
-
+            
+            {/* <CommonBtn onPress={() => {{navigation.navigate('SearchLocate', {setLocateProcess : setLocate, setRegionProcess : setRegion, navigation: route})}}}>
+                    {/* <PlusText>+</PlusText> }
+                    <Text>지역 수정</Text>
+                    </CommonBtn> */}
             <DaumMap currentRegion={{
                 latitude: parseFloat(100),
                 longitude: parseFloat(100),
