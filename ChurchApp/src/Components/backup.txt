@@ -1,0 +1,21 @@
+        <Container>
+            {/* <MainImgBox> */}
+                {/* <Image style={{flex:1, alignSelf: 'stretch'}} source={{uri: url}} /> */}
+                {/* <Image style={{width:'80%', height:'100%', resizeMode:'contain'}} source={{uri: url}} /> */}
+                <MainImg source={{uri: url}} />
+            {/* </MainImgBox> */}
+        </Container>
+
+
+
+
+                    <FlatList
+                ListHeaderComponent={
+                    <MyGroupTitleBox><MyGroupTitle>Card</MyGroupTitle></MyGroupTitleBox>
+                }
+                data={myGroupDatas}
+                keyExtractor={(item, id) => { return `myGroup-${id}` }}
+                renderItem={({ item, index }) => (
+                    <GroupCard data={item}></GroupCard>
+                )}
+            />
