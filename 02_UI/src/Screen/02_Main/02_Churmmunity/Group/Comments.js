@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {View,Text, FlatList, SafeAreaView} from 'react-native';
-import Comment from '~/Components/Comment';
+import Comment from '@/Components/Comment';
 
 
 const RenderItem = ({item}) => {

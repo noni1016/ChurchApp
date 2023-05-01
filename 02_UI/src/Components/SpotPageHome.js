@@ -1,9 +1,9 @@
 import React, {useState, useEffect, useContext} from 'react';
 import {Text} from 'react-native';
 import Styled from 'styled-components/native';
-import DaumMap from '~/Screen/03_Map/DaumMapController';
+import DaumMap from '@/Screen/03_Map/DaumMapController';
 import { useIsFocused } from '@react-navigation/native';
-import {UserData} from '~/Context/User';
+import {UserData} from '@/Context/User';
 import GroupMemProfile from './GroupMemProfile';
 
 const Container = Styled.View`

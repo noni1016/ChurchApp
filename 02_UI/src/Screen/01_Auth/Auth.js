@@ -1,10 +1,10 @@
 import JoinPage from './JoinPage';
-import Main from '~/Screen/02_Main/Main';
+import Main from '@/Screen/02_Main/Main';
 import { View, Text, Image } from 'react-native';
 import Styled from 'styled-components/native';
 import React, { useState, useEffect, useContext } from 'react';
-import { DomainContext } from '~/Context/Domain';
-import { UserData, KakaoAuthData, TryGetKakao } from '~/Context/User';
+import { DomainContext } from '@/Context/Domain';
+import { UserData, KakaoAuthData, TryGetKakao } from '@/Context/User';
 import { KakaoOAuthToken, KakaoProfile, getProfile as getKakaoProfile,  login, logout, unlink, } from '@react-native-seoul/kakao-login';
 
 const Screen = Styled.View`
@@ -115,12 +115,12 @@ useEffect(() => {
   return (
     <>
       {tryGetKakao == false && userData == null && <Screen>
-        {authCheckFlag == false && <Image source={require(`~/Assets/Images/mainpray.jpg`)} />}
+        {authCheckFlag == false && <Image source={require(`@/Assets/Images/mainpray.jpg`)} />}
         {authCheckFlag && kakaoAuthData == null && <KaKaoBtn onPress={
           () => {
             signInWithKakao();
           }}>
-          <Image source={require(`~/Assets/Images/kakao_login_medium_narrow.png`)} />
+          <Image source={require(`@/Assets/Images/kakao_login_medium_narrow.png`)} />
         </KaKaoBtn>}
       </Screen>}
       {tryGetKakao && userData == null && <JoinPage />}

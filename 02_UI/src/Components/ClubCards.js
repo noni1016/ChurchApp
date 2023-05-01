@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import { Dimensions, ScrollView} from 'react-native';
 import Styled from 'styled-components/native';
-import ClubCard from '~/Components/ClubCard';
+import ClubCard from '@/Components/ClubCard';
 
 
 const ClubCardBox = Styled.View`

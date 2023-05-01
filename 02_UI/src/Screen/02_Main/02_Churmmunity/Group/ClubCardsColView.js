@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { View, FlatList, TouchableOpacity } from 'react-native';
 import Styled from 'styled-components/native';
-import ClubCard from '~/Components/ClubCard';
+import ClubCard from '@/Components/ClubCard';
 
 const ClubCardsColViewBox = Styled.View`
   background-color: #FFFFFF;

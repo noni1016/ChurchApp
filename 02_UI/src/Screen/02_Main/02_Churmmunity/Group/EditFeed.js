@@ -1,7 +1,7 @@
 import React, {useState, useEffect, useContext} from 'react';
 import { View, Text, Dimensions, ScrollView, Image} from 'react-native';
-import {DomainContext} from '~/Context/Domain';
-import { UserData } from '~/Context/User';
+import {DomainContext} from '@/Context/Domain';
+import { UserData } from '@/Context/User';
 import Styled from 'styled-components/native';
 import {launchImageLibrary} from 'react-native-image-picker';
 
