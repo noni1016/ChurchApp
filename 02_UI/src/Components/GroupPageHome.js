@@ -23,6 +23,7 @@ const Title = Styled.Text`
 
 const Desc = Styled.Text`
     font-size: 20px;
+    color: black;
 `;
 
 const JoinBtn = Styled.TouchableOpacity`

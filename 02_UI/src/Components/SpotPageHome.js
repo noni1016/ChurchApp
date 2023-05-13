@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useContext} from 'react';
-import {Text} from 'react-native';
+import {Text, View} from 'react-native';
 import Styled from 'styled-components/native';
 import DaumMap from '~/Screen/03_Map/DaumMapController';
 import { useIsFocused } from '@react-navigation/native';
@@ -60,6 +60,7 @@ const SpotPageHome = ({data, members,isLeader, stackNavi}) => {
                 /> }
                 <Divider />
                 <Title>리더</Title>
+                <View style={{height: 15}}/>
                 <GroupMemProfile member={userData} />
         </Container>
     )

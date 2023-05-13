@@ -5,8 +5,10 @@ import {DomainContext} from '~/Context/Domain';
 import {UserData} from '~/Context/User';
 import Tab from '~/Components/Tab';
 import ImageSize from 'react-native-image-size';
+import Icon1 from 'react-native-vector-icons/Ionicons';
 import Icon2 from 'react-native-vector-icons/AntDesign';
 import SpotPageHome from '~/Components/SpotPageHome';
+import SpotMembersView from '~/Components/SpotMembersView';
 
 const Header = Styled.View`
     flex-direction: row;
@@ -91,7 +93,8 @@ const SpotPage = ({navigation}) => {
 
     /* 멤버 정보 불러오기 */
     useEffect(() => {
-        fetch(`${domain}/Club/${data.id}/Member`).then(res => res.json()).then(res => { setMembers(res); });
+        // fetch(`${domain}/Club/${data.id}/Member`).then(res => res.json()).then(res => { setMembers(res); });
+        fetch(`${domain}/Club/2/Member`).then(res => res.json()).then(res => { setMembers(res); });
     }, [data])
 
     /* 멤버 정보 불러왓으면 현재 유저가 그룹 멤버인지 확인. 리더 여부도 확인 */
@@ -132,7 +135,7 @@ const SpotPage = ({navigation}) => {
                     <JoinBtn><Text style={{fontSize: 20, fontFamily: 'DoHyeon-Regular', color: 'white'}}>함께하기</Text></JoinBtn>
                 </TabContainer>
                 {tabIdx == 0 && <SpotPageHome data={data} members={members} isLeader={isLeader} stackNavi={navigation} />}
-                {tabIdx == 1 && <Text>참가자</Text>}
+                {tabIdx == 1 && <SpotMembersView members={members} isLeader={isLeader} stackNavi={navigation} />}
             </ScrollView>
         </>
     )

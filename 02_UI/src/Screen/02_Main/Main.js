@@ -48,7 +48,7 @@ const BottomTabNavi = () => {
                 children={(navigation) => <SpotPage navigation={navigation}/>}
                 options={{
                     headerShown: false,
-                    tabBarIcon: ({ color }) => <Icon2 name="message1" size={26}/>
+                    tabBarIcon: ({ color }) => <Icon2 name="message1" color={color} size={26}/>
                 }}
             />  
             <BottomTab.Screen
