@@ -1,7 +1,7 @@
 import React, {useState, useEffect, useContext} from 'react';
 import { View, FlatList, Text, Dimensions, ScrollView, Image, NativeSyntheticEvent, NativeScrollEvent } from 'react-native';
 import styled from 'styled-components/native';
-import {DomainContext} from '@/Context/Domain';
+import {DomainContext} from '~/Context/Domain';
 
 const Container = styled.TouchableOpacity`
     height: 70px;

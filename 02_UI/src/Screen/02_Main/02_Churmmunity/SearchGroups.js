@@ -2,16 +2,16 @@ import React, { useState, useEffect, useContext } from 'react';
 import {View,Text, ActivityIndicator, ScrollView, Button, TouchableOpacity} from 'react-native';
 import Styled from 'styled-components/native';
 import { useForm, Controller, useFieldArray } from "react-hook-form";
-import ClubCard from '@/Components/ClubCard';
-import TagBox from '@/Components/TagBox';
+import ClubCard from '~/Components/ClubCard';
+import TagBox from '~/Components/TagBox';
 import AsyncStorage from '@react-native-community/async-storage';
 
 import Icon from 'react-native-vector-icons/Ionicons';
 import Icon2 from 'react-native-vector-icons/MaterialIcons';
 
-import { UserData, UserContextProvider } from '@/Context/User';
-import {DomainContext, DomainContextProvider} from '@/Context/Domain';
-import UserDataStorage from '@/Context/UserDataStorage';
+import { UserData, UserContextProvider } from '~/Context/User';
+import {DomainContext, DomainContextProvider} from '~/Context/Domain';
+import UserDataStorage from '~/Context/UserDataStorage';
 
 /*
     Ref : https://react-hook-form.com/api/useform/register#options

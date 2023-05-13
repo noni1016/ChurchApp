@@ -1,6 +1,6 @@
 import React, {useState, useEffect, useContext} from 'react';
 import {View, Image, Text} from 'react-native';
-import {DomainContext} from '@/Context/Domain';
+import {DomainContext} from '~/Context/Domain';
 import Styled from 'styled-components/native';
 
 const Container = Styled.View`

@@ -1,8 +1,8 @@
 import React, {useContext, useEffect, useState} from 'react';
 import { View, FlatList, Text, Dimensions, ScrollView, Image, NativeSyntheticEvent, NativeScrollEvent } from 'react-native';
 import Styled from 'styled-components/native';
-import AddBtn from '@/Components/AddBtn'
-import { UserData } from '@/Context/User';
+import AddBtn from '~/Components/AddBtn'
+import { UserData } from '~/Context/User';
 import {NativeModules, Button} from 'react-native';
 import { getUniqueId, getManufacturer, isEmulator } from 'react-native-device-info';
 
@@ -20,7 +20,7 @@ const Home = ({navigation}) => {
           </View>}
           
         {userData == null && <View>
-            <Image source={require(`@/Assets/Images/bakery.jpg`)}/>
+            <Image source={require(`~/Assets/Images/bakery.jpg`)}/>
             </View>}
         </>
     )

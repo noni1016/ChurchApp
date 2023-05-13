@@ -1,9 +1,9 @@
 import React, {useState, useEffect, useContext} from 'react';
 import {View, Text, ScrollView} from 'react-native';
-import {DomainContext} from '@/Context/Domain';
-import {UserData} from '@/Context/User';
-import Feed from '@/Components/Feed';
-import AddBtn from '@/Components/AddBtn';
+import {DomainContext} from '~/Context/Domain';
+import {UserData} from '~/Context/User';
+import Feed from '~/Components/Feed';
+import AddBtn from '~/Components/AddBtn';
 import { useIsFocused } from '@react-navigation/native';
 
 const GroupNotification = ({route, navigation}) => {
