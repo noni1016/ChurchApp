@@ -2,6 +2,11 @@
   package="com.churchapp">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
 
     <application
       android:name=".MainApplication"
@@ -35,5 +40,9 @@
             android:scheme="kakao9a787aa9f3bd97e804dd8c73dbf0cd5b" />
     </intent-filter>
   </activity>
+   <activity
+        android:name=".MapViewActivity"
+        android:exported="true">
+        </activity>
     </application>
 </manifest>
