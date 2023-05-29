@@ -49,7 +49,7 @@ const HeaderTextArea = styled.View`
 const ChangePhoto = styled.TouchableOpacity`
  height: 100%;
  background-color: transparent;
- margin: 0px 10px 0px 0px //상 우 하 좌
+ margin: 0px 10px 0px 0px; //상 우 하 좌
  `;
 
  const CommonBtn = styled.TouchableOpacity`
