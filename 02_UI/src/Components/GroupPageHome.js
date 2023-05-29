@@ -1,13 +1,13 @@
 import React, {useState, useEffect, useContext} from 'react';
 import { Text, Dimensions, Alert } from 'react-native';
 import Styled from 'styled-components/native';
-import {DomainContext} from '@/Context/Domain';
-import {UserData} from '@/Context/User';
+import {DomainContext} from '~/Context/Domain';
+import {UserData} from '~/Context/User';
 import GroupMemProfile from './GroupMemProfile';
 import Icon from 'react-native-vector-icons/Ionicons';
-import DaumMap from '@/Screen/03_Map/DaumMapController';
+import DaumMap from '~/Screen/03_Map/DaumMapController';
 import { useIsFocused } from '@react-navigation/native';
-import { TabNavi } from '@/Context/Navi';
+import { TabNavi } from '~/Context/Navi';
 
 const Container = Styled.View`
     padding: 10px 10px 0px 10px; //상 우 하 좌
@@ -23,6 +23,7 @@ const Title = Styled.Text`
 
 const Desc = Styled.Text`
     font-size: 20px;
+    color: black;
 `;
 
 const JoinBtn = Styled.TouchableOpacity`

@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 import { Text, Dimensions, ScrollView, Image, NativeSyntheticEvent, NativeScrollEvent, View } from 'react-native';
 import styled from 'styled-components/native';
 
-import LightCard from '@/Components/LightCard';
+import LightCard from '~/Components/LightCard';
 
 const MyLightContainer = styled.View`
   flex-direction: column;

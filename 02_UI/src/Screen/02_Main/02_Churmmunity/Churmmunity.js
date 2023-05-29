@@ -8,21 +8,21 @@ import {
 } from '@react-navigation/stack';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
-import ClubCards from '@/Components/ClubCards';
-import ClubCardsColView from '@/Screen/02_Main/02_Churmmunity/Group/ClubCardsColView';
-import ClubPage from '@/Screen/02_Main/02_Churmmunity/Group/ClubPage'
+import ClubCards from '~/Components/ClubCards';
+import ClubCardsColView from '~/Screen/02_Main/02_Churmmunity/Group/ClubCardsColView';
+import ClubPage from '~/Screen/02_Main/02_Churmmunity/Group/ClubPage'
 import Comments from './Group/Comments';
 import EditFeed from './Group/EditFeed';
 import EditChurmmunity from './Group/EditChurmmunity';
 import EditMembers from './Group/EditMembers';
 
-import { UserData, UserContextProvider } from '@/Context/User';
-import {DomainContext, DomainContextProvider} from '@/Context/Domain';
-import SearchLocate from '@/Screen/03_Map/SearchLocate';
+import { UserData, UserContextProvider } from '~/Context/User';
+import {DomainContext, DomainContextProvider} from '~/Context/Domain';
+import SearchLocate from '~/Screen/03_Map/SearchLocate';
 import SearchGroups from './SearchGroups';
-import GroupNotification from '@/Screen/02_Main/02_Churmmunity/Group/GroupNotification';
-import {ProfileMain} from '@/Screen/02_Main/03_Profile/Profile';
-import {TabNavi} from '@/Context/Navi';
+import GroupNotification from '~/Screen/02_Main/02_Churmmunity/Group/GroupNotification';
+import {ProfileMain} from '~/Screen/02_Main/03_Profile/Profile';
+import {TabNavi} from '~/Context/Navi';
 
 
 const Stack = createStackNavigator();

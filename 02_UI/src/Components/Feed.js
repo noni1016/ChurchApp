@@ -1,8 +1,8 @@
 import React, {useState, useEffect, useContext, createRef} from 'react';
 import { View, FlatList, Text, Dimensions, ScrollView, Image, TouchableOpacity, Alert} from 'react-native';
 import Styled from 'styled-components/native';
-import {DomainContext} from '@/Context/Domain';
-import { UserData } from '@/Context/User';
+import {DomainContext} from '~/Context/Domain';
+import { UserData } from '~/Context/User';
 import Icon from 'react-native-vector-icons/Entypo';
 import ActionSheet from 'react-native-actions-sheet';
 import ActionSheetBtn from './ActionSheetBtn';

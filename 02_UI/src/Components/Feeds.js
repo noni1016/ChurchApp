@@ -2,7 +2,7 @@ import React, {useState, useEffect, useContext} from 'react';
 import { View, FlatList, Text, Dimensions, ScrollView, Image, NativeSyntheticEvent, NativeScrollEvent, Alert } from 'react-native';
 import Styled from 'styled-components/native';
 import Feed from './Feed';
-import {DomainContext} from '@/Context/Domain';
+import {DomainContext} from '~/Context/Domain';
 import { useIsFocused } from '@react-navigation/native';
 
 const Temp = Styled.View`

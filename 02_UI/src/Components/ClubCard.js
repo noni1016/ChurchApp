@@ -1,7 +1,7 @@
 import React, {useEffect, useContext, useState} from 'react';
 import {Image, Dimensions} from 'react-native';
 import Styled from 'styled-components/native';
-import {DomainContext} from '@/Context/Domain';
+import {DomainContext} from '~/Context/Domain';
 import IconE from 'react-native-vector-icons/Entypo';
 import IconM from 'react-native-vector-icons/MaterialCommunityIcons';
 import ImageSize from 'react-native-image-size';

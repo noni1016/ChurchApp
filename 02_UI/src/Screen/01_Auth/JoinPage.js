@@ -7,10 +7,10 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { View, FlatList, Text, Dimensions, ScrollView, Image, NativeSyntheticEvent, NativeScrollEvent, Button } from 'react-native';
 import Styled from 'styled-components/native';
-import AddBtn from '@/Components/AddBtn'
-import { UserData, KakaoAuthData, UserContextProvider } from '@/Context/User';
-import { DomainContext } from '@/Context/Domain';
-import Main from '@/Screen/02_Main/Main';
+import AddBtn from '~/Components/AddBtn'
+import { UserData, KakaoAuthData, UserContextProvider } from '~/Context/User';
+import { DomainContext } from '~/Context/Domain';
+import Main from '~/Screen/02_Main/Main';
 
 const Input = Styled.TextInput`
     width: 50%;

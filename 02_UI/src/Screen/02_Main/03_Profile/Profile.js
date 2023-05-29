@@ -1,8 +1,8 @@
 import React, {useState, useEffect, useContext} from 'react';
 import { View, Text, ScrollView, Image } from 'react-native';
 import styled from 'styled-components/native';
-import {DomainContext} from '@/Context/Domain';
-import {UserData} from '@/Context/User';
+import {DomainContext} from '~/Context/Domain';
+import {UserData} from '~/Context/User';
 import {
     createStackNavigator,
 } from '@react-navigation/stack';
