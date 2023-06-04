@@ -8,6 +8,7 @@ import {
 } from '@react-navigation/stack';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
+import SpotCards from '~/Components/SpotCards';
 import ClubCards from '~/Components/ClubCards';
 import ClubCardsColView from '~/Screen/02_Main/02_Churmmunity/Group/ClubCardsColView';
 import ClubPage from '~/Screen/02_Main/02_Churmmunity/Group/ClubPage'
@@ -70,13 +71,12 @@ const ChurmmunityMain = ({navigation}) => {
         <ScrollView>
             <ClubCards title={'내 모임'} orgDatas={myClubs} stackNavi={navigation}/>
             <ClubCards title={'오늘의 모임'} orgDatas={recClubs} stackNavi={navigation}/>
-            {/* <SpotCards title={'번개 모임'} orgDatas={recClubs} stackNavi={navigation}/> */}
+            <SpotCards title={'번개 모임'} orgDatas={recClubs} stackNavi={navigation}/>
             {/* <LightCardContainer datas={myLightDatas}/> */}
             {/* <RecLightContainer orgDatas={recLights}/> */}
             <EmptyArea />
         </ScrollView>
     );
-
 
 };
 
