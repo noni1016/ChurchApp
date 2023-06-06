@@ -28,6 +28,22 @@ const Divider = Styled.View`
     border-bottom-width: 2px;
 `;
 
+const NumGroupMemCont = Styled.View`
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    flex: 1;
+    border-color: #000000;
+    border-bottom-width: 1px;    
+    border-top-width: 1px;
+    padding: 3px 0px 3px 10px; //상 우 하 좌
+    /* margin: 1px 1px 20px 1px; */
+`;
+
+const Padding = Styled.View`
+    height: 10px;
+`;
+
 const SpotMembersView = ({members, isLeader, stackNavi}) => {
     const {userData} = useContext(UserData);
     const {tabNavi} = useContext(TabNavi);
@@ -40,6 +56,12 @@ const SpotMembersView = ({members, isLeader, stackNavi}) => {
         else {
             setShowingComponent(
                 <>
+                    <NumGroupMemCont>
+                        <Text fontSize={18}>멤버 {members.length} 명</Text>
+                        {isLeader && <Icon name="settings-outline" size={18} onPress={() => stackNavi.navigate('EditMembers', { group: data, members: members, navigation: stackNavi })} />}
+                    </NumGroupMemCont>
+                    {/* <Divider/> */}
+                    <Padding/>
                     {members.map((member, index) => (<GroupMemProfile key={index.toString()} member={member} onPress={() => {
                         if (member.id == userData.id) tabNavi.navigate('Profile', { member: member });
                         else stackNavi.navigate('Profile', { member: member });
