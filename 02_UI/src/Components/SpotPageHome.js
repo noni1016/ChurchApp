@@ -19,6 +19,7 @@ const Title = Styled.Text`
 
 const Desc = Styled.Text`
     font-size: 20px;
+    color: black;
 `;
 
 const Divider = Styled.View`
@@ -27,7 +28,7 @@ const Divider = Styled.View`
     border-bottom-width: 2px;
 `;
 
-const SpotPageHome = ({data, members,isLeader, stackNavi}) => {
+const SpotPageHome = ({data, members, isLeader, leader, stackNavi}) => {
     const isFocused = useIsFocused();
     const {userData} = useContext(UserData);
 
@@ -61,7 +62,7 @@ const SpotPageHome = ({data, members,isLeader, stackNavi}) => {
                 <Divider />
                 <Title>리더</Title>
                 <View style={{height: 15}}/>
-                <GroupMemProfile member={userData} />
+                <GroupMemProfile member={leader} />
         </Container>
     )
 };

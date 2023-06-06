@@ -41,7 +41,7 @@ const JoinBtn = Styled.TouchableOpacity`
     position: absolute;
     top: 0%;
     left: 35%;
-    background-color: rgba(44, 136, 217, 1);
+    background-color: ${props => props.state ? 'rgba(44, 136, 217, 1)' : 'gray'};
     color: white;
     width: 30%;
     height: 100%;
@@ -61,7 +61,7 @@ const tempSpot = {id: 1, name: '막무가내 리코더 합주', mainImg: 'GroupI
 const SpotPage = ({navigation}) => {
     const domain = useContext(DomainContext);
     const {userData} = useContext(UserData);   
-    const data = tempSpot;
+    var [data, setData] = useState(tempSpot);
     var [url, setUrl] = useState('');
     var [resizedWidth, setResizedWidth] = useState(100);
     var [resizedHeight, setResizedHeight] = useState(100);
@@ -69,12 +69,21 @@ const SpotPage = ({navigation}) => {
     var [isMember, setIsMember] = useState(false);
     var [isLeader, setIsLeader] = useState(false);
     var tabs = ['번개 정보        ', '        참가자'];
-    const [tabIdx, setTabIdx] = useState(0); 
+    const [tabIdx, setTabIdx] = useState(-1); 
+    var [joinText, setJoinText] = useState('함께하기');
+    var [leader, setLeader] = useState();
+
+    // /* temp : 서버에서 데이터 가져오기 */
+    // useEffect(() => {
+    //     fetch(`${domain}/Group/Spot/1`).then(res => res.json()).then(res => {setData(res);});
+    // }, [])
+
 
     /* 첫 마운팅때 Group 상단 사진 url 설정 */
     useEffect(() => {
+        if (data == null) return;
         setUrl(`${domain}/${data.mainImg}`);
-    }, []);    
+    }, [data]);    
 
     /* Group 상단 사진의 사이즈를 화면 사이즈에 맞게 설정 */
     useEffect(() => {
@@ -93,20 +102,48 @@ const SpotPage = ({navigation}) => {
 
     /* 멤버 정보 불러오기 */
     useEffect(() => {
-        // fetch(`${domain}/Club/${data.id}/Member`).then(res => res.json()).then(res => { setMembers(res); });
-        fetch(`${domain}/Club/2/Member`).then(res => res.json()).then(res => { setMembers(res); });
+        fetch(`${domain}/Group/Member/Spot/${data.id}`).then(res => res.json()).then(res => setMembers(res));
     }, [data])
 
     /* 멤버 정보 불러왓으면 현재 유저가 그룹 멤버인지 확인. 리더 여부도 확인 */
     useEffect(() => {
         members.map((member, index) => {
             if (member.id === userData.id) {
-                setIsMember(true);
+                setMember(true);
                 if (member.role === 'leader')
                     setIsLeader(true);
             }
+            if (member.role === 'leader')
+            {
+                setLeader(member);
+                setTabIdx(0);
+            }                
         })
     }, [members])
+
+    /* 함께하기 버튼 누르면 버튼이 파란색으로 바뀜 */
+    const onPressJoinBtn = () => {
+        if (isMember == false) {
+            // 멤버로 넣어주기
+            fetch(`${domain}/Group/Join/Spot/${data.id}/${userData.id}`);
+            setMember(true);
+        }
+        else {
+            fetch(`${domain}/Group/Exit/Spot/${data.id}/${userData.id}`);
+            setMember(false);
+        }        
+    }
+
+    /* 현재 유저를 멤버로 설정해줌 */
+    const setMember = (curUserIsMemOfThisGroup) => {
+        if ((isMember == false && curUserIsMemOfThisGroup == true) || (isMember == true && curUserIsMemOfThisGroup == false))
+            fetch(`${domain}/Group/Member/Spot/${data.id}`).then(res => res.json()).then(res => { setMembers(res); });
+        setIsMember(curUserIsMemOfThisGroup);
+        if (curUserIsMemOfThisGroup) setJoinText('참가중!');
+        else setJoinText('함께하기');
+    };
+
+    // return(<Text>Hello</Text>)
 
     return (
         <>
@@ -132,10 +169,10 @@ const SpotPage = ({navigation}) => {
                             }}
                         />
                     ))}
-                    <JoinBtn><Text style={{fontSize: 20, fontFamily: 'DoHyeon-Regular', color: 'white'}}>함께하기</Text></JoinBtn>
+                    <JoinBtn state={isMember} onPress={() => {onPressJoinBtn()}}><Text style={{fontSize: 20, fontFamily: 'DoHyeon-Regular', color: 'white'}}>{joinText}</Text></JoinBtn>
                 </TabContainer>
-                {tabIdx == 0 && <SpotPageHome data={data} members={members} isLeader={isLeader} stackNavi={navigation} />}
-                {tabIdx == 1 && <SpotMembersView members={members} isLeader={isLeader} stackNavi={navigation} />}
+                {tabIdx == 0 && <SpotPageHome data={data} members={members} isLeader={isLeader} leader={leader} stackNavi={navigation} />}
+                {tabIdx == 1 && <SpotMembersView members={members} isLeader={isLeader} leader={leader} stackNavi={navigation} />}
             </ScrollView>
         </>
     )
