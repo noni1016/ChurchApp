@@ -53,7 +53,10 @@ const SearchLocate = ({route, navigation})=>{
     const isFocused = useIsFocused();
 
     let defaultLocation = {latitude: 1000.0, longitude: 1000.0};
-    let serchRigion = "지역";
+    let [serchRigion, setSerchRigion] = useState("지역");
+    let [lastSerchRigion, setLastSerchRigion] = useState(""); //마지막으로 검색한 내용
+    let [resCount, setResCount] = useState(1);
+    let [rigionIndex, setRigionIndex] = useState(0);
 
     const [location, setLocation] = useState(defaultLocation);
     const [region, setRegion] = useState("");
@@ -103,7 +106,7 @@ const SearchLocate = ({route, navigation})=>{
                     returnKeyType="done"
                     onChangeText={(value) => {
                         console.log(value);
-                        serchRigion = value;
+                        serchRigion = setSerchRigion(value);
                     }}
                 />
 
@@ -111,13 +114,42 @@ const SearchLocate = ({route, navigation})=>{
                     () => {
                         console.log("search!!!")
                         console.log(serchRigion);
-                        DaumMap.serachAddress(serchRigion).then((res) => {
-                            console.log(res["documents"][0]["x"]);
-                            console.log(res["documents"][0]["y"]);
-                            console.log(res["documents"][0]["address_name"]);
+                        
+                        if (lastSerchRigion == serchRigion) {
+                            console.log("----------------------------------");
+                            console.log(rigionIndex);
+                            //setRigionIndex(rigionIndex++);
+                            console.log(rigionIndex);
+                            console.log(resCount);
+                            if (resCount <= rigionIndex)
+                                setRigionIndex(1);
+                                
+                                console.log("----------------------------------");
+                        }
+                        else
+                        {
+                            console.log("======");
+                            console.log(lastSerchRigion);
+                            setLastSerchRigion(serchRigion);
+                            setRigionIndex(0);
+                            setResCount(1);
+                            console.log("======");
+                        }
 
-                            setRegion(res["documents"][0]["address_name"]);
-                            setLocation({ longitude: res["documents"][0]["x"], latitude: res["documents"][0]["y"] });
+                        DaumMap.searchKeyword(serchRigion).then((res) => {
+                            console.log(rigionIndex);
+                            setResCount(res["documents"].length)
+                            let returnRegion = res["documents"][rigionIndex];
+                            setRigionIndex(rigionIndex++);
+                            console.log(returnRegion); 
+                            console.log(resCount);
+
+                            console.log(returnRegion["x"]);
+                            console.log(returnRegion["y"]);
+                            console.log(returnRegion["address_name"]);
+
+                            setRegion(returnRegion["address_name"]);
+                            setLocation({ longitude: returnRegion["x"], latitude: returnRegion["y"] });
                         })
                     }
                 }>
@@ -145,14 +177,14 @@ const SearchLocate = ({route, navigation})=>{
                     mapType={"Standard"}
                     style={{ width: 400, height: 400, backgroundColor: 'transparent' }}
 
-                    // markers={[{
-                    //     latitude: parseFloat(data.location_ll.y),
-                    //     longitude: parseFloat(data.location_ll.x),
-                    //     pinColor: "red",
-                    //     pinColorSelect: "yellow",
-                    //     title: "marker test",
-                    //     draggable: true,
-                    // }]}
+                    markers={[{
+                        latitude: parseFloat(location.latitude),
+                        longitude: parseFloat(location.longitude),
+                        pinColor: "red",
+                        pinColorSelect: "yellow",
+                        title: "marker test",
+                        draggable: true,
+                   }]}
                 />}
         </>
     )
