@@ -12,6 +12,24 @@ const util = require('util');
 const conn = require('../../config/database');
 const path = require('path');
 
+// Get group with id
+router.get('/:type/:id', (req, res) => {
+    let dbTbl = 'Club'
+    if (req.params.type == '1' || req.params.type == 'Club') dbTbl = 'ClubView';
+    else if (req.params.type == '2' || req.params.type == 'Spot') dbTbl = 'Spot';
+
+    let sql = `SELECT * FROM ${dbTbl} where id=${req.params.id}`;
+    console.log(sql);
+    conn.query(sql, function (err, rows, fields) {
+        if (!err) {
+            console.log(rows);
+            res.send(rows);
+        } else {
+            console.log('query error : ' + err);
+        }
+    });
+})
+
 // Create group
 const uploadGroupImg = multer({
     storage: multer.diskStorage({
@@ -29,7 +47,7 @@ router.post('/:type', async (req, res) => {
     let sql1 = ``;
     let sql2 = ``;
     let sql3 = ``;
-    let clubId;
+    let groupId;
     uploadGroupImg(req, res, async (err) => {
         if (err) {
             res.send({fileName : null});
@@ -48,12 +66,12 @@ router.post('/:type', async (req, res) => {
                 await conn.beginTransaction();
                 await conn.query(sql1, (error, rows) => {
                     // console.log(rows);
-                    clubId = rows.insertId;
-                    sql2 = `INSERT INTO ClubUser (clubId, userId, role) VALUES (${clubId}, ${req.body.userId}, 'leader')`;
+                    groupId = rows.insertId;
+                    sql2 = `INSERT INTO ClubUser (clubId, userId, role) VALUES (${groupId}, ${req.body.userId}, 'leader')`;
                     console.log(sql2);
                     conn.query(sql2, (error, rows) => {
                         // console.log(rows);
-                        sql3 = `SELECT * FROM ClubView WHERE id = ${clubId}`;
+                        sql3 = `SELECT * FROM ClubView WHERE id = ${groupId}`;
                         console.log(sql3);
                         conn.query(sql3, (error, rows) => {
                             console.log(rows[0]);
@@ -75,6 +93,32 @@ router.post('/:type', async (req, res) => {
         } else if (req.params.type == '2') // Spot
         {
             console.log('Create Spot');
+
+            sql1 = `INSERT INTO Spot (name, mainImg, location, location_ll, description, keyword, time) VALUES ('${req.body.name}', 'GroupImg/${req.file.filename}', '${req.body.location}', ST_GeomFromText('POINT(${req.body.location_ll_x} ${req.body.location_ll_y})', 4326), '${req.body.description}', '${req.body.keyword}', '${req.body.dateTime}')`;
+            console.log(sql1);
+            try {
+                await conn.beginTransaction();
+                await conn.query(sql1, (error, rows) => {
+                    if (error) console.log('query error : ' + err);
+                    console.log(rows);
+                    groupId = rows.insertId;
+                    sql2 = `INSERT INTO SpotUser (spotId, userId, role) VALUES (${groupId}, ${req.body.userId}, 'leader')`;
+                    console.log(sql2);
+                    conn.query(sql2, (error, rows) => {
+                        sql3 = `SELECT * FROM Spot WHERE id = ${groupId}`;
+                        console.log(sql3);
+                        conn.query(sql3, (error, rows) => {
+                            console.log(rows[0]);
+                            conn.commit();
+                            res.json(rows[0]);
+                        })
+                    });
+                });
+            } catch (err) {
+                console.log(err);
+                await conn.rollback()
+                res.send({ result: false});
+            }
         }
 
     });
@@ -196,6 +240,58 @@ router.get('/Search/:searchKey/:long/:lat', (req, res) => {
         }
     });
 })
+
+// Join Group 
+router.get('/Join/:type/:groupId/:userId', (req, res) => {
+    // console.log('Join Group');
+    let sql = `INSERT INTO ${req.params.type}User (${req.params.type}Id, userId, role) VALUES (${req.params.groupId}, ${req.params.userId}, 'user')`;
+    console.log(sql);
+
+    conn.query(sql, function (error, rows, fields) {
+        if (!error) {
+            console.log(rows);
+            res.send(rows);
+        } else {
+            console.log('query error : ' + error);
+        }
+    });
+})
+
+// Exit Group 
+router.get('/Exit/:type/:groupId/:userId', (req, res) => {
+    let sql = `DELETE FROM ${req.params.type}User
+        WHERE ${req.params.type}User.${req.params.type}id = ${req.params.groupId}
+        AND ${req.params.type}User.userId = ${req.params.userId}`;
+    console.log(sql);
+
+    conn.query(sql, function (error, rows, fields) {
+        if (!error) {
+            console.log(rows);
+            res.send(rows);
+        } else {
+            console.log('query error : ' + error);
+        }
+    });
+})
+
+// Get Group Member
+router.get('/Member/:type/:groupId', (req, res) => {
+    let sql = `SELECT User.id, User.name, User.photo, ${req.params.type}User.role 
+    FROM ${req.params.type}, ${req.params.type}User, User
+    WHERE ${req.params.type}User.${req.params.type}Id = ${req.params.groupId}
+    AND ${req.params.type}User.userId = User.id
+    AND ${req.params.type}User.${req.params.type}Id = ${req.params.type}.id`;
+    console.log(sql)
+    conn.query(sql, function (error, rows, fields) {
+        if (!error) {
+            console.log(rows);
+            res.send(rows);
+        } else {
+            console.log('query error : ' + error);
+        }
+    })
+})
+
 
 
 
