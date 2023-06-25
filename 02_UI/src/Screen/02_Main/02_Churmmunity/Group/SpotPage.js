@@ -58,10 +58,11 @@ const JoinBtn = Styled.TouchableOpacity`
 const tempSpot = {id: 1, name: '막무가내 리코더 합주', mainImg: 'GroupImg/1659157815604.jpg', location: '올림픽공원 나홀로나무 앞', location_ll: {x:126.93415099999976, y: 37.354753799999926}, description: `인적 드물고 경치 좋은 곳에서 리코더 뿝뿝 하실 분들~! \n
 찬양 연주 같이 해요`, keyword: ['리코더', '합주', '악기', '연주'], time: '220501 Sun 7:30 PM'};
 
-const SpotPage = ({navigation}) => {
+const SpotPage = ({route, navigation}) => {
     const domain = useContext(DomainContext);
     const {userData} = useContext(UserData);   
-    var [data, setData] = useState(tempSpot);
+    // var [data, setData] = useState(tempSpot);
+    var [data, setData] = useState(route.params.spot);
     var [url, setUrl] = useState('');
     var [resizedWidth, setResizedWidth] = useState(100);
     var [resizedHeight, setResizedHeight] = useState(100);
@@ -98,11 +99,12 @@ const SpotPage = ({navigation}) => {
                 setResizedHeight(height);
             }
         }, () => { console.log(`fail to get imgSize : ${url}`) })
-    }, [url])
+    }, [data, url])
 
     /* 멤버 정보 불러오기 */
     useEffect(() => {
-        fetch(`${domain}/Group/Member/Spot/${data.id}`).then(res => res.json()).then(res => setMembers(res));
+        console.log(data);
+        if (data) fetch(`${domain}/Group/Member/Spot/${data.id}`).then(res => res.json()).then(res => setMembers(res));
     }, [data])
 
     /* 멤버 정보 불러왓으면 현재 유저가 그룹 멤버인지 확인. 리더 여부도 확인 */
@@ -143,9 +145,7 @@ const SpotPage = ({navigation}) => {
         else setJoinText('함께하기');
     };
 
-    // return(<Text>Hello</Text>)
-
-    return (
+    return data ? (
         <>
             <Header>
                 <Title>
@@ -175,7 +175,7 @@ const SpotPage = ({navigation}) => {
                 {tabIdx == 1 && <SpotMembersView members={members} isLeader={isLeader} leader={leader} stackNavi={navigation} />}
             </ScrollView>
         </>
-    )
+    ) : (<Text>Loading...</Text>)
 };
 
 export default SpotPage;

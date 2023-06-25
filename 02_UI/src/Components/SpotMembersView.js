@@ -57,7 +57,7 @@ const SpotMembersView = ({members, isLeader, stackNavi}) => {
             setShowingComponent(
                 <>
                     <NumGroupMemCont>
-                        <Text fontSize={18}>멤버 {members.length} 명</Text>
+                        <Text style={{color: "black"}} fontSize={18}>멤버 {members.length} 명</Text>
                         {isLeader && <Icon name="settings-outline" size={18} onPress={() => stackNavi.navigate('EditMembers', { group: data, members: members, navigation: stackNavi })} />}
                     </NumGroupMemCont>
                     {/* <Divider/> */}

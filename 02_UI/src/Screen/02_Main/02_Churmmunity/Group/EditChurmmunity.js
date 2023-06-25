@@ -287,9 +287,12 @@ const EditChurmmunity = ({route, navigation}) => {
             }
         }).then(res => res.json()).then(res => {
             console.log(res);
-            if (res) {
+            if (createType == 1 && res) {
                 navigation.navigate('ClubPage', {club : res, navigation: navigation});
-            } else {
+            } else if (createType == 2 && res) {
+                navigation.navigate('SpotPage', {spot: res, navigation: navigation});
+            }
+            else {
                 console.log('Call Noni');
             } 
         })      
