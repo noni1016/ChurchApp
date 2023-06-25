@@ -11,6 +11,7 @@ import Icon1 from 'react-native-vector-icons/Ionicons';
 import Icon2 from 'react-native-vector-icons/AntDesign';
 
 import {launchImageLibrary} from 'react-native-image-picker';
+import DaumMap from './../../03_Map/DaumMapController';
 
 const tempUser = {id: 4, name: "짱쎄", photo: 'Profile/짱쎄.jpg', role: 'user'};
 const Stack = createStackNavigator();
@@ -48,15 +49,23 @@ const HeaderTextArea = styled.View`
 const ChangePhoto = styled.TouchableOpacity`
  height: 100%;
  background-color: transparent;
- margin: 0px 10px 0px 0px //상 우 하 좌
+ margin: 0px 10px 0px 0px; //상 우 하 좌
  `;
+
+ const CommonBtn = styled.TouchableOpacity`
+background-color: green;
+width: 20%;
+border-bottom-width: 3px;
+`;
 
 const ProfileMain = ({navigation, route}) => {
     const domain = useContext(DomainContext);
     const {userData} = useContext(UserData);
     const [member, setMember] = useState(route ? route.params.member : userData);
-    const [imgSrc, setImgSrc] = useState(undefined);
-
+    const [imgSrc, setImgSrc] = useState('');
+    const [locate, setLocate] = useState([0,0]);
+    const [region, setRegion] = useState('');
+    
     useEffect(() => {
         setMember(route != undefined ? route.params.member : userData);
     }, [])
@@ -77,12 +86,25 @@ const ProfileMain = ({navigation, route}) => {
             });
         }
 
-        if(imgSrc)
+        if (imgSrc != undefined)
         {
             console.log("=====photo change=====");
-            console.log(imgSrc);
-        }
-    }, [member], [imgSrc])
+            console.log(domain + '/' + imgSrc.uri);
+            const imageData = new FormData();
+            imageData.append('file', {
+              uri: imgSrc.uri,
+              type: imgSrc.type,
+              name: imgSrc.fileName,
+              data: imgSrc.data
+            });
+      
+            let fetchHeader = {
+              Accept: 'application/json',
+              'Content-Type': 'multipart/form-data',
+            }
+            reqChangeUserInfo(fetchHeader, "photo", imageData)
+          }
+    }, [member, imgSrc])
 
 
     // Camera Roll
@@ -97,15 +119,26 @@ const ProfileMain = ({navigation, route}) => {
             return;
         }
         if (response.assets.length > 0) {
-            alert('프사변경');
-            console.log('ImageSrc: ' + JSON.stringify(response.assets));
-            console.log('ImageSrc: ' + response.assets[0].uri);
-            setImgSrc(domain + '/' +response.assets[0].uri);
+            setImgSrc(response.assets[0]);
             return;
         }
         alert('프사변경취소');
     });
 }
+
+const reqChangeUserInfo = (fetchHeader, changeType, changeValue) => {
+    console.log(changeType, changeValue);
+    console.log(userData.id);
+    
+    fetch(`${domain}/User/${userData.id}/${changeType}`, {
+      method: 'PUT',
+      body: changeValue,
+      headers: fetchHeader
+    }).catch(e => {
+      console.log("[ChangeFail]");
+      console.log(e);
+    });
+  };
 
     return (
         <ScrollView style={{padding: 10}}>
@@ -119,9 +152,23 @@ const ProfileMain = ({navigation, route}) => {
                     <Text>{member.church}</Text>
                 </HeaderTextArea>
             </HeaderBox>
+            
+            {/* <CommonBtn onPress={() => {{navigation.navigate('SearchLocate', {setLocateProcess : setLocate, setRegionProcess : setRegion, navigation: route})}}}>
+                    {/* <PlusText>+</PlusText> }
+                    <Text>지역 수정</Text>
+                    </CommonBtn> */}
+            <DaumMap currentRegion={{
+                latitude: parseFloat(100),
+                longitude: parseFloat(100),
+                zoomLevel: 5,
+               }}
+                mapType={"Standard"}
+                style={{ width: 400, height: 400, backgroundColor: 'transparent' }}/>
+
         </ScrollView>
     )
 }
+
 
 
 const ProfileStackNavi = ({tabNavi}) => {

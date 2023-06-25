@@ -16,6 +16,7 @@ import Home from '~/Screen/02_Main/01_Home/Home';
 import Churmmunity from '~/Screen/02_Main/02_Churmmunity/Churmmunity';
 import Profile from '~/Screen/02_Main/03_Profile/Profile';
 import Default from '~/Screen/99_Etc/Default';
+import SpotPage from '~/Screen/02_Main/02_Churmmunity/Group/SpotPage';
 
 // import contexts
 import {NaviContextProvider} from '~/Context/Navi';
@@ -30,6 +31,7 @@ const BottomTabNavi = () => {
                 name="Home"
                 component={Home}
                 options={{
+                    headerShown: false,
                     tabBarIcon: ({color}) => <Icon name="home" color={color} size={26} />
                 }}
             />
@@ -37,20 +39,23 @@ const BottomTabNavi = () => {
                 name="Churmmunity"
                 component={Churmmunity}
                 options={{
+                    headerShown: false,
                     tabBarIcon: ({color}) => <Icon name="people" color={color} size={26} />
                 }}
             />
             <BottomTab.Screen
                 name="Chat"
-                children={(navigation) => <Default navigation={navigation}/>}
+                children={(navigation) => <SpotPage navigation={navigation}/>}
                 options={{
-                    tabBarIcon: ({ color }) => <Icon2 name="message1" size={26}/>
+                    headerShown: false,
+                    tabBarIcon: ({ color }) => <Icon2 name="message1" color={color} size={26}/>
                 }}
             />  
             <BottomTab.Screen
                 name="Profile"
                 children={(navigation) => <Profile navigation={navigation}/>}
                 options={{
+                    headerShown: false,
                     tabBarIcon: ({ color }) => <Icon name="account-box" color={color} size={26} />
                 }}
             />            

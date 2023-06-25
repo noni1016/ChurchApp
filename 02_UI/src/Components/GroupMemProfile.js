@@ -18,7 +18,8 @@ const NameCont = styled.View`
 
 const Name = styled.Text`    
     font-size: 20px;
-    font-family: 'DoHyeon-Regular';    
+    font-family: 'DoHyeon-Regular';  
+    color: black;  
 `;
 
 const GroupMemProfile = ({member, onPress}) => {
