@@ -43,3 +43,15 @@ app.use('/Club', require('./routes/03_Churmmunity/Club')); // /churmmunity/ 로 
 app.use('/Group', require('./routes/03_Churmmunity/Group')); // Club, Spot 공통 기능
 // app.use('/Spot', require('./routes/03_Churmmunity/Spot')); // /churmmunity/ 로 접근하는 url 요청 처리
 // app.use('/Auth', require('./routes/01_Auth/Auth'));
+
+//catch unCaughtException 
+process.on("uncaughtException", function(err) {
+	console.error("uncaughtException (Node is alive)", err);
+});
+
+setInterval(function() {
+    conn.query('SELECT 1', function(err, results) {
+        if (err) console.log('SELECT', err.code);
+        else console.log('SELECT', results);
+    })
+}, 3600000);
