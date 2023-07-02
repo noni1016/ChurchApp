@@ -56,7 +56,7 @@ const Profile = () => {
   const domain = useContext(DomainContext);
   const { userData, setUserData} = useContext(UserData);
   const { kakaoAuthData, setKakaoAuthData } = useContext(KakaoAuthData);
-  const { tryGetKakao, setTryGetKakaoFlag } = useContext(TryGetKakao);
+  const { tryGetUserData: tryGetKakao, setTryGetUserDataFlag: setTryGetKakaoFlag } = useContext(TryGetKakao);
   const [logOutResult, setLogOutResult] = useState(null);
   const [imgSrc, setImgSrc] = useState(undefined);
 

@@ -4,7 +4,7 @@ import { View, Text, Image } from 'react-native';
 import Styled from 'styled-components/native';
 import React, { useState, useEffect, useContext } from 'react';
 import { DomainContext } from '~/Context/Domain';
-import { UserData, KakaoAuthData, TryGetKakao } from '~/Context/User';
+import { UserData, KakaoAuthData, TryGetUserData } from '~/Context/User';
 import { KakaoOAuthToken, KakaoProfile, getProfile as getKakaoProfile,  login, logout, unlink, } from '@react-native-seoul/kakao-login';
 
 const Screen = Styled.View`
@@ -39,12 +39,12 @@ const AuthPage = () => {
   const { kakaoAuthData, setKakaoAuthData } = useContext(KakaoAuthData) //로그인 하여 가져온 카카오 계정정보
   
   const [ authCheckFlag, setAuthCheckFlag ] = useState(false); //카카오 로그인시도했음
-  const { tryGetKakao, setTryGetKakaoFlag } = useContext(TryGetKakao);
+  const { tryGetUserData, setTryGetUserDataFlag } = useContext(TryGetUserData); //카카오 계정으로 철취앱 회원정보 조회 시도함
   
   const GetUser = (kakao_id) => {
     fetch(domain + '/User/Domain/kakao/' + kakao_id).then(res => res.json()).then(res => {
       let resultCount = Object.keys(res).length; //회원정보가 있다면 res가 0이 아닐것
-      setTryGetKakaoFlag(true);
+      setTryGetUserDataFlag(true);
 
       if(resultCount != 0)
       {
@@ -71,7 +71,7 @@ useEffect(() => {
 
 //카카오 정보로 회원 정보 체크 후
 useEffect(() => {
-}, [tryGetKakao])
+}, [tryGetUserData])
 
   //앱실행 후 자동로그인
   const autoLogin = async () => {
@@ -114,7 +114,7 @@ useEffect(() => {
 
   return (
     <>
-      {tryGetKakao == false && userData == null && <Screen>
+      {tryGetUserData == false && userData == null && <Screen>
         {authCheckFlag == false && <Image source={require(`~/Assets/Images/mainpray.jpg`)} />}
         {authCheckFlag && kakaoAuthData == null && <KaKaoBtn onPress={
           () => {
@@ -123,8 +123,8 @@ useEffect(() => {
           <Image source={require(`~/Assets/Images/kakao_login_medium_narrow.png`)} />
         </KaKaoBtn>}
       </Screen>}
-      {tryGetKakao && userData == null && <JoinPage />}
-      {tryGetKakao && userData != null && <Main />}
+      {tryGetUserData && userData == null && <JoinPage />}
+      {tryGetUserData && userData != null && <Main />}
     </>
   );
 };
