@@ -92,8 +92,8 @@ const ChurmmunityStackNavi = () => {
                     headerShown: true,
                     headerRight: () => (
                         <HeaderButtonsContainer>
-                            <Icon name="search" size={26} onPress={() => navigation.navigate('SearchGroups', {navigation: navigation})} />
-                            <Icon name="add" size={26} onPress={() => navigation.navigate('EditChurmmunity', {navigation: navigation})} />
+                            <Icon name="search" color="black" size={26} onPress={() => navigation.navigate('SearchGroups', {navigation: navigation})} />
+                            <Icon name="add" color="black" size={26} onPress={() => navigation.navigate('EditChurmmunity', {navigation: navigation})} />
                         </HeaderButtonsContainer>
                     )
                 })}
