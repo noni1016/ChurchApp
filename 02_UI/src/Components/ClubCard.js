@@ -78,7 +78,7 @@ const ClubCard = ({club}) => {
     var [url, setUrl] = useState('');
 
     useEffect(() => {
-        setUrl(`${domain}/${club.mainImg}`);
+        setUrl(`${domain}/ClubMainImg/${club.mainImg}`);
     }, [club]);
 
     useEffect(() => {

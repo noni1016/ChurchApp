@@ -234,7 +234,7 @@ const EditChurmmunity = ({route, navigation}) => {
         ]);
     }
 
-    const sendGroupInfo = () => {
+    const sendGroupInfo = async () => {
         let fetchReq = ``;
         let fetchMethod = ``;
         let keywordString = ``;
@@ -286,6 +286,7 @@ const EditChurmmunity = ({route, navigation}) => {
                 'Content-Type': 'multipart/form-data',
             }
         }).then(res => res.json()).then(res => {
+
             console.log(res);
             if (createType == 1 && res) {
                 navigation.navigate('ClubPage', {club : res, navigation: navigation});
@@ -432,11 +433,11 @@ const EditChurmmunity = ({route, navigation}) => {
                     <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 18 }}>게시</Text>
                 </SendBtn>
             </SendBtnBox>
-            <SendBtnBox>
+            {!edit && <SendBtnBox>
                 <SendBtn style={{backgroundColor: 'red'}} onPress={() => delChurmmunity()}>
                     <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 18 }}>모임 해산</Text>
                 </SendBtn>
-            </SendBtnBox>
+            </SendBtnBox>}
         </ScrollView>);
 
 };
