@@ -23,5 +23,11 @@ const VerticalMargin = Styled.View`
     background-color: transparent;
 `;
 
+const DefaultText = Styled.Text`
+    font-size: 20px;
+    font-family: 'DoHyeon-Regular';
+    color: 'black';
+`;
+
 export default Styles;
-export {VerticalMargin};
+export {VerticalMargin, DefaultText};
