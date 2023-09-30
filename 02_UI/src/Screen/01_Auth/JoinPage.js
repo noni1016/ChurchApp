@@ -41,6 +41,7 @@ const JoinPage = () => {
 
     let [nickName, setNickName] = useState('');
     let [churchName, setChurchName] = useState('');
+    let [profilePhoto, setProfilePhoto] = useState('');
 
     const NickNameTextHandler = (value) => {
         setNickName(value);
@@ -56,7 +57,7 @@ const JoinPage = () => {
 
     const JoinUser = () => {
         // console.log(kakaoAuthData);
-        let sendCommentUserData = { name: nickName == '' ? kakaoAuthData.nickname : nickName, photo: kakaoAuthData.profileImageUrl, church: churchName, age: 10, level: 99, role: 0, id_domain: kakaoAuthData.id };
+        let sendCommentUserData = { name: nickName == '' ? kakaoAuthData.nickname : nickName, photo: profilePhoto, church: churchName, age: 10, level: 99, role: 0, id_domain: kakaoAuthData.id };
         console.log(sendCommentUserData);
         fetch(domain + '/User/Domain/kakao', {
             method: 'POST',
@@ -71,7 +72,7 @@ const JoinPage = () => {
             console.log("[=========]");
             //로그인 
             let userInfo = res[0];
-            userInfo.photo = domain + '/' + res[0].photo;
+            userInfo.photo = res[0].photo;
             setUserData(userInfo);
         }).catch(e => {console.log("[JOINFAIL]"); console.log(e.json())});
     }

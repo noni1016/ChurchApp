@@ -140,13 +140,26 @@ const reqChangeUserInfo = (fetchHeader, changeType, changeValue) => {
     });
   };
 
+    const SetProfileImage = () => {
+        console.log("setprofioleimage");
+        if (userData.photo == "") {
+            console.log("no img");
+            return <Image style={{ width: 70, height: 70, flex: 1, resizeMode: 'contain' }} source = {require(`~/Assets/Images/Profile/jesus.png`)} />
+        }
+        else {
+            console.log("yes img");
+            return <Image style={{ width: 70, height: 70, flex: 1, resizeMode: 'contain' }} source={{ uri: userData.photo + "?cache="+Math.random() }}/>
+        }
+    }
+
     return (
         <ScrollView style={{padding: 10}}>
             <HeaderBox>
             <ChangePhoto onPress={() => {showCameraRoll();}}>
-                <Image style={{ width: 70, height: 70, flex: 1, resizeMode: 'contain' }}   source={{ uri: userData.photo + "?cache="+Math.random() }} />
+                {SetProfileImage()}
             </ChangePhoto>
-                <HeaderTextArea style={{ flex: 3 }}>
+
+            <HeaderTextArea style={{ flex: 3 }}>
                     <Text style={{ fontWeight: 'bold'}}>{member.name}</Text>
                     {member.description ? <Text>{member.description}</Text> : <Text>자기소개 없음</Text>}
                     <Text>{member.church}</Text>
@@ -188,6 +201,7 @@ const Profile = ({navigation}) => {
         <ProfileStackNavi tabNavi={navigation}/>
     )
 };
+
 
 
 export {Profile as default, ProfileMain} ;
