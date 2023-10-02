@@ -62,7 +62,8 @@ const SpotPage = ({route, navigation}) => {
     const domain = useContext(DomainContext);
     const {userData} = useContext(UserData);   
     // var [data, setData] = useState(tempSpot);
-    var [data, setData] = useState(route.params.spot);
+    if (route) var [data, setData] = useState(route.params.spot);
+    else var [data, setData] = useState(tempSpot);
     var [url, setUrl] = useState('');
     var [resizedWidth, setResizedWidth] = useState(100);
     var [resizedHeight, setResizedHeight] = useState(100);
@@ -103,7 +104,6 @@ const SpotPage = ({route, navigation}) => {
 
     /* 멤버 정보 불러오기 */
     useEffect(() => {
-        console.log(data);
         if (data) fetch(`${domain}/Group/Member/Spot/${data.id}`).then(res => res.json()).then(res => setMembers(res));
     }, [data])
 
@@ -125,6 +125,10 @@ const SpotPage = ({route, navigation}) => {
 
     /* 함께하기 버튼 누르면 버튼이 파란색으로 바뀜 */
     const onPressJoinBtn = () => {
+        if (isLeader) {
+            alert('리더는 탈퇴할 수 없습니다. 먼저 리더를 변경해주세요.');
+            return;
+        }
         if (isMember == false) {
             // 멤버로 넣어주기
             fetch(`${domain}/Group/Join/Spot/${data.id}/${userData.id}`);
@@ -172,7 +176,7 @@ const SpotPage = ({route, navigation}) => {
                     <JoinBtn state={isMember} onPress={() => {onPressJoinBtn()}}><Text style={{fontSize: 20, fontFamily: 'DoHyeon-Regular', color: 'white'}}>{joinText}</Text></JoinBtn>
                 </TabContainer>
                 {tabIdx == 0 && <SpotPageHome data={data} members={members} isLeader={isLeader} leader={leader} stackNavi={navigation} />}
-                {tabIdx == 1 && <SpotMembersView members={members} isLeader={isLeader} leader={leader} stackNavi={navigation} />}
+                {tabIdx == 1 && <SpotMembersView data={data} members={members} isLeader={isLeader} leader={leader} stackNavi={navigation} />}
             </ScrollView>
         </>
     ) : (<Text>Loading...</Text>)

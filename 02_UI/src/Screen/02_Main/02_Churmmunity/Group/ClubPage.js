@@ -58,7 +58,7 @@ const ClubPage = ({route, navigation}) => {
     
     /* 첫 마운팅때 Group 상단 사진 url 설정 */
     useEffect(() => {
-        setUrl(`${domain}/${data.mainImg}`);
+        setUrl(`${domain}/ClubMainImg/${data.mainImg}`);
     }, []);    
 
     /* Group 상단 사진의 사이즈를 화면 사이즈에 맞게 설정 */
@@ -98,7 +98,7 @@ const ClubPage = ({route, navigation}) => {
         members.map((member, index) => {
             if (member.id === userData.id) {
                 setIsMember(true);
-                if (member.role === 'leader')
+                if (member.role === 1)
                     setIsLeader(true);
             }
         })
@@ -120,8 +120,8 @@ const ClubPage = ({route, navigation}) => {
                     {data.name}
                 </Title>
                 <Side>
-                <Icon2 name="notification" size={26} onPress={() => navigation.navigate('GroupNotification', {club: data, isLeader: isLeader})} />
-                {isLeader && <Icon1 name="settings-outline" size={26} onPress={() => navigation.navigate('EditChurmmunity', {edit: 1, editData: data, navigation: navigation})} />}
+                <Icon2 name="notification" size={26} color={'black'} onPress={() => navigation.navigate('GroupNotification', {club: data, isLeader: isLeader})} />
+                {isLeader && <Icon1 name="settings-outline" size={26} color={'black'} onPress={() => navigation.navigate('EditChurmmunity', {edit: 1, editData: data, navigation: navigation})} />}
                 </Side>          
             </Header>
             <ScrollView>

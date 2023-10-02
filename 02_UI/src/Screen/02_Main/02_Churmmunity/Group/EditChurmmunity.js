@@ -12,7 +12,8 @@ import DaumMap from '~/Screen/03_Map/DaumMapController';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import moment from 'moment';
 import { useIsFocused } from '@react-navigation/native';
-
+import Styles from '~/Style';
+import {VerticalMargin} from '~/Style';
 
 const OptionName = Styled.Text`
     margin: 20px 10px 10px 5px;
@@ -65,8 +66,8 @@ const PlusBtnBox = Styled.TouchableOpacity`
     align-items: center;
     width: 100%;
     height: 200px;
-    margin: 10px 0px 10px 0px; //상 우 하 좌
     background-color: transparent;
+    margin: 10px 0px 10px 0px; //상 우 하 좌
 `;
 
 const PlusText = Styled.Text`
@@ -77,9 +78,9 @@ const PlusText = Styled.Text`
     font-size: 50px;
     font-family: 'DoHyeon-Regular';
     padding: 5px;
-    margin: 10px 0px 10px 0px; //상 우 하 좌
     text-align: center;
     border-radius: 10px;
+    margin: 10px 0px 10px 0px; //상 우 하 좌
 `;
 
 const DescInputBox = Styled.View`
@@ -124,9 +125,10 @@ const SendBtn = Styled.TouchableOpacity`
 `;
 
 const CommonBtn = Styled.TouchableOpacity`
-background-color: green;
+background-color: transparent;
 width: 20%;
 border-bottom-width: 3px;
+color: black;
 `;
 
 
@@ -234,7 +236,7 @@ const EditChurmmunity = ({route, navigation}) => {
         ]);
     }
 
-    const sendGroupInfo = () => {
+    const sendGroupInfo = async () => {
         let fetchReq = ``;
         let fetchMethod = ``;
         let keywordString = ``;
@@ -286,6 +288,7 @@ const EditChurmmunity = ({route, navigation}) => {
                 'Content-Type': 'multipart/form-data',
             }
         }).then(res => res.json()).then(res => {
+
             console.log(res);
             if (createType == 1 && res) {
                 navigation.navigate('ClubPage', {club : res, navigation: navigation});
@@ -353,8 +356,8 @@ const EditChurmmunity = ({route, navigation}) => {
             <OptionName>모임 대표 이미지</OptionName>
             {imgSrc == undefined && <PlusBtnBox onPress={() => { showCameraRoll(); }}>
                 <PlusText>+</PlusText>
-                <Text>버튼을 눌러</Text>
-                <Text>사진을 추가해보세요</Text>
+                <Text style={Styles.default}>버튼을 눌러</Text>
+                <Text style={Styles.default}>사진을 추가해보세요</Text>
             </PlusBtnBox>}
             {imgSrc && <PlusBtnBox onPress={() => { showCameraRoll(); }}>
                 <Image style={{ backgroundColor: 'transparent', width: '100%', height: '100%', resizeMode: 'contain' }} source={{ uri: imgSrc.uri }} />
@@ -380,7 +383,7 @@ const EditChurmmunity = ({route, navigation}) => {
             <OptionName>검색 키워드</OptionName>
             <View style={{flexDirection: "row", alignItems: "center"}}>
                 <KeywordInput color="black" placeholderTextColor="gray" multiline={false} maxLength={10} value={keyword} placeholder={'최대 10자'} onChangeText={(v)=>{setKeyword(v)}} onSubmitEditing={() => addKeyword()}/>
-                <Icon name="pluscircle" size={26} onPress={() => addKeyword()} />
+                <Icon name="pluscircle" size={26} color="skyblue" onPress={() => addKeyword()} />
             </View>
             <KeywordView>
                 {content.keyword ? content.keyword.map((v, i) => <TagBox key={i} text={v} color="blue" onPressDelBtn={() => setContent((current) => {let newContent = {...current}; newContent.keyword.splice(i, 1); return newContent})}/>) : null}
@@ -407,7 +410,7 @@ const EditChurmmunity = ({route, navigation}) => {
                 (content.location_ll != null && content.location_ll.y == null && content.location_ll.x == null)) && 
                 <PlusBtnBox onPress={() => {{navigation.navigate('SearchLocate', {setLocateProcess : setLocate, setRegionProcess : setRegion, navigation: navigation})}}}>
                     <PlusText>+</PlusText>
-                    <Text>지역 추가</Text>
+                    <Text style={Styles.default}>지역 추가</Text>
                 </PlusBtnBox>}
 
             {(content.location_ll != null && 
@@ -422,8 +425,7 @@ const EditChurmmunity = ({route, navigation}) => {
                 style={{ width: 400, height: 400, backgroundColor: 'transparent' }}/> }
 
                 <CommonBtn onPress={() => {{navigation.navigate('SearchLocate', {setLocateProcess : setLocate, setRegionProcess : setRegion, navigation: navigation})}}}>
-                    <PlusText>+</PlusText>
-                    <Text>지역 수정</Text>
+                    <Text style={Styles.default}>지역 수정</Text>
                 </CommonBtn>
             </>  )}
             
@@ -432,11 +434,12 @@ const EditChurmmunity = ({route, navigation}) => {
                     <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 18 }}>게시</Text>
                 </SendBtn>
             </SendBtnBox>
-            <SendBtnBox>
+            {edit == 1 && <SendBtnBox>
                 <SendBtn style={{backgroundColor: 'red'}} onPress={() => delChurmmunity()}>
                     <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 18 }}>모임 해산</Text>
                 </SendBtn>
-            </SendBtnBox>
+            </SendBtnBox>}
+            <VerticalMargin />
         </ScrollView>);
 
 };

@@ -6,6 +6,7 @@ import { useIsFocused } from '@react-navigation/native';
 import {UserData} from '~/Context/User';
 import GroupMemProfile from './GroupMemProfile';
 import { TabNavi } from '~/Context/Navi';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 const Container = Styled.View`
     padding: 10px 10px 0px 10px; //상 우 하 좌
@@ -44,20 +45,17 @@ const Padding = Styled.View`
     height: 10px;
 `;
 
-const SpotMembersView = ({members, isLeader, stackNavi}) => {
+const SpotMembersView = ({data, members, isLeader, stackNavi}) => {
     const {userData} = useContext(UserData);
     const {tabNavi} = useContext(TabNavi);
     const [ShowingComponent, setShowingComponent] = useState(<View/>);
 
     useEffect(() => {
-        if (isLeader) {
-            setShowingComponent(<GroupMemProfile member={userData} />)
-        } 
-        else {
+        console.log(stackNavi);
             setShowingComponent(
                 <>
                     <NumGroupMemCont>
-                        <Text style={{color: "black"}} fontSize={18}>멤버 {members.length} 명</Text>
+                        <Text style={{color: "black"}} fontSize={30}>멤버 {members.length} 명</Text>
                         {isLeader && <Icon name="settings-outline" size={18} onPress={() => stackNavi.navigate('EditMembers', { group: data, members: members, navigation: stackNavi })} />}
                     </NumGroupMemCont>
                     {/* <Divider/> */}
@@ -68,7 +66,6 @@ const SpotMembersView = ({members, isLeader, stackNavi}) => {
                     }} />))}
                 </>
             )
-        }
     }, [])
 
     return (

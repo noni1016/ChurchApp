@@ -41,9 +41,9 @@ const EmptyArea = styled.View`
     background-color: transparent;
 `;
 
-var initClub = { id: 0, name: `로딩중`, mainImg: `WinLockImages/a48b65589f2727feb93b12693ffeccb5d4aa1c0b6bbc1dff4d503ff28eba5a4c.jpg`, location: `수원시 영통구 매탄4동 10`, numMember: 10 };
-var initMyLightData = [{ id: 0, name: `로딩중`, mainImg: `WinLockImages/a48b65589f2727feb93b12693ffeccb5d4aa1c0b6bbc1dff4d503ff28eba5a4c.jpg`, location: `로딩중`, time: "0000-00-00 00:00:00", numMember: 0 },
-{ id: 1, name: `로딩중`, mainImg: `WinLockImages/a48b65589f2727feb93b12693ffeccb5d4aa1c0b6bbc1dff4d503ff28eba5a4c.jpg`, location: `로딩중`, time: "0000-00-00 00:00:00", numMember: 0 }
+var initClub = { id: 0, name: `로딩중`, mainImg: `default.jpg`, location: `수원시 영통구 매탄4동 10`, numMember: 10 };
+var initMyLightData = [{ id: 0, name: `로딩중`, mainImg: `default.jpg`, location: `로딩중`, time: "0000-00-00 00:00:00", numMember: 0 },
+{ id: 1, name: `로딩중`, mainImg: `default.jpg`, location: `로딩중`, time: "0000-00-00 00:00:00", numMember: 0 }
 ];
 
 
@@ -60,7 +60,7 @@ const ChurmmunityMain = ({navigation}) => {
     useEffect(() => {
         if (userData.id) {
             fetch(`${domain}/User/${userData.id}/Club`).then(res => res.json()).then(res => {setMyClubs(res)});
-            fetch(`${domain}/Club/Sort/Rand()/7`).then(res => res.json()).then(res => {setRecClubs(res)});
+            fetch(`${domain}/Group/Sort/Rand()/7`).then(res => res.json()).then(res => {setRecClubs(res)});
         }
         
         // fetch(domain + '/Churmmunity/GetMyLightDatas').then(res => res.json()).then(res => {setMyLightDatas(res)});
@@ -72,7 +72,7 @@ const ChurmmunityMain = ({navigation}) => {
         <ScrollView>
             <ClubCards title={'내 모임'} orgDatas={myClubs} stackNavi={navigation}/>
             <ClubCards title={'오늘의 모임'} orgDatas={recClubs} stackNavi={navigation}/>
-            <SpotCards title={'번개 모임'} orgDatas={recClubs} stackNavi={navigation}/>
+            {/* <SpotCards title={'번개 모임'} orgDatas={recClubs} stackNavi={navigation}/> */}
             {/* <LightCardContainer datas={myLightDatas}/> */}
             {/* <RecLightContainer orgDatas={recLights}/> */}
             <EmptyArea />
@@ -92,8 +92,8 @@ const ChurmmunityStackNavi = () => {
                     headerShown: true,
                     headerRight: () => (
                         <HeaderButtonsContainer>
-                            <Icon name="search" size={26} onPress={() => navigation.navigate('SearchGroups', {navigation: navigation})} />
-                            <Icon name="add" size={26} onPress={() => navigation.navigate('EditChurmmunity', {navigation: navigation})} />
+                            <Icon name="search" color="black" size={26} onPress={() => navigation.navigate('SearchGroups', {navigation: navigation})} />
+                            <Icon name="add" color="black" size={26} onPress={() => navigation.navigate('EditChurmmunity', {navigation: navigation})} />
                         </HeaderButtonsContainer>
                     )
                 })}

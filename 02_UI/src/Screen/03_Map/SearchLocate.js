@@ -5,6 +5,7 @@ import Styled from 'styled-components/native';
 import DaumMap from './DaumMapController';
 import Geolocation from 'react-native-geolocation-service';
 import { useIsFocused } from '@react-navigation/native';
+import Styles from '~/Style';
 
 const Input = Styled.TextInput`
 background-color: yellow;
@@ -23,6 +24,7 @@ background-color: blue;
 width: 15%;
 height: 15%;
 border-bottom-width: 3px;
+color: black;
 `;
 
 //맵 데이터 -- 전역으로 쓸 필요가 있을까
@@ -89,13 +91,13 @@ const SearchLocate = ({route, navigation})=>{
         <>
             {location ? (
                 <>
-                    <Text> ============================== </Text>
-                    <Text>Latitude: {location.latitude}</Text>
-                    <Text>Longitude: {location.longitude}</Text>
-                    <Text>region : {region}</Text>
-                    <Text> ============================== </Text>
+                    <Text style={Styles.default}> ============================== </Text>
+                    <Text style={Styles.default}>Latitude: {location.latitude}</Text>
+                    <Text style={Styles.default}>Longitude: {location.longitude}</Text>
+                    <Text style={Styles.default}>region : {region}</Text>
+                    <Text style={Styles.default}> ============================== </Text>
                 </>
-            ) : (<Text>Loading...</Text>)}
+            ) : (<Text style={Styles.default}>Loading...</Text>)}
 
             <View>
                 <Input
@@ -108,6 +110,7 @@ const SearchLocate = ({route, navigation})=>{
                         console.log(value);
                         serchRigion = setSerchRigion(value);
                     }}
+                    style={Styles.default}
                 />
 
                 <SearchBtn onPress={

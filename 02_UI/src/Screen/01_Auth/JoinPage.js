@@ -11,6 +11,7 @@ import AddBtn from '~/Components/AddBtn'
 import { UserData, KakaoAuthData, UserContextProvider } from '~/Context/User';
 import { DomainContext } from '~/Context/Domain';
 import Main from '~/Screen/02_Main/Main';
+import Styles from '~/Style';
 
 const Input = Styled.TextInput`
     width: 50%;
@@ -32,6 +33,16 @@ width: 50%;
 height: 15%;
 background-color: red;
 border-bottom-width: 10px;
+`;
+
+const Header = Styled.View`
+    height: 50px;
+    background-color: yellow;
+`;
+
+const Title = Styled.Text`
+    font-weight: bold;
+    font-size: 30px;
 `;
 
 const JoinPage = () => {
@@ -79,7 +90,10 @@ const JoinPage = () => {
 
     return (
         <>
-        { userData == null && kakaoAuthData != null && <View>
+        {/* { userData == null && kakaoAuthData != null &&  */}
+        <ScrollView style={{width: "95%", backgroundColor: 'skyblue'}}>
+            <Text style={Styles.header}>회원가입</Text>
+
             <Input
                 autoFocus={false}
                 autoCapitalize="none"
@@ -109,8 +123,9 @@ const JoinPage = () => {
             }}>
                 <Text>회원가입</Text>
             </JoinBtn>
-        </View>}
-        { userData != null && <Main/> }
+        </ScrollView>
+        {/* } */}
+        {/* { userData != null && <Main/> } */}
         </>
         
         

@@ -8,6 +8,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import DaumMap from '~/Screen/03_Map/DaumMapController';
 import { useIsFocused } from '@react-navigation/native';
 import { TabNavi } from '~/Context/Navi';
+import Styles, { DefaultText } from '~/Style.js';
 
 const Container = Styled.View`
     padding: 10px 10px 0px 10px; //상 우 하 좌
@@ -28,17 +29,18 @@ const Desc = Styled.Text`
 
 const JoinBtn = Styled.TouchableOpacity`
     flex: 1;
-    margin: 20px ${Dimensions.get('window').width * 0.2}px 15px ${Dimensions.get('window').width * 0.2}px; //상 우 하 좌
-    padding: 10px 0px 5px 0px; //상 우 하 좌
     align-items: center;
     justify-content: center;  
     background-color: skyblue;
+    margin: 20px ${Dimensions.get('window').width * 0.2}px 15px ${Dimensions.get('window').width * 0.2}px;
+    padding: 10px 0px 5px 0px;
 `;
 
 const JoinBtnText = Styled.Text`
     font-size: 25px;    
     color: white;
     font-family: 'DoHyeon-Regular'; 
+    text-align: center;
 `;
 
 const NumGroupMemCont = Styled.View`
@@ -49,7 +51,7 @@ const NumGroupMemCont = Styled.View`
     border-color: #000000;
     border-bottom-width: 1px;    
     border-top-width: 1px;
-    padding: 3px 0px 3px 10px; //상 우 하 좌
+    padding: 3px 0px 3px 10px;
     //background-color: blue;
 `;
 
@@ -113,10 +115,10 @@ const ClubPageHome = ({data, members, isMember, isLeader, setMember, stackNavi})
                 /> }
             {button}
             <NumGroupMemCont>
-                <Text fontSize={18}>멤버 {numClubMem} 명</Text>
-                {isLeader && <Icon name="settings-outline" size={18} onPress={() => stackNavi.navigate('EditMembers', {group: data, members: members, navigation: stackNavi})} />}
+                <Text style={Styles.default}>멤버 {numClubMem} 명</Text>
+                {isLeader && <Icon name="settings-outline" size={18} color={'black'} onPress={() => stackNavi.navigate('EditMembers', {group: data, members: members, navigation: stackNavi})} />}
             </NumGroupMemCont>
-            {members.map((member, index) => (<GroupMemProfile key={index.toString()} member={member} onPress={() => {
+            {members.map((member, index) => (<GroupMemProfile key={index.toString()} member={member} isLeader={isLeader} onPress={() => {
                 if (member.id == userData.id) tabNavi.navigate('Profile', {member: member});
                 else stackNavi.navigate('Profile', {member: member});
             }} /> ))}
