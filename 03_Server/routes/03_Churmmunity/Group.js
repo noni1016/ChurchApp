@@ -30,6 +30,21 @@ router.get('/:type/:id', (req, res) => {
     });
 })
 
+// All Club with Sorting
+router.get('/Sort/:method/:num', (req, res) => {
+    let sql = `SELECT * FROM ClubView ORDER BY ${req.params.method} LIMIT 0, ${req.params.num}`; // Club 테이블에서 Sorting 해서 num 개 까지의 값을 가져옴
+    console.log(sql);
+    conn.query(sql, function (error, rows, fields) { // sql 쿼리 수행
+        if (!error) {
+            // console.log(rows);
+            res.send(rows);
+        } else {
+            console.log('query error : ' + error);
+        }
+    });
+});
+
+
 // Create group
 var groupId;
 var returnTableValue;

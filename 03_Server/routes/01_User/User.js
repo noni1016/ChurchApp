@@ -79,47 +79,81 @@ router.post('/Domain/:domain', async (req, res) => {
 // Update(Put) User Information
 // Update(Put) User Img
 let fileName = '';
+var queryRes;
 const putUserImg = multer({
     storage: multer.diskStorage({
         destination: function (req, file, cb) {
             cb(null, 'public/Profile');
         },
-        filename(req, file, cb) {
+        async filename(req, file, cb) {
             console.log(file.originalname);
                 var temp = file.originalname.split('.');
                 var fileExt = temp[temp.length - 1];
                 fileName = 'UserImg' + req.params.userId + '.' + fileExt;         
                 cb(null, fileName);
+
+                
+                let sql1 = `UPDATE User SET photo = '${fileName}' WHERE id = ${req.params.userId}`;
+                let sql2 = `SELECT * FROM User WHERE id = ${req.params.userId}`;
+                console.log(sql1);
+                
+                try {
+                    await conn.beginTransaction();
+                    await conn.query(sql1);
+                    console.log(sql2);
+                    await conn.query(sql2, async (error, rows) => {
+                        queryRes = rows[0];
+                        await conn.commit();
+                    });
+                } catch (err) {
+                    console.log(err);
+                    await conn.rollback();                    
+                }
         },
     }),
-})
+}).single('file');
 
-router.put('/:userId/photo', putUserImg.single('file'), async (req, res, next) => {
+router.put('/:userId/photo', async (req, res, next) => {
     // console.log(req.file.filename);
     console.log('Photo change');
-    
-    let queryRes = false;
-    let sql = `UPDATE User SET photo = '${domain}/Profile/${fileName}' WHERE id = ${req.params.userId}`;
-    console.log(sql);
-    conn.query(sql, function (error, rows, fields) { // sql 쿼리 수행
-        if (!error) {
-            console.log(rows.affectedRows);
-            if (rows.affectedRows === 1) queryRes = true;
-            // console.log('query success')
-            res.send(queryRes);
-        } else {
-            console.log('query error : ' + error);
+
+    putUserImg(req, res, async (err) => {
+        if (err) {
+            res.status(500).json(err);
         }
-    });
+        else {            
+            console.log(queryRes);
+            res.json(queryRes);
+        }
+    })
+
+    // let queryRes = false;
+    // let sql = `UPDATE User SET photo = '${domain}/Profile/${fileName}' WHERE id = ${req.params.userId}`;
+    // console.log(sql);
+    // conn.query(sql, function (error, rows, fields) { // sql 쿼리 수행
+    //     if (!error) {
+    //         console.log(rows.affectedRows);
+    //         if (rows.affectedRows === 1) queryRes = true;
+    //         // console.log('query success')
+    //         res.send(queryRes);
+    //     } else {
+    //         console.log('query error : ' + error);
+    //         res.send(queryRes);
+    //     }
+    // });
 
 })
 
 
 
-router.put('/:userId/:column', (req, res) => {
-    let queryRes = false;
-    let sql = `UPDATE User SET ${req.params.column} = '${req.body.data}' WHERE id = ${req.params.userId}`;
-    console.log(sql);
+router.put('/:userId/:column', async (req, res) => {
+    let queryRes;
+    let sql1 = `UPDATE User SET ${req.params.column} = '${req.body.data}' WHERE id = ${req.params.userId}`;
+    let sql2 = `SELECT * FROM User WHERE id = ${req.params.userId}`;
+    console.log(sql1);
+
+
+
     conn.query(sql, function (error, rows, fields) { // sql 쿼리 수행
         if (!error) {
             console.log(rows.affectedRows);
