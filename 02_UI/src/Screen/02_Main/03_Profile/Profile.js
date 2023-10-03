@@ -159,6 +159,7 @@ const reqChangeUserInfo = (fetchHeader, changeType, changeValue) => {
             setUserData(res);
         }
     }).catch(e => {
+      alert('프로필 사진 변경에 실패하였습니다.');
       console.log("[ChangeFail]");
       console.log(e);
     });
