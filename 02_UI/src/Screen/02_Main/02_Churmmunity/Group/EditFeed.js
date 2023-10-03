@@ -34,8 +34,8 @@ const PlusBtnBox = Styled.TouchableOpacity`
     align-items: center;
     width: 90%;
     height: 200px;
-    margin: 10px 0px 10px 0px; //상 우 하 좌
     background-color: transparent;
+    margin: 10px 0px 10px 0px;
 `;
 
 const PlusText = Styled.Text`
@@ -46,7 +46,7 @@ const PlusText = Styled.Text`
     font-size: 50px;
     font-family: 'DoHyeon-Regular';
     padding: 5px;
-    margin: 10px 0px 10px 0px; //상 우 하 좌
+    margin: 10px 0px 10px 0px;
     text-align: center;
     border-radius: 10px;
 `;
@@ -264,7 +264,7 @@ const EditFeed = ({route, navigation}) => {
             </PlusBtnBox>}
             <FeedTextBox>
                 <ProfileBox>
-                    <Image style={{ backgroundColor: 'transparent', width: 50, height: 50, resizeMode: 'contain' }} source={{uri : userData.photo}} />
+                    <Image style={{ backgroundColor: 'transparent', width: 50, height: 50, resizeMode: 'contain' }} source={{uri : userData.photoUrl}} />
                     <Text style={{fontWeight: 'bold', fontSize: 18, margin: 10}}>{userData.name}</Text>
                 </ProfileBox>
                 <Input 
