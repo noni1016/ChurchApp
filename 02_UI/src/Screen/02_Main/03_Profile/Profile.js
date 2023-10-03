@@ -60,15 +60,26 @@ border-bottom-width: 3px;
 
 const ProfileMain = ({navigation, route}) => {
     const domain = useContext(DomainContext);
-    const {userData} = useContext(UserData);
+    const {userData, setUserData} = useContext(UserData);
     const [member, setMember] = useState(route ? route.params.member : userData);
     const [imgSrc, setImgSrc] = useState('');
     const [locate, setLocate] = useState([0,0]);
     const [region, setRegion] = useState('');
+    const [userImgUrl, setUserImgUrl] = useState(`${domain}/Profile/Jesus.png`);
     
     useEffect(() => {
         setMember(route != undefined ? route.params.member : userData);
     }, [])
+
+    useEffect(() => {
+        console.log('[useEffect: userData]')
+        console.log(userData);
+        setUserImgUrl(`${domain}/Profile/${userData.photo}` + "?cache="+Math.random());
+    }, [userData])
+
+    useEffect(() => {
+        console.log(userImgUrl);
+    }, [userImgUrl])
 
     useEffect(() => {
         if (member)
@@ -86,10 +97,15 @@ const ProfileMain = ({navigation, route}) => {
             });
         }
 
-        if (imgSrc != undefined)
+
+    }, [member])
+
+    useEffect(() => {
+        console.log(imgSrc)
+        if (imgSrc)
         {
             console.log("=====photo change=====");
-            console.log(domain + '/' + imgSrc.uri);
+            console.log(imgSrc.uri);
             const imageData = new FormData();
             imageData.append('file', {
               uri: imgSrc.uri,
@@ -104,7 +120,7 @@ const ProfileMain = ({navigation, route}) => {
             }
             reqChangeUserInfo(fetchHeader, "photo", imageData)
           }
-    }, [member, imgSrc])
+    }, [imgSrc])
 
 
     // Camera Roll
@@ -128,35 +144,31 @@ const ProfileMain = ({navigation, route}) => {
 
 const reqChangeUserInfo = (fetchHeader, changeType, changeValue) => {
     console.log(changeType, changeValue);
-    console.log(userData.id);
+    console.log(userData);
+    let fetchUrl = `${domain}/User/${userData.id}/${changeType}`;
+    console.log(fetchUrl);
     
-    fetch(`${domain}/User/${userData.id}/${changeType}`, {
+    fetch(fetchUrl, {
       method: 'PUT',
       body: changeValue,
       headers: fetchHeader
+    }).then(res => res.json()).then(res => {
+        console.log('[query result]');
+        console.log(res);
+        if (res.id) {
+            setUserData(res);
+        }
     }).catch(e => {
       console.log("[ChangeFail]");
       console.log(e);
     });
   };
 
-    const SetProfileImage = () => {
-        console.log("setprofioleimage");
-        if (userData.photo == "") {
-            console.log("no img");
-            return <Image style={{ width: 70, height: 70, flex: 1, resizeMode: 'contain' }} source = {require(`~/Assets/Images/Profile/jesus.png`)} />
-        }
-        else {
-            console.log("yes img");
-            return <Image style={{ width: 70, height: 70, flex: 1, resizeMode: 'contain' }} source={{ uri: userData.photo + "?cache="+Math.random() }}/>
-        }
-    }
-
     return (
         <ScrollView style={{padding: 10}}>
             <HeaderBox>
             <ChangePhoto onPress={() => {showCameraRoll();}}>
-                {SetProfileImage()}
+                <Image style={{ width: 70, height: 70, flex: 1, resizeMode: 'contain' }} source={{ uri: userImgUrl }}/>
             </ChangePhoto>
 
             <HeaderTextArea style={{ flex: 3 }}>
