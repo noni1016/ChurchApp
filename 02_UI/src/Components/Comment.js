@@ -28,7 +28,7 @@ const Comment = ({data, navigation}) => {
 
     return (
         <Container>
-            <Image style={{ backgroundColor: 'transparent', width: 50, height: 50, resizeMode: 'contain', marginRight: 10}} source={commentAuthor.photo? {uri: commentAuthor.photo } : null} />
+            <Image style={{ backgroundColor: 'transparent', width: 50, height: 50, resizeMode: 'contain', marginRight: 10}} source={commentAuthor.photo? {uri: `${domain}/Profile/${commentAuthor.photo}` } : null} />
             <Data>
                 <Text>
                     <Text style={{marginRight: 10, fontWeight: 'bold'}}>{commentAuthor.name}</Text> {data.text}
