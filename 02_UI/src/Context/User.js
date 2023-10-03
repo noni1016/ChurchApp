@@ -1,5 +1,5 @@
-import React, {useState, createContext} from 'react';
-import { useContext } from 'react/cjs/react.development';
+import React, {useState, createContext, useEffect, useContext} from 'react';
+import { DomainContext } from './Domain';
 
 //카카오계정 정보
 const KakaoAuthData = createContext({
@@ -22,6 +22,13 @@ const UserContextProvider = ({children}) => {
     const [kakaoAuthData, setKakaoAuthData] = useState(null);
     const [tryGetUserData, setTryGetUserDataFlag] = useState(false);
     const [userData, setUserData] = useState(null);
+    let domain = useContext(DomainContext);
+
+    useEffect(() => {
+        console.log('[[UserData Context]]');
+        if (userData) userData.photoUrl = `${domain}/Profile/${userData.photo}` + "?cache="+Math.random();
+        console.log(userData);
+    }, [userData])
 
     return (
         <KakaoAuthData.Provider value = {{kakaoAuthData, setKakaoAuthData}}>

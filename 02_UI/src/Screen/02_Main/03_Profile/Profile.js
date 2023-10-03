@@ -77,9 +77,9 @@ const ProfileMain = ({navigation, route}) => {
         setUserImgUrl(`${domain}/Profile/${userData.photo}` + "?cache="+Math.random());
     }, [userData])
 
-    useEffect(() => {
-        console.log(userImgUrl);
-    }, [userImgUrl])
+    // useEffect(() => {
+    //     console.log(userImgUrl);
+    // }, [userImgUrl])
 
     useEffect(() => {
         if (member)
