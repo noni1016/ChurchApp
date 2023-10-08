@@ -47,7 +47,7 @@ var initMyLightData = [{ id: 0, name: `로딩중`, mainImg: `default.jpg`, locat
 ];
 
 
-const ChurmmunityMain = ({navigation}) => {
+const ChurmmunityMain = ({route, navigation}) => {
     const domain = useContext(DomainContext);
     var [myClubs, setMyClubs] = useState([initClub]);
     var [myLightDatas, setMyLightDatas] = useState([initMyLightData]);
@@ -55,22 +55,28 @@ const ChurmmunityMain = ({navigation}) => {
     var [recLights, setRecLights] = useState([initMyLightData]);
     // var [loading, setLoading] = useState([]);
     //var data = {userId : 3}; // 로그인 기능 완성될때까지 임시 사용
-    const {userData} = useContext(UserData);
+    const {userData, userClub} = useContext(UserData);
 
     useEffect(() => {
         if (userData.id) {
-            fetch(`${domain}/User/${userData.id}/Club`).then(res => res.json()).then(res => {setMyClubs(res)});
+            // fetch(`${domain}/User/${userData.id}/Club`).then(res => res.json()).then(res => {setMyClubs(res)});
             fetch(`${domain}/Group/Sort/Rand()/7`).then(res => res.json()).then(res => {setRecClubs(res)});
         }
+        console.log('churmmunity main====')
         
         // fetch(domain + '/Churmmunity/GetMyLightDatas').then(res => res.json()).then(res => {setMyLightDatas(res)});
         // fetch(domain + '/Churmmunity/GetRecGroupsOrderRand').then(res => res.json()).then(res => {setRecGroups(res)});
         // fetch(domain + '/Churmmunity/GetRecLightsOrderTime').then(res => res.json()).then(res => {setRecLights(res)});
     }, []);
 
+    useEffect(() => {
+        console.log('UserClub changed')
+    }, [userClub])
+
     return (
         <ScrollView>
-            <ClubCards title={'내 모임'} orgDatas={myClubs} stackNavi={navigation}/>
+            {/* <ClubCards title={'내 모임'} orgDatas={myClubs} stackNavi={navigation}/> */}
+            <ClubCards title={'내 모임'} orgDatas={userClub} stackNavi={navigation}/>
             <ClubCards title={'오늘의 모임'} orgDatas={recClubs} stackNavi={navigation}/>
             {/* <SpotCards title={'번개 모임'} orgDatas={recClubs} stackNavi={navigation}/> */}
             {/* <LightCardContainer datas={myLightDatas}/> */}
@@ -87,7 +93,7 @@ const ChurmmunityStackNavi = () => {
         <Stack.Navigator>
             <Stack.Screen
                 name={'ChurmmunityMain'}
-                children={({navigation}) => <ChurmmunityMain navigation={navigation} />}
+                children={({navigation}) => <ChurmmunityMain navigation={navigation} reload={0} />}
                 options={({navigation}) => ({
                     headerShown: true,
                     headerRight: () => (

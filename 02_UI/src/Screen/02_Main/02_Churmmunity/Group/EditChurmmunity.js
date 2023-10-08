@@ -134,7 +134,7 @@ color: black;
 
 const EditChurmmunity = ({route, navigation}) => {
     const domain = useContext(DomainContext);
-    const {userData} = useContext(UserData);
+    const {userData, updateUserClub} = useContext(UserData);
     const edit = route.params.edit ? route.params.edit : 0;
     const editData = route.params.editData;
     const [createType, setCreateType] = useState(1);
@@ -222,12 +222,17 @@ const EditChurmmunity = ({route, navigation}) => {
         [
             {
                 text: "예",
-                onPress: () => fetch(`${domain}/Group/${createType}/${editData.id}`, {
-                    method: 'DELETE',
-                    headers: {
-                        'Content-Type' : 'application/json'
-                    },
-                }).then((res) => res.json()).then((res) => {alert(`${editData.id} Group 삭제`); navigation.navigate('ChurmmunityMain', {navigation: navigation})}),
+                onPress: () => 
+                {
+                    console.log('모임해산!!!!!!!');
+                    fetch(`${domain}/Group/${createType}/${editData.id}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                    }).then((res) => res.json()).then((res) => { alert(`${editData.id} Group 삭제`); updateUserClub(); navigation.navigate('ChurmmunityMain', { navigation: navigation }) })
+                },
+                    
             },
             {
                 text: "아니요",
@@ -291,6 +296,7 @@ const EditChurmmunity = ({route, navigation}) => {
 
             console.log(res);
             if (createType == 1 && res) {
+                updateUserClub();
                 navigation.navigate('ClubPage', {club : res, navigation: navigation});
             } else if (createType == 2 && res) {
                 navigation.navigate('SpotPage', {spot: res, navigation: navigation});
