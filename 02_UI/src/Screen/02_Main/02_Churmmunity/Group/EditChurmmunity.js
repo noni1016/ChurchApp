@@ -308,7 +308,7 @@ const EditChurmmunity = ({route, navigation}) => {
         if (edit === 1 && route.params.editData) /* 클럽 모임 수정 모드 */
         {
             navigation.setOptions({title: '모임 정보 수정'});
-            setImgSrc({uri: domain + '/' + route.params.editData.mainImg});
+            setImgSrc({uri: domain + '/ClubMainImg/' + route.params.editData.mainImg});
             setTextInput(route.params.editData.description);
             if (route.params.editData.keyword == undefined) route.params.editData.keyword = [];
             else if (route.params.editData.keyword.constructor == String) { 
@@ -414,7 +414,7 @@ const EditChurmmunity = ({route, navigation}) => {
                 </PlusBtnBox>}
 
             {(content.location_ll != null && 
-            (content.location_ll.y != null && content.location_ll.y != null)) && (
+            (content.location_ll.x != null && content.location_ll.y != null)) && (
             <>
                {isFocused && <DaumMap currentRegion={{
                 latitude: parseFloat(content.location_ll.y),
