@@ -10,6 +10,7 @@ import {
 	Text,
 } from 'react-native';
 import { isEmulator } from 'react-native-device-info';
+import { confirmButtonStyles } from 'react-native-modal-datetime-picker';
 
 
 let REST_API_KEY 	= "";
@@ -400,6 +401,7 @@ function makeRequestURL (url, params) {
 function requestDaumAPI (url, option) {
 	return new Promise(function(success, failed) {
 		var errorFlag = false;
+		console.log(url);
 
 		fetch("https://dapi.kakao.com/v2/local/" + url, option)
 		.then((response) => {

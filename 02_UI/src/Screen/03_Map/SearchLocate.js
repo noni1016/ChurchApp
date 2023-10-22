@@ -56,9 +56,9 @@ const SearchLocate = ({route, navigation})=>{
 
     let defaultLocation = {latitude: 1000.0, longitude: 1000.0};
     let [serchRigion, setSerchRigion] = useState("지역");
-    let [lastSerchRigion, setLastSerchRigion] = useState(""); //마지막으로 검색한 내용
+    let [lastSerchRegion, setLastSerchRigion] = useState(""); //마지막으로 검색한 내용
     let [resCount, setResCount] = useState(1);
-    let [rigionIndex, setRigionIndex] = useState(0);
+    let [regionIndex, setRegionIndex] = useState(0);
 
     const [location, setLocation] = useState(defaultLocation);
     const [region, setRegion] = useState("");
@@ -86,6 +86,33 @@ const SearchLocate = ({route, navigation})=>{
             console.log(location.longitude);
         }
     }, [location])
+
+    useEffect(() => {
+        DaumMap.searchKeyword(serchRigion,null,undefined,undefined,500, regionIndex).then((res) => {
+            setResCount(res["meta"].pageable_count)
+            let placeName = "";
+            for(let i = 0; i < res["documents"].length; ++i)
+            {
+                let test = res["documents"][i];
+                console.log(i + " : " + test.place_name + "/" + test.address_name);
+                //
+                placeName += test.place_name + "\n";
+            }
+            let returnRegion = res["documents"][regionIndex];
+            setRegionIndex(regionIndex++);
+            console.log(returnRegion); 
+            console.log(resCount);
+            console.log(placeName);
+
+            console.log(returnRegion["x"]);
+            console.log(returnRegion["y"]);
+            console.log(returnRegion["place_name"]);
+
+            setRegion(placeName);
+            setLocation({ longitude: returnRegion["x"], latitude: returnRegion["y"] });
+        })
+        
+    }, [regionIndex])
 
     return (
         <>
@@ -115,45 +142,26 @@ const SearchLocate = ({route, navigation})=>{
 
                 <SearchBtn onPress={
                     () => {
-                        console.log("search!!!")
-                        console.log(serchRigion);
-                        
-                        if (lastSerchRigion == serchRigion) {
+                        if (lastSerchRegion == serchRigion) {
+                            setRegionIndex(regionIndex+1);
                             console.log("----------------------------------");
-                            console.log(rigionIndex);
-                            //setRigionIndex(rigionIndex++);
-                            console.log(rigionIndex);
+                            console.log("지역인덱스");
+                            console.log(regionIndex);
+                            console.log("전체개수");
                             console.log(resCount);
-                            if (resCount <= rigionIndex)
-                                setRigionIndex(1);
-                                
-                                console.log("----------------------------------");
+                            if (resCount <= regionIndex * 15)
+                                setRegionIndex(1);
+                             
+                            console.log("----------------------------------");
                         }
                         else
                         {
+                            setRegionIndex(0);
                             console.log("======");
-                            console.log(lastSerchRigion);
+                            console.log(lastSerchRegion);
                             setLastSerchRigion(serchRigion);
-                            setRigionIndex(0);
-                            setResCount(1);
                             console.log("======");
                         }
-
-                        DaumMap.searchKeyword(serchRigion).then((res) => {
-                            console.log(rigionIndex);
-                            setResCount(res["documents"].length)
-                            let returnRegion = res["documents"][rigionIndex];
-                            setRigionIndex(rigionIndex++);
-                            console.log(returnRegion); 
-                            console.log(resCount);
-
-                            console.log(returnRegion["x"]);
-                            console.log(returnRegion["y"]);
-                            console.log(returnRegion["address_name"]);
-
-                            setRegion(returnRegion["address_name"]);
-                            setLocation({ longitude: returnRegion["x"], latitude: returnRegion["y"] });
-                        })
                     }
                 }>
                     <Text> Search Locate </Text>
