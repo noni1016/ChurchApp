@@ -7,6 +7,7 @@ import Icon from 'react-native-vector-icons/Entypo';
 import ActionSheet from 'react-native-actions-sheet';
 import ActionSheetBtn from './ActionSheetBtn';
 import ImageSize from 'react-native-image-size';
+import { TabNavi } from '~/Context/Navi';
 
 const FeedContainer = Styled.View`
     flex-direction: column;
@@ -96,6 +97,7 @@ const Feed = ({club, feed, onFeedChange, navigation}) => {
     let [resizedHeight, setResizedHeight] = useState();
     let [commentInput, setCommentInput] = useState('');
     const actionSheetRef = createRef();
+    const {tabNavi} = useContext(TabNavi);
 
     /* 초기 마운팅시 Author 정보, Feed 댓글들을 받아옴 */
     useEffect(() => {
@@ -151,18 +153,28 @@ const Feed = ({club, feed, onFeedChange, navigation}) => {
     return (
         <FeedContainer>
             <FeedHeader>
-                <Image style={{ backgroundColor: 'transparent', width: 50, height: 50}} source={feedAuthorData ? {uri: `${domain}/Profile/${feedAuthorData.photo}`} : null } />
+                <TouchableOpacity onPress={() => {
+                    if (feedAuthorData.id == userData.id) tabNavi.navigate('Profile', {member: feedAuthorData});
+                    else navigation.navigate('Profile', {member: feedAuthorData});
+                }}>
+                    <Image style={{ backgroundColor: 'transparent', width: 50, height: 50}} source={feedAuthorData ? {uri: `${domain}/Profile/${feedAuthorData.photo}`} : null } />
+                </TouchableOpacity>
                 <HeaderInfo>
                     {feedAuthorData && 
-                        <Text style={{fontWeight: 'bold', fontSize: 18}}>
-                            {feedAuthorData.name}
-                        </Text>}
+                        (<TouchableOpacity onPress={() => {
+                            if (feedAuthorData.id == userData.id) tabNavi.navigate('Profile', {member: feedAuthorData});
+                            else navigation.navigate('Profile', {member: feedAuthorData});
+                        }}>
+                            <Text style={{fontWeight: 'bold', fontSize: 18}}>
+                                {feedAuthorData.name}
+                            </Text>
+                        </TouchableOpacity>)}
                     <Text>
                     {feed.location} - {feed.time}
                     </Text>
                 </HeaderInfo>
                 <HeaderOptionBtnContainer>
-                    <Icon name="dots-three-vertical" size={30} onPress={() => {actionSheetRef.current?.setModalVisible();}} />
+                    <Icon name="dots-three-vertical" size={30} onPress={() => {actionSheetRef.current?.setModalVisible(1); }} />
                 </HeaderOptionBtnContainer>
             </FeedHeader>
             <FeedBody>

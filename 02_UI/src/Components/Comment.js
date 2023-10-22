@@ -2,6 +2,9 @@ import React, {useState, useEffect, useContext} from 'react';
 import {View, Image, Text} from 'react-native';
 import {DomainContext} from '~/Context/Domain';
 import Styled from 'styled-components/native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import { TabNavi } from '~/Context/Navi';
+import {UserData} from '~/Context/User';
 
 const Container = Styled.View`
     flex-direction: row;
@@ -20,7 +23,9 @@ const Data = Styled.View`
 
 const Comment = ({data, navigation}) => {
     const domain = useContext(DomainContext);
+    const {userData, setUserData} = useContext(UserData);
     const [commentAuthor, setCommentAuthor] = useState([]);
+    const {tabNavi} = useContext(TabNavi);
 
     useEffect(() => {
         fetch(`${domain}/User/${data.authorId}`).then(res => res.json()).then(res => {setCommentAuthor(res[0])});
@@ -28,7 +33,11 @@ const Comment = ({data, navigation}) => {
 
     return (
         <Container>
-            <Image style={{ backgroundColor: 'transparent', width: 50, height: 50, resizeMode: 'contain', marginRight: 10}} source={commentAuthor.photo? {uri: `${domain}/Profile/${commentAuthor.photo}` } : null} />
+            <TouchableOpacity onPress={() => {
+                if (commentAuthor.id == userData.id) tabNavi.navigate('Profile', {member: commentAuthor});
+                else stackNavi.navigate('Profile', {member: commentAuthor});}}>
+                <Image style={{ backgroundColor: 'transparent', width: 50, height: 50, resizeMode: 'contain', marginRight: 10}} source={commentAuthor.photo? {uri: `${domain}/Profile/${commentAuthor.photo}` } : null} />
+            </TouchableOpacity>
             <Data>
                 <Text>
                     <Text style={{marginRight: 10, fontWeight: 'bold'}}>{commentAuthor.name}</Text> {data.text}
