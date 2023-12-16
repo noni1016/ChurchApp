@@ -84,7 +84,7 @@ const SpotPage = ({route, navigation}) => {
     /* 첫 마운팅때 Group 상단 사진 url 설정 */
     useEffect(() => {
         if (data == null) return;
-        setUrl(`${domain}/${data.mainImg}`);
+        setUrl(`${domain}/SpotMainImg/${data.mainImg}`);
     }, [data]);    
 
     /* Group 상단 사진의 사이즈를 화면 사이즈에 맞게 설정 */
@@ -110,16 +110,16 @@ const SpotPage = ({route, navigation}) => {
     /* 멤버 정보 불러왓으면 현재 유저가 그룹 멤버인지 확인. 리더 여부도 확인 */
     useEffect(() => {
         members.map((member, index) => {
-            if (member.id === userData.id) {
-                setMember(true);
-                if (member.role === 'leader')
-                    setIsLeader(true);
-            }
-            if (member.role === 'leader')
+            if (member.role === 1)
             {
                 setLeader(member);
+                setIsLeader(true);
                 setTabIdx(0);
-            }                
+            }       
+            if (member.id === userData.id) {
+                setMember(true);
+            }
+         
         })
     }, [members])
 
