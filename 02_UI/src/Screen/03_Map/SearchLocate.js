@@ -88,6 +88,7 @@ const SearchLocate = ({route, navigation})=>{
     }, [location])
 
     useEffect(() => {
+        console.log(regionIndex);
         DaumMap.searchKeyword(serchRigion,null,undefined,undefined,500, regionIndex).then((res) => {
             setResCount(res["meta"].pageable_count)
             let placeName = "";
@@ -156,7 +157,7 @@ const SearchLocate = ({route, navigation})=>{
                         }
                         else
                         {
-                            setRegionIndex(0);
+                            setRegionIndex(1);
                             console.log("======");
                             console.log(lastSerchRegion);
                             setLastSerchRigion(serchRigion);
