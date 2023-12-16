@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from 'react';
-import { View, FlatList, Text, Dimensions, ScrollView, Image, NativeSyntheticEvent, NativeScrollEvent } from 'react-native';
+import { View, FlatList, Text, Dimensions, ScrollView, Image, NativeSyntheticEvent, NativeScrollEvent, Alert } from 'react-native';
 import Styled from 'styled-components/native';
 import AddBtn from '~/Components/AddBtn'
 import { UserData } from '~/Context/User';
@@ -19,7 +19,7 @@ const Home = ({navigation}) => {
     return (
         <>
         <Button title="안녕" onPress={() => navigation.navigate('Profile')}/>
-        <Button title="Click" color="#841584" onPress={console.log("click test")} />
+        <Button title="Click" color="#841584" onPress={() => {console.log("click test"); alert("oo")}} />
         {userData != null && <View>
             <Image style={{ width: '100%', height: '100%', resizeMode: 'contain' }} source={{ uri: userData.photoUrl}} />
           </View>}

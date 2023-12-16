@@ -10,6 +10,12 @@ const Styles = StyleSheet.create({
         fontFamily: 'DoHyeon-Regular',
     },
 
+    text: {
+        color: 'black',
+        fontSize: 20,
+        fontFamily: 'DoHyeon-Regular',
+    }, 
+
     default: {
         color: 'black',
         fontSize: 20,
