@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { Dimensions, ScrollView} from 'react-native';
+import { Dimensions, ScrollView, Text } from 'react-native';
 import Styled from 'styled-components/native';
 import ClubCard from '~/Components/ClubCard';
 
@@ -26,8 +26,10 @@ const Body = Styled.TouchableOpacity`
     flex-direction: row;
     align-items: center;
     justify-content: center;
-    width: ${Dimensions.get('window').width}px;
-    /* background-color: #00FF00; */
+    width: ${Dimensions.get('window').width / 2}px;
+    background-color: #ffff00;
+    border-color: black;
+    border-width: 2px;
 `;
 
 
@@ -76,10 +78,25 @@ const SpotCards = ({title, orgDatas, stackNavi}) => {
     var datas = orgDatas.length > 8 ? orgDatas.slice(0,7) : orgDatas;
     const dataLength = datas.length;    
     
+    const dataIndicator = (indicatorIdx) => {
+        let arr = [];
+        for (let i = 0; i < datas.length / 2; i++)
+        {
+            arr.push(
+                <DataIndicator
+                    key={`data-${i}`}
+                    style={{
+                        backgroundColor:
+                            indicatorIdx >= i && indicatorIdx < i + 1
+                                ? '#3769EF'
+                                : '#D3D3D3',
+                    }}
+                />
+            )
+        }
 
-    useEffect(() => {
-        setIndicator
-    }, [datas]);
+        return arr;        
+    }
 
     return (
         <ClubCardBox>
@@ -97,24 +114,20 @@ const SpotCards = ({title, orgDatas, stackNavi}) => {
                     scrollEnabled={dataLength > 1}
                     onScroll={(event) => {
                         setIndicatorIdx(
-                            Math.round(event.nativeEvent.contentOffset.x / Dimensions.get('window').width)
+                            Math.round(event.nativeEvent.contentOffset.x / (Dimensions.get('window').width))
                         );
                     }}>
                         {datas.map((data, index) => (
                              <Body activeOpacity={1} key={index} onPress = {() => {
-                                stackNavi.navigate('ClubPage', {club : data});}} style={{backgroundColor : 'blue'}}> 
-                                <ClubCard club={data} /><ClubCard club={data} />
+                                stackNavi.navigate('ClubPage', {club : data});}} > 
+                                {/* <ClubCard club={data} /><ClubCard club={data} /> */}
+                                <Text>{data.name}</Text>
                             </Body> 
                         ))}
-                        {
-                            for(var i = 0; i < (datas.length / 2); i++)
-                            {
-
-                            }
-                        }
                 </ScrollView>
                 <InidicatorBox>
-                    {dataLength > 1 &&
+                    {/* {dataLength > 1 &&
+
                         datas.map((datas, index) => (
                             <DataIndicator
                                 key={`data-${index}`}
@@ -125,7 +138,8 @@ const SpotCards = ({title, orgDatas, stackNavi}) => {
                                             : '#D3D3D3',
                                 }}
                             />
-                        ))}
+                        ))} */}
+                    {dataLength > 1 && dataIndicator(indicatorIdx)}
                 </InidicatorBox>
         </ClubCardBox>        
     );
