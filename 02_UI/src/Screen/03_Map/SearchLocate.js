@@ -27,6 +27,12 @@ border-bottom-width: 3px;
 color: black;
 `;
 
+const SearchResultBtn = Styled.TouchableOpacity`
+background-color: yellow;
+width: 60%;
+border-bottom-width: 3px;
+`;
+
 //맵 데이터 -- 전역으로 쓸 필요가 있을까
 const MapData = createContext({
     mapData : {
@@ -62,6 +68,7 @@ const SearchLocate = ({route, navigation})=>{
 
     const [location, setLocation] = useState(defaultLocation);
     const [region, setRegion] = useState("");
+    const [searchRes, setSearchRes] = useState();
    
     useEffect(() => {
         DaumMap.setRestApiKey("598b6c15a810f443c42c0255a2e607ae");
@@ -109,24 +116,60 @@ const SearchLocate = ({route, navigation})=>{
             console.log(returnRegion["y"]);
             console.log(returnRegion["place_name"]);
 
+            let zz = res["documents"];
             setRegion(placeName);
+            setSearchRes(zz);
             setLocation({ longitude: returnRegion["x"], latitude: returnRegion["y"] });
         })
         
     }, [regionIndex])
 
+    useEffect(()=>
+    {
+        console.log("use effect searchRes");
+        if(searchRes)
+        {
+            for(let i = 0; i<searchRes.length; ++i)
+            {
+                console.log("@@@@@@");
+                console.log(i);
+                console.log("@@@@@@");
+                <SearchResultBtn onPress={
+                    () => {
+                        console.log(searchRes[i].place_name);
+                    }
+                }>
+                    <Text>{searchRes[i].place_name}</Text>
+                </SearchResultBtn>
+            }
+        }
+    }, [region])
+
     return (
         <>
-            {location ? (
+            {location ?(
                 <>
                     <Text style={Styles.default}> ============================== </Text>
                     <Text style={Styles.default}>Latitude: {location.latitude}</Text>
                     <Text style={Styles.default}>Longitude: {location.longitude}</Text>
-                    <Text style={Styles.default}>region : {region}</Text>
                     <Text style={Styles.default}> ============================== </Text>
                 </>
             ) : (<Text style={Styles.default}>Loading...</Text>)}
-
+            
+            {searchRes ?(
+                <>
+                {
+                    searchRes.map((data, index) => (
+                        
+                        <SearchResultBtn onPress = {()=>{
+                            console.log({data});
+                        }}><Text style={Styles.default}>{data.place_name}</Text>
+                        </SearchResultBtn>
+                    ))
+                }
+                </>
+            ) : (<Text style={Styles.default}>장소를 검색하세요.</Text>)}
+            
             <View>
                 <Input
                     autoFocus={false}
