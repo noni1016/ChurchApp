@@ -78,7 +78,7 @@ const ChurmmunityMain = ({route, navigation}) => {
             {/* <ClubCards title={'내 모임'} orgDatas={myClubs} stackNavi={navigation}/> */}
             <ClubCards title={'내 모임'} orgDatas={userClub} stackNavi={navigation}/>
             <ClubCards title={'오늘의 모임'} orgDatas={recClubs} stackNavi={navigation}/>
-            {/* <SpotCards title={'번개 모임'} orgDatas={recClubs} stackNavi={navigation}/> */}
+            <SpotCards title={'번개 모임'} orgDatas={recClubs} stackNavi={navigation}/>
             {/* <LightCardContainer datas={myLightDatas}/> */}
             {/* <RecLightContainer orgDatas={recLights}/> */}
             <EmptyArea />

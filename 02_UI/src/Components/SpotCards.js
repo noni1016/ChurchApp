@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import { Dimensions, ScrollView} from 'react-native';
 import Styled from 'styled-components/native';
 import ClubCard from '~/Components/ClubCard';
@@ -61,12 +61,25 @@ const DataIndicator = Styled.View`
   margin: 1px;
 `;
 
+const ContentCover = Styled.View`
+    height: 100%;
+    flex: 1;
+    width: ${Dimensions.get('window').width}px;
+    background-color: #00FF00;
+`;
+
+
 
 const SpotCards = ({title, orgDatas, stackNavi}) => {
 
     const [indicatorIdx, setIndicatorIdx] = useState(0);
     var datas = orgDatas.length > 8 ? orgDatas.slice(0,7) : orgDatas;
     const dataLength = datas.length;    
+    
+
+    useEffect(() => {
+        setIndicator
+    }, [datas]);
 
     return (
         <ClubCardBox>
@@ -93,6 +106,12 @@ const SpotCards = ({title, orgDatas, stackNavi}) => {
                                 <ClubCard club={data} /><ClubCard club={data} />
                             </Body> 
                         ))}
+                        {
+                            for(var i = 0; i < (datas.length / 2); i++)
+                            {
+
+                            }
+                        }
                 </ScrollView>
                 <InidicatorBox>
                     {dataLength > 1 &&
