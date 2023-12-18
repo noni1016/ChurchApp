@@ -1,6 +1,6 @@
 import React, {useState, useEffect, createContext} from 'react';
 import { useContext } from 'react/cjs/react.development';
-import { View, Text, Image } from 'react-native';
+import { ScrollView, View, Text, Image } from 'react-native';
 import Styled from 'styled-components/native';
 import DaumMap from './DaumMapController';
 import Geolocation from 'react-native-geolocation-service';
@@ -15,20 +15,20 @@ border-bottom-width: 3px;
 
 const SearchBtn = Styled.TouchableOpacity`
 background-color: green;
-width: 20%;
+width: 30%;
+height: 30px;
 border-bottom-width: 3px;
 `;
 
 const ChangeBtn = Styled.TouchableOpacity`
 background-color: blue;
-width: 15%;
-height: 15%;
+width: 30%;
+height: 30px;
 border-bottom-width: 3px;
-color: black;
 `;
 
 const SearchResultBtn = Styled.TouchableOpacity`
-background-color: yellow;
+background-color: skyblue;
 width: 60%;
 border-bottom-width: 3px;
 `;
@@ -156,22 +156,23 @@ const SearchLocate = ({route, navigation})=>{
                 </>
             ) : (<Text style={Styles.default}>Loading...</Text>)}
             
+            <ScrollView>
             {searchRes ?(
                 <>
                 {
                     searchRes.map((data, index) => (
-                        
                         <SearchResultBtn onPress = {()=>{
-                            console.log({data});
+                            setRegion(data.place_name);
+                            setLocation({longitude: data.x, latitude: data.y});
                         }}><Text style={Styles.default}>{data.place_name}</Text>
                         </SearchResultBtn>
                     ))
                 }
                 </>
             ) : (<Text style={Styles.default}>장소를 검색하세요.</Text>)}
-            
-            <View>
-                <Input
+            </ScrollView>
+
+            <Input
                     autoFocus={false}
                     autoCapitalize="none"
                     autoCorrect={false}
@@ -184,6 +185,8 @@ const SearchLocate = ({route, navigation})=>{
                     style={Styles.default}
                 />
 
+            <View 
+                style={{flexDirection: "row"}}>
                 <SearchBtn onPress={
                     () => {
                         if (lastSerchRegion == serchRigion) {
@@ -207,7 +210,7 @@ const SearchLocate = ({route, navigation})=>{
                             console.log("======");
                         }
                     }
-                }>
+                } height = "30%">
                     <Text> Search Locate </Text>
                 </SearchBtn>
                 
@@ -220,7 +223,7 @@ const SearchLocate = ({route, navigation})=>{
                         route.params.setRegionProcess(region);
                         navigation.goBack();
                     }
-                }}>
+                }} height = "30%" >
                 </ChangeBtn>
             </View>
             
