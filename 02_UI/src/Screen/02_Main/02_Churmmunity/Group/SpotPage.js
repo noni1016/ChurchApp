@@ -113,13 +113,12 @@ const SpotPage = ({route, navigation}) => {
             if (member.role === 1)
             {
                 setLeader(member);
-                setIsLeader(true);
-                setTabIdx(0);
+                setIsLeader(true);                
             }       
             if (member.id === userData.id) {
                 setMember(true);
             }
-         
+            setTabIdx(0);         
         })
     }, [members])
 
@@ -161,7 +160,7 @@ const SpotPage = ({route, navigation}) => {
                 </Side>          
             </Header>
             <ScrollView>
-            <Image style={{ backgroundColor: '#000000', width: resizedWidth, height: resizedHeight, resizeMode: 'contain' }} source={url ? {uri: url } : null} />
+            <Image style={{ backgroundColor: '#000000', width: "100%", height: 300, resizeMode: 'cover' }} source={url ? {uri: url } : null} />
             <TabContainer>
                     {tabs.map((label, index) => (
                         <Tab

@@ -9,13 +9,14 @@ const Container = Styled.TouchableOpacity`
   padding-bottom: 8px;
   align-items: center;
   justify-content: center;  
-  padding: 10px 0px 5px 0px; //상 우 하 좌
+  padding: 10px 0px 10px 0px; //상 우 하 좌
 `;
 const Label = Styled.Text`
   font-size: 20px;
   color: #929292;
   text-align: center;  
   font-family: 'DoHyeon-Regular';
+  height: 25px;
 `;
 const TabImage = Styled.Image`
   margin-top: 8px;

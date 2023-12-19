@@ -111,7 +111,7 @@ const SpotCards = ({title, orgDatas, stackNavi}) => {
                         );
                     }}>
                         {datas.map((data, index) => (
-                             <Body activeOpacity={1} key={index} onPress = {() => {stackNavi.navigate('ClubPage', {club : data});}} > 
+                             <Body activeOpacity={1} key={index} onPress = {() => {stackNavi.navigate('SpotPage', {spot : data});}} > 
                                 <SpotCard spot={data} />
                             </Body> 
                         ))}
