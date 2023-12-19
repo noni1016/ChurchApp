@@ -55,7 +55,7 @@ const ChurmmunityMain = ({route, navigation}) => {
     var [recLights, setRecLights] = useState([initMyLightData]);
     // var [loading, setLoading] = useState([]);
     //var data = {userId : 3}; // 로그인 기능 완성될때까지 임시 사용
-    const {userData, userClub} = useContext(UserData);
+    const {userData, userClub, userSpot} = useContext(UserData);
 
     useEffect(() => {
         if (userData.id) {
@@ -73,12 +73,14 @@ const ChurmmunityMain = ({route, navigation}) => {
         console.log('UserClub changed')
     }, [userClub])
 
+    // useEffect(() => )
+
     return (
         <ScrollView>
             {/* <ClubCards title={'내 모임'} orgDatas={myClubs} stackNavi={navigation}/> */}
             <ClubCards title={'내 모임'} orgDatas={userClub} stackNavi={navigation}/>
             <ClubCards title={'오늘의 모임'} orgDatas={recClubs} stackNavi={navigation}/>
-            <SpotCards title={'번개 모임'} orgDatas={recClubs} stackNavi={navigation}/>
+            <SpotCards title={'번개 모임'} orgDatas={userSpot} stackNavi={navigation}/>
             {/* <LightCardContainer datas={myLightDatas}/> */}
             {/* <RecLightContainer orgDatas={recLights}/> */}
             <EmptyArea />
