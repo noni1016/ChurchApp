@@ -1,10 +1,10 @@
-import React, {useState} from 'react';
-import { Dimensions, ScrollView} from 'react-native';
+import React, {useState, useEffect} from 'react';
+import { Dimensions, ScrollView, Text } from 'react-native';
 import Styled from 'styled-components/native';
-import ClubCard from '~/Components/ClubCard';
+import SpotCard from './SpotCard';
 
 
-const ClubCardBox = Styled.View`
+const SpotCardBox = Styled.View`
   flex-direction: column;
   height: 320px;
   background-color: #FFFFFF;
@@ -16,18 +16,20 @@ const Header = Styled.View`
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    padding: 0px 15px 2px 15px; //상 우 하 좌
+    padding: 0px 15px 2px 15px;
     /* background-color: #FF0000; */
 `;
 
 const Body = Styled.TouchableOpacity`
     height: 100%;
     flex: 1;
-    flex-direction: row;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    width: ${Dimensions.get('window').width}px;
-    /* background-color: #00FF00; */
+    width: ${Dimensions.get('window').width / 2}px;
+    /* background-color: #ffff00; */
+    /* border-color: black; */
+    /* border-width: 2px; */
 `;
 
 
@@ -41,6 +43,7 @@ const ShowMore = Styled.Text`
 
 const Title = Styled.Text`
     flex: 9;
+    height: 90%
     color: black;
     font-size: 25px;
     font-family: 'DoHyeon-Regular';
@@ -67,9 +70,29 @@ const SpotCards = ({title, orgDatas, stackNavi}) => {
     const [indicatorIdx, setIndicatorIdx] = useState(0);
     var datas = orgDatas.length > 8 ? orgDatas.slice(0,7) : orgDatas;
     const dataLength = datas.length;    
+    
+    const dataIndicator = (indicatorIdx) => {
+        let arr = [];
+        for (let i = 0; i < datas.length / 2; i++)
+        {
+            arr.push(
+                <DataIndicator
+                    key={`data-${i}`}
+                    style={{
+                        backgroundColor:
+                            indicatorIdx >= i && indicatorIdx < i + 1
+                                ? '#3769EF'
+                                : '#D3D3D3',
+                    }}
+                />
+            )
+        }
+
+        return arr;        
+    }
 
     return (
-        <ClubCardBox>
+        <SpotCardBox>
             <Header>
                 <Title>{title}</Title>
                 <ShowMore
@@ -84,31 +107,19 @@ const SpotCards = ({title, orgDatas, stackNavi}) => {
                     scrollEnabled={dataLength > 1}
                     onScroll={(event) => {
                         setIndicatorIdx(
-                            Math.round(event.nativeEvent.contentOffset.x / Dimensions.get('window').width)
+                            Math.round(event.nativeEvent.contentOffset.x / (Dimensions.get('window').width))
                         );
                     }}>
                         {datas.map((data, index) => (
-                             <Body activeOpacity={1} key={index} onPress = {() => {
-                                stackNavi.navigate('ClubPage', {club : data});}} style={{backgroundColor : 'blue'}}> 
-                                <ClubCard club={data} /><ClubCard club={data} />
+                             <Body activeOpacity={1} key={index} onPress = {() => {stackNavi.navigate('ClubPage', {club : data});}} > 
+                                <SpotCard spot={data} />
                             </Body> 
                         ))}
                 </ScrollView>
                 <InidicatorBox>
-                    {dataLength > 1 &&
-                        datas.map((datas, index) => (
-                            <DataIndicator
-                                key={`data-${index}`}
-                                style={{
-                                    backgroundColor:
-                                        indicatorIdx >= index && indicatorIdx < index + 1
-                                            ? '#3769EF'
-                                            : '#D3D3D3',
-                                }}
-                            />
-                        ))}
+                    {dataLength > 1 && dataIndicator(indicatorIdx)}
                 </InidicatorBox>
-        </ClubCardBox>        
+        </SpotCardBox>        
     );
 
 }
