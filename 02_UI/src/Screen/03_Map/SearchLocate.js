@@ -69,6 +69,8 @@ const SearchLocate = ({route, navigation})=>{
     const [location, setLocation] = useState(defaultLocation);
     const [region, setRegion] = useState("");
     const [searchRes, setSearchRes] = useState();
+
+    const [DaumMapModule, setDaumMap] = useState();
    
     useEffect(() => {
         DaumMap.setRestApiKey("598b6c15a810f443c42c0255a2e607ae");
@@ -85,6 +87,7 @@ const SearchLocate = ({route, navigation})=>{
             },
             {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
         );
+
     },[])
 
     useEffect(() => {
@@ -242,6 +245,7 @@ const SearchLocate = ({route, navigation})=>{
                         pinColorSelect: "yellow",
                         title: "marker test",
                         draggable: true,
+                        allClear: true,
                    }]}
                 />}
         </>
