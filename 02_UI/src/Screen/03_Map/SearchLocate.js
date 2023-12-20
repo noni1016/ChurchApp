@@ -244,7 +244,7 @@ const SearchLocate = ({route, navigation})=>{
                         pinColor: "red",
                         pinColorSelect: "yellow",
                         title: "marker test",
-                        draggable: true,
+                        draggable: false,
                         allClear: true,
                    }]}
                 />}

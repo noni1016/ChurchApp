@@ -430,13 +430,28 @@ const EditChurmmunity = ({route, navigation}) => {
             {(content.location_ll != null && 
             (content.location_ll.x != null && content.location_ll.y != null)) && (
             <>
+                {console.log(content)}
+                <Text>{content.location}</Text>
+
                {isFocused && <DaumMap currentRegion={{
                 latitude: parseFloat(content.location_ll.y),
                 longitude: parseFloat(content.location_ll.x),
                 zoomLevel: 5,
                }}
                 mapType={"Standard"}
-                style={{ width: 400, height: 400, backgroundColor: 'transparent' }}/> }
+                style={{ width: 400, height: 400, backgroundColor: 'transparent' }}
+                
+                markers={[{
+                    latitude: parseFloat(content.location_ll.y),
+                    longitude: parseFloat(content.location_ll.x),
+                    pinColor: "red",
+                    pinColorSelect: "yellow",
+                    title: "marker test",
+                    draggable: false,
+                    allClear: true,
+               }]}
+               /> }
+
 
                 <CommonBtn onPress={() => {{navigation.navigate('SearchLocate', {setLocateProcess : setLocate, setRegionProcess : setRegion, navigation: navigation})}}}>
                     <Text style={Styles.default}>지역 수정</Text>
