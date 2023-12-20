@@ -137,10 +137,10 @@ const EditChurmmunity = ({route, navigation}) => {
     const {userData, updateUserClub} = useContext(UserData);
     const edit = route.params.edit ? route.params.edit : 0;
     const editData = route.params.editData;
-    const [createType, setCreateType] = useState(1);
+    const [createType, setCreateType] = useState(route.params.createType);
     const [imgSrc, setImgSrc] = useState(undefined);
     const [textInput, setTextInput] = useState('');
-    const [content, setContent] = useState({name: '', mainImg: '', location: '', location_ll: {x: null, y: null}, description: '', keyword: [], dateTime: ''});
+    const [content, setContent] = useState({name: '', mainImg: '', location: '', location_ll: {x: null, y: null}, description: '', keyword: [], time: ''});
     const [keyword, setKeyword] = useState('');
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
     const [locate, setLocate] = useState([0,0]);
@@ -209,7 +209,7 @@ const EditChurmmunity = ({route, navigation}) => {
         } else if (content.description == '') {
             alert('모임 설명을 입력해주세요');
             return;
-        } else if (createType == 2 && content.dateTime == '') {
+        } else if (createType == 2 && content.time == '') {
             alert('모임 시간을 입력해주세요');
             return;
         } // 모임 지역 입력 추가
@@ -267,7 +267,7 @@ const EditChurmmunity = ({route, navigation}) => {
         fd.append('location', content.location);
         fd.append('location_ll_x', content.location_ll.x);
         fd.append('location_ll_y', content.location_ll.y);
-        fd.append('dateTime', content.dateTime);
+        fd.append('time', content.time);
         fd.append('description', content.description);
         fd.append('keyword', keywordString);
         fd.append('userId', userData.id);
@@ -299,6 +299,7 @@ const EditChurmmunity = ({route, navigation}) => {
                 updateUserClub();
                 navigation.navigate('ClubPage', {club : res, navigation: navigation});
             } else if (createType == 2 && res) {
+                updateUserSpot();
                 navigation.navigate('SpotPage', {spot: res, navigation: navigation});
             }
             else {
@@ -311,10 +312,25 @@ const EditChurmmunity = ({route, navigation}) => {
 
 
     useEffect(() => {
-        if (edit === 1 && route.params.editData) /* 클럽 모임 수정 모드 */
+        if (edit && createType === 1 && route.params.editData) /* 클럽 모임 수정 모드 */
         {
             navigation.setOptions({title: '모임 정보 수정'});
             setImgSrc({uri: domain + '/ClubMainImg/' + route.params.editData.mainImg});
+            //if (route.params.editData.location_ll == undefined) route.params.editData.location_ll = {x: 0, y: 0};
+            console.log("--------------------------------");
+            console.log(route.params.editData.location);
+            console.log(route.params.editData.location_ll);
+            console.log("--------------------------------");
+        }
+        else if (edit && createType === 2 && route.params.editData) /* 번개 모임 수정 모드 */
+        {
+            navigation.setOptions({title: '번개 모임 수정'});
+            setImgSrc({uri: domain + '/SpotMainImg/' + route.params.editData.mainImg});
+            console.log("Date Time!!!!!!!!!!!!")
+            console.log(content.time);
+        }
+        if (edit)
+        {
             setTextInput(route.params.editData.description);
             if (route.params.editData.keyword == undefined) route.params.editData.keyword = [];
             else if (route.params.editData.keyword.constructor == String) { 
@@ -322,16 +338,7 @@ const EditChurmmunity = ({route, navigation}) => {
                 arr.pop();
                 route.params.editData.keyword = arr;
             }
-            //if (route.params.editData.location_ll == undefined) route.params.editData.location_ll = {x: 0, y: 0};
             setContent(route.params.editData);
-            console.log("--------------------------------");
-            console.log(route.params.editData.location);
-            console.log(route.params.editData.location_ll);
-            console.log("--------------------------------");
-        }
-        else if (edit === 2 && route.params.editData) /* 번개 모임 수정 모드 */
-        {
-            navigation.setOptions({title: '번개 모임 수정'});
         }
     }, [edit, route.params.editData])
 
@@ -342,12 +349,13 @@ const EditChurmmunity = ({route, navigation}) => {
 
     // Debugging 용 useEffect
     useEffect(() => {
-        if (content.dateTime)
+        if (content.time)
         {
-            console.log(moment(content.dateTime).format('YYYY.MM.DD HH:mm:ss'))
+            console.log("Date Time!!!!!")
+            console.log(moment(content.time).format('YYYY.MM.DD HH:mm:ss'))
         }
             // console.log(content.dateTime);
-    }, [content.dateTime]);
+    }, [content]);
 
     return (        
         <ScrollView>
@@ -395,16 +403,16 @@ const EditChurmmunity = ({route, navigation}) => {
                 {content.keyword ? content.keyword.map((v, i) => <TagBox key={i} text={v} color="blue" onPressDelBtn={() => setContent((current) => {let newContent = {...current}; newContent.keyword.splice(i, 1); return newContent})}/>) : null}
             </KeywordView>
 
-            {createType == 2 ? 
+            {(createType == 2) ? 
             (<>
                 <OptionName>모임 시간</OptionName>
                 <TouchableOpacity style={{marginLeft: 10, marginBottom: 10}} onPress={() => setDatePickerVisibility(true)}>
-                    <Text>{content.dateTime ? content.dateTime : '여기를 눌러 시간을 설정하세요'}</Text>
+                    <Text>{content.time ? content.time : '여기를 눌러 시간을 설정하세요'}</Text>
                 </TouchableOpacity>
                 <DateTimePickerModal
                     isVisible={isDatePickerVisible}
                     mode="datetime"
-                    onConfirm={(date) => {setContent((current) => {let newContent = {...current}; newContent.dateTime=moment(date.toUTCString()).format('YYYY.MM.DD HH:mm'); return newContent;}); setDatePickerVisibility(false);}}
+                    onConfirm={(date) => {setContent((current) => {let newContent = {...current}; newContent.time=moment(date.toUTCString()).format('YYYY.MM.DD HH:mm'); return newContent;}); setDatePickerVisibility(false);}}
                     onCancel={() => setDatePickerVisibility(false)}
                 />
             </>)

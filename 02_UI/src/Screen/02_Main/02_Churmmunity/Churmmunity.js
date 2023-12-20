@@ -73,6 +73,11 @@ const ChurmmunityMain = ({route, navigation}) => {
         console.log('UserClub changed')
     }, [userClub])
 
+    useEffect(() => {
+        console.log('UserSpot changed')
+        console.log(userSpot);
+    }, [userSpot])
+
     // useEffect(() => )
 
     return (
