@@ -42,26 +42,23 @@ const EmptyArea = styled.View`
 `;
 
 var initClub = { id: 0, name: `로딩중`, mainImg: `default.jpg`, location: `수원시 영통구 매탄4동 10`, numMember: 10 };
-var initMyLightData = [{ id: 0, name: `로딩중`, mainImg: `default.jpg`, location: `로딩중`, time: "0000-00-00 00:00:00", numMember: 0 },
+var initSpot = [{ id: 0, name: `로딩중`, mainImg: `default.jpg`, location: `로딩중`, time: "0000-00-00 00:00:00", numMember: 0 },
 { id: 1, name: `로딩중`, mainImg: `default.jpg`, location: `로딩중`, time: "0000-00-00 00:00:00", numMember: 0 }
 ];
 
 
 const ChurmmunityMain = ({route, navigation}) => {
     const domain = useContext(DomainContext);
-    var [myClubs, setMyClubs] = useState([initClub]);
-    var [myLightDatas, setMyLightDatas] = useState([initMyLightData]);
     var [recClubs, setRecClubs] = useState([initClub]);
-    var [recLights, setRecLights] = useState([initMyLightData]);
+    var [recSpots, setRecSpots] = useState([initSpot]);
     // var [loading, setLoading] = useState([]);
-    //var data = {userId : 3}; // 로그인 기능 완성될때까지 임시 사용
+
     const {userData, userClub, userSpot} = useContext(UserData);
 
     useEffect(() => {
-        if (userData.id) {
-            // fetch(`${domain}/User/${userData.id}/Club`).then(res => res.json()).then(res => {setMyClubs(res)});
-            fetch(`${domain}/Group/Sort/Rand()/7`).then(res => res.json()).then(res => {setRecClubs(res)});
-        }
+        fetch(`${domain}/Group/Sort/Club/Rand()/7`).then(res => res.json()).then(res => {setRecClubs(res)});
+        fetch(`${domain}/Group/Sort/Spot/time/7`).then(res => res.json()).then(res => {setRecSpots(res)});
+        
         console.log('churmmunity main====')
         
         // fetch(domain + '/Churmmunity/GetMyLightDatas').then(res => res.json()).then(res => {setMyLightDatas(res)});
@@ -82,12 +79,10 @@ const ChurmmunityMain = ({route, navigation}) => {
 
     return (
         <ScrollView>
-            {/* <ClubCards title={'내 모임'} orgDatas={myClubs} stackNavi={navigation}/> */}
             <ClubCards title={'내 모임'} orgDatas={userClub} stackNavi={navigation}/>
             <ClubCards title={'오늘의 모임'} orgDatas={recClubs} stackNavi={navigation}/>
-            <SpotCards title={'번개 모임'} orgDatas={userSpot} stackNavi={navigation}/>
-            {/* <LightCardContainer datas={myLightDatas}/> */}
-            {/* <RecLightContainer orgDatas={recLights}/> */}
+            <SpotCards title={'참여한 번개 모임'} datas={userSpot} stackNavi={navigation}/>
+            <SpotCards title={'다가오는 번개 모임'} datas={recSpots} stackNavi={navigation}/>
             <EmptyArea />
         </ScrollView>
     );

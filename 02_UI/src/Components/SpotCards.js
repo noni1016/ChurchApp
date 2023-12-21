@@ -65,10 +65,9 @@ const DataIndicator = Styled.View`
 `;
 
 
-const SpotCards = ({title, orgDatas, stackNavi}) => {
+const SpotCards = ({title, datas, stackNavi}) => {
 
     const [indicatorIdx, setIndicatorIdx] = useState(0);
-    var datas = orgDatas.length > 8 ? orgDatas.slice(0,7) : orgDatas;
     const dataLength = datas.length;    
     
     const dataIndicator = (indicatorIdx) => {
