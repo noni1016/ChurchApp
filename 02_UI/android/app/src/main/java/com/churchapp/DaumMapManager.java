@@ -102,12 +102,23 @@ public class DaumMapManager extends SimpleViewManager<View> implements MapView.M
 
 	@ReactProp(name = "markers")
 	public void setMarkers(MapView mMapView, ReadableArray markers) {
-		for (int i = 0; i < markers.size(); i++) {
+		for (int i = 0; i < markers.size(); i++) 
+		{	
 			ReadableMap markerInfo = markers.getMap(i);
 			double latitude 	= markerInfo.hasKey("latitude") ? markerInfo.getDouble("latitude") : 36.143099;
 			double longitude 	= markerInfo.hasKey("longitude") ? markerInfo.getDouble("longitude") : 128.392905;
 
 			MapPOIItem.MarkerType markerType = MapPOIItem.MarkerType.BluePin;
+
+			boolean allClear = false;
+			if (markerInfo.hasKey("allClear")) {
+				allClear = markerInfo.getBoolean("allClear");
+
+				if(allClear)
+				{
+					mMapView.removeAllPOIItems();
+				}
+			}
 
 			if (markerInfo.hasKey("pinColor")) {
 				String pinColor = markerInfo.getString("pinColor").toLowerCase();
@@ -259,6 +270,11 @@ public class DaumMapManager extends SimpleViewManager<View> implements MapView.M
 			circle1.setTag(tagIdx);
 			mMapView.addCircle(circle1);
 		}
+	}
+
+	@ReactProp(name = "removeAllMarkers")
+	public void removeMarkers(MapView mMapView, ReadableArray markers) {
+		mMapView.removeAllPOIItems();
 	}
 
 	private int getColor(String colorString) {

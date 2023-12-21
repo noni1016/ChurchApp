@@ -84,7 +84,7 @@ const SpotPage = ({route, navigation}) => {
     /* 첫 마운팅때 Group 상단 사진 url 설정 */
     useEffect(() => {
         if (data == null) return;
-        setUrl(`${domain}/${data.mainImg}`);
+        setUrl(`${domain}/SpotMainImg/${data.mainImg}`);
     }, [data]);    
 
     /* Group 상단 사진의 사이즈를 화면 사이즈에 맞게 설정 */
@@ -110,16 +110,15 @@ const SpotPage = ({route, navigation}) => {
     /* 멤버 정보 불러왓으면 현재 유저가 그룹 멤버인지 확인. 리더 여부도 확인 */
     useEffect(() => {
         members.map((member, index) => {
-            if (member.id === userData.id) {
-                setMember(true);
-                if (member.role === 'leader')
-                    setIsLeader(true);
-            }
-            if (member.role === 'leader')
+            if (member.role === 1)
             {
                 setLeader(member);
-                setTabIdx(0);
-            }                
+                setIsLeader(true);                
+            }       
+            if (member.id === userData.id) {
+                setMember(true);
+            }
+            setTabIdx(0);         
         })
     }, [members])
 
@@ -157,11 +156,11 @@ const SpotPage = ({route, navigation}) => {
                 </Title>
                 <Side>
                 <Icon2 name="notification" size={26} onPress={() => navigation.navigate('GroupNotification', {club: data, isLeader: isLeader})} />
-                {isLeader && <Icon1 name="settings-outline" size={26} onPress={() => navigation.navigate('EditChurmmunity', {edit: 1, editData: data, navigation: navigation})} />}
+                {isLeader && <Icon1 name="settings-outline" size={26} onPress={() => navigation.navigate('EditChurmmunity', {edit: 1, editData: data, createType: 2, navigation: navigation})} />}
                 </Side>          
             </Header>
             <ScrollView>
-            <Image style={{ backgroundColor: '#000000', width: resizedWidth, height: resizedHeight, resizeMode: 'contain' }} source={url ? {uri: url } : null} />
+            <Image style={{ backgroundColor: '#000000', width: "100%", height: 300, resizeMode: 'cover' }} source={url ? {uri: url } : null} />
             <TabContainer>
                     {tabs.map((label, index) => (
                         <Tab

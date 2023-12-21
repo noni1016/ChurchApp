@@ -7,15 +7,15 @@ import IconM from 'react-native-vector-icons/MaterialCommunityIcons';
 import ImageSize from 'react-native-image-size';
 
 
-const ClubCardBox = Styled.View`
+const SpotCardBox = Styled.View`
     width: 90%;
     flex-direction: column;
     justify-content: center;
     align-items: flex-start; 
-    background-color: #0000FF;
+    /* background-color: #FF0000; */
 `;
 
-const ClubTitleAndNumMem = Styled.View`
+const SpotTitleAndNumMem = Styled.View`
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
@@ -23,7 +23,7 @@ const ClubTitleAndNumMem = Styled.View`
     margin: 5px 0px 0px 0px; //상 우 하 좌
 `;
 
-const ClubTitle = Styled.Text`
+const SpotTitle = Styled.Text`
     flex: 9;
     color: black;
     font-size: 25px;
@@ -33,11 +33,11 @@ const ClubTitle = Styled.Text`
     /* background-color: #0000FF; */
 `;
 
-const ClubNumBox = Styled.View`
+const SpotNumBox = Styled.View`
     flex-direction: row;
 `;
 
-const ClubNumMem = Styled.Text`
+const SpotNumMem = Styled.Text`
     color: black;
     font-size: 15px;
     font-family: 'DoHyeon-Regular';
@@ -51,24 +51,26 @@ const LocationBox = Styled.View`
     /* background-color: #0000FF; */    
 `;
 
-const ClubLocation = Styled.Text`
+const SpotLocation = Styled.Text`
     color: black;
     font-size: 15px;
     font-family: 'DoHyeon-Regular';
     text-align: left;
+    text-wrap: wrap;
+    width: 90%;
 `;
 
 const MainImageBox = Styled.View`
     flex-direction: row;
-    width: ${Dimensions.get('window').width * 0.9}px;
+    width: 100%;
     height: 200px;
     justify-content: center;
     align-items: center;
-    background-color: #0000FF;     
+    /* background-color: #0000FF;      */
 `;
 
 
-const SpotCard = ({club}) => {
+const SpotCard = ({spot}) => {
 
     const domain = useContext(DomainContext);
     
@@ -78,8 +80,8 @@ const SpotCard = ({club}) => {
     var [url, setUrl] = useState('');
 
     useEffect(() => {
-        setUrl(`${domain}/${club.mainImg}`);
-    }, [club]);
+        setUrl(`${domain}/SpotMainImg/${spot.mainImg}`);
+    }, [spot]);
 
     useEffect(() => {
         if (url) {
@@ -98,23 +100,23 @@ const SpotCard = ({club}) => {
 
 
     return (
-        <ClubCardBox>
+        <SpotCardBox>
             <MainImageBox>
                 {/* <Image style={{backgroundColor: '#FFFFFF', width: resizedWidth, height: resizedHeight, resizeMode: 'contain'}} source={url ? {uri: url } : null} /> */}
-                <Image style={{backgroundColor: '#FFFFFF', width: '50%', height: '70%', resizeMode: 'cover'}} source={url ? {uri: url } : null} />
+                <Image style={{backgroundColor: '#FFFFFF', width: '100%', height: '100%', resizeMode: 'cover'}} source={url ? {uri: url } : null} />
             </MainImageBox>
-            <ClubTitleAndNumMem>
-                <ClubTitle>{club.name}</ClubTitle>
-                <ClubNumBox>
+            <SpotTitleAndNumMem>
+                <SpotTitle>{spot.name}</SpotTitle>
+                <SpotNumBox>
                     <IconM name="human-child" size={15} color="#000000" />
-                    <ClubNumMem>{club.numMember}</ClubNumMem>
-                </ClubNumBox>
-            </ClubTitleAndNumMem>
-            <LocationBox>
+                    <SpotNumMem>{spot.numMember}</SpotNumMem>
+                </SpotNumBox>
+            </SpotTitleAndNumMem>
+            <LocationBox style={{backgroundColor: "transparent"}}>
                 <IconE name="location-pin" size={15} color="#000000" />
-                <ClubLocation>{club.location}</ClubLocation>
+                <SpotLocation>{spot.location}</SpotLocation>
             </LocationBox>            
-        </ClubCardBox>
+        </SpotCardBox>
     );
   };
   

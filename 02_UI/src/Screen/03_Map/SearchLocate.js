@@ -1,6 +1,6 @@
 import React, {useState, useEffect, createContext} from 'react';
 import { useContext } from 'react/cjs/react.development';
-import { View, Text, Image } from 'react-native';
+import { ScrollView, View, Text, Image } from 'react-native';
 import Styled from 'styled-components/native';
 import DaumMap from './DaumMapController';
 import Geolocation from 'react-native-geolocation-service';
@@ -15,16 +15,22 @@ border-bottom-width: 3px;
 
 const SearchBtn = Styled.TouchableOpacity`
 background-color: green;
-width: 20%;
+width: 30%;
+height: 30px;
 border-bottom-width: 3px;
 `;
 
 const ChangeBtn = Styled.TouchableOpacity`
 background-color: blue;
-width: 15%;
-height: 15%;
+width: 30%;
+height: 30px;
 border-bottom-width: 3px;
-color: black;
+`;
+
+const SearchResultBtn = Styled.TouchableOpacity`
+background-color: skyblue;
+width: 60%;
+border-bottom-width: 3px;
 `;
 
 //맵 데이터 -- 전역으로 쓸 필요가 있을까
@@ -62,6 +68,9 @@ const SearchLocate = ({route, navigation})=>{
 
     const [location, setLocation] = useState(defaultLocation);
     const [region, setRegion] = useState("");
+    const [searchRes, setSearchRes] = useState();
+
+    const [DaumMapModule, setDaumMap] = useState();
    
     useEffect(() => {
         DaumMap.setRestApiKey("598b6c15a810f443c42c0255a2e607ae");
@@ -78,6 +87,7 @@ const SearchLocate = ({route, navigation})=>{
             },
             {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
         );
+
     },[])
 
     useEffect(() => {
@@ -88,6 +98,7 @@ const SearchLocate = ({route, navigation})=>{
     }, [location])
 
     useEffect(() => {
+        console.log(regionIndex);
         DaumMap.searchKeyword(serchRigion,null,undefined,undefined,500, regionIndex).then((res) => {
             setResCount(res["meta"].pageable_count)
             let placeName = "";
@@ -108,26 +119,63 @@ const SearchLocate = ({route, navigation})=>{
             console.log(returnRegion["y"]);
             console.log(returnRegion["place_name"]);
 
+            let zz = res["documents"];
             setRegion(placeName);
+            setSearchRes(zz);
             setLocation({ longitude: returnRegion["x"], latitude: returnRegion["y"] });
         })
         
     }, [regionIndex])
 
+    useEffect(()=>
+    {
+        console.log("use effect searchRes");
+        if(searchRes)
+        {
+            for(let i = 0; i<searchRes.length; ++i)
+            {
+                console.log("@@@@@@");
+                console.log(i);
+                console.log("@@@@@@");
+                <SearchResultBtn onPress={
+                    () => {
+                        console.log(searchRes[i].place_name);
+                    }
+                }>
+                    <Text>{searchRes[i].place_name}</Text>
+                </SearchResultBtn>
+            }
+        }
+    }, [region])
+
     return (
         <>
-            {location ? (
+            {location ?(
                 <>
                     <Text style={Styles.default}> ============================== </Text>
                     <Text style={Styles.default}>Latitude: {location.latitude}</Text>
                     <Text style={Styles.default}>Longitude: {location.longitude}</Text>
-                    <Text style={Styles.default}>region : {region}</Text>
                     <Text style={Styles.default}> ============================== </Text>
                 </>
             ) : (<Text style={Styles.default}>Loading...</Text>)}
+            
+            <ScrollView>
+            {searchRes ?(
+                <>
+                {
+                    searchRes.map((data, index) => (
+                        <SearchResultBtn onPress = {()=>{
+                            setRegion(data.place_name);
+                            setLocation({longitude: data.x, latitude: data.y});
+                        }}><Text style={Styles.default}>{data.place_name}</Text>
+                        </SearchResultBtn>
+                    ))
+                }
+                </>
+            ) : (<Text style={Styles.default}>장소를 검색하세요.</Text>)}
+            </ScrollView>
 
-            <View>
-                <Input
+            <Input
                     autoFocus={false}
                     autoCapitalize="none"
                     autoCorrect={false}
@@ -140,6 +188,8 @@ const SearchLocate = ({route, navigation})=>{
                     style={Styles.default}
                 />
 
+            <View 
+                style={{flexDirection: "row"}}>
                 <SearchBtn onPress={
                     () => {
                         if (lastSerchRegion == serchRigion) {
@@ -156,14 +206,14 @@ const SearchLocate = ({route, navigation})=>{
                         }
                         else
                         {
-                            setRegionIndex(0);
+                            setRegionIndex(1);
                             console.log("======");
                             console.log(lastSerchRegion);
                             setLastSerchRigion(serchRigion);
                             console.log("======");
                         }
                     }
-                }>
+                } height = "30%">
                     <Text> Search Locate </Text>
                 </SearchBtn>
                 
@@ -176,7 +226,7 @@ const SearchLocate = ({route, navigation})=>{
                         route.params.setRegionProcess(region);
                         navigation.goBack();
                     }
-                }}>
+                }} height = "30%" >
                 </ChangeBtn>
             </View>
             
@@ -194,7 +244,8 @@ const SearchLocate = ({route, navigation})=>{
                         pinColor: "red",
                         pinColorSelect: "yellow",
                         title: "marker test",
-                        draggable: true,
+                        draggable: false,
+                        allClear: true,
                    }]}
                 />}
         </>

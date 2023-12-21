@@ -19,6 +19,7 @@ const UserData =  createContext({
 });
 
 var initClub = { id: 0, name: `로딩중`, mainImg: `default.jpg`, location: `수원시 영통구 매탄4동 10`, numMember: 10 };
+var initSpot = { id: 0, name: `로딩중`, mainImg: `default.jpg`, location: `수원시 영통구 매탄4동 10`, time: "2023-10-26 20:32:00", numMember: 10 };
 
 const UserContextProvider = ({children}) => {
     const [kakaoAuthData, setKakaoAuthData] = useState(null);
@@ -26,6 +27,7 @@ const UserContextProvider = ({children}) => {
     const [userData, setUserData] = useState(null);
     let domain = useContext(DomainContext);
     const [userClub, setUserClub] = useState([initClub]);
+    const [userSpot, setUserSpot] = useState([initSpot]);
 
     useEffect(() => {
         console.log('[[UserData Context]]');
@@ -33,18 +35,24 @@ const UserContextProvider = ({children}) => {
         console.log(userData);
         if (userData && userData.id) {
             updateUserClub();
+            updateUserSpot();
         }
     }, [userData])
 
     const updateUserClub = () => {
-        console.log('~~~~Update User Data~~~~')
+        console.log('~~~~Update User Data: Club~~~~')
         fetch(`${domain}/User/${userData.id}/Club`).then(res => res.json()).then(res => {setUserClub(res)});
+    };
+
+    const updateUserSpot = () => {
+        console.log('~~~~Update User Data: Spot~~~~')
+        fetch(`${domain}/User/${userData.id}/Spot`).then(res => res.json()).then(res => {setUserSpot(res)});
     };
 
     return (
         <KakaoAuthData.Provider value = {{kakaoAuthData, setKakaoAuthData}}>
         <TryGetUserData.Provider value = {{tryGetUserData, setTryGetUserDataFlag}}>
-        <UserData.Provider value = {{userData, setUserData, userClub, updateUserClub}}>
+        <UserData.Provider value = {{userData, setUserData, userClub, updateUserClub, userSpot, updateUserSpot}}>
             {children}
         </UserData.Provider>
         </TryGetUserData.Provider>
