@@ -30,11 +30,11 @@ router.get('/:type/:id', (req, res) => {
     });
 })
 
-// All Club with Sorting
-router.get('/Sort/:method/:num', (req, res) => {
-    let sql = `SELECT * FROM ClubView ORDER BY ${req.params.method} LIMIT 0, ${req.params.num}`; // Club ���̺����� Sorting �ؼ� num �� ������ ���� ������
+// All Group with Sorting
+router.get('/Sort/:type/:method/:num', (req, res) => {
+    let sql = `SELECT * FROM ${req.params.type}View ORDER BY ${req.params.method} LIMIT 0, ${req.params.num}`; // Club ?��?��블에?�� Sorting ?��?�� num �? 까�???�� 값을 �??��?��
     console.log(sql);
-    conn.query(sql, function (error, rows, fields) { // sql ���� ����
+    conn.query(sql, function (error, rows, fields) { // sql 쿼리 ?��?��
         if (!error) {
             // console.log(rows);
             res.send(rows);
@@ -44,20 +44,37 @@ router.get('/Sort/:method/:num', (req, res) => {
     });
 });
 
-
 // Create group
 var groupId;
 var returnTableValue;
 const uploadGroupImg = multer({
     storage: multer.diskStorage({
         destination: function (req, file, cb) {
-            cb(null, 'public/ClubMainImg');
+            let group = ``;
+            if (req.params.type == 1) // Club
+                group = `Club`;
+            else if (req.params.type == 2) // Spot
+                group = 'Spot';
+            cb(null, `public/${group}MainImg`);
         },
         async filename(req, file, cb) {
             console.log(file.originalname);
-            let sql1 = `INSERT INTO Club (name, location, location_ll, description, keyword) VALUES ('${req.body.name}', '${req.body.location}', ST_GeomFromText('POINT(${req.body.location_ll_x} ${req.body.location_ll_y})', 4326), '${req.body.description}','${req.body.keyword}')`;
+            console.log(req.params.type);
+            var sql1 = ``;
+            var group = ``;
+            if (req.params.type == 1) // Club
+            {
+                sql1 = `INSERT INTO Club (name, location, location_ll, description, keyword) VALUES ('${req.body.name}', '${req.body.location}', ST_GeomFromText('POINT(${req.body.location_ll_x} ${req.body.location_ll_y})', 4326), '${req.body.description}','${req.body.keyword}')`;
+                group = `Club`;
+            }
+            else if (req.params.type == 2) // Spot
+            {
+                sql1 = `INSERT INTO Spot (name, location, location_ll, description, keyword, dateTime) VALUES ('${req.body.name}', '${req.body.location}', ST_GeomFromText('POINT(${req.body.location_ll_x} ${req.body.location_ll_y})', 4326), '${req.body.description}','${req.body.keyword}', '${req.body.dateTime}')`;
+                group = 'Spot';
+            }
+
             console.log(sql1);
-            let fileName = '';
+            var fileName = '';
             try {
                 await conn.beginTransaction();
                 await conn.query(sql1, (error, rows) => {
@@ -65,15 +82,15 @@ const uploadGroupImg = multer({
                     fileName = groupId + path.extname(file.originalname);
                     cb(null, fileName);
                     console.log(fileName);
-                    sql2 = `INSERT INTO ClubUser (clubId, userId, role) VALUES (${groupId}, ${req.body.userId}, 1)`;
+                    sql2 = `INSERT INTO ${group}User (${group}Id, userId, role) VALUES (${groupId}, ${req.body.userId}, 1)`;
                     console.log(sql2);
                     conn.query(sql2, (err, rows) => {
                         if (err) console.log(err);
                         else {
-                            sql3 = `Update Club SET mainImg = '${fileName}' WHERE id = ${groupId}`;
+                            sql3 = `Update ${group} SET mainImg = '${fileName}' WHERE id = ${groupId}`;
                             console.log(sql3);
                             conn.query(sql3, (error, rows) => {
-                                sql4 = `SELECT * FROM ClubView WHERE id = ${groupId}`;
+                                sql4 = `SELECT * FROM ${group}View WHERE id = ${groupId}`;
                                 console.log(sql4);
                                 conn.query(sql4, (error, rows) => {
                                     console.log(rows[0]);
@@ -110,143 +127,7 @@ router.post('/:type', async (req, res) => {
             res.json(returnTableValue);
         }
 
-        // sql1 = `INSERT INTO Club (name, location, location_ll, description, keyword) VALUES ('${req.body.name}', '${req.body.location}', ST_GeomFromText('POINT(${req.body.location_ll_x} ${req.body.location_ll_y})', 4326), '${req.body.description}','${req.body.keyword}')`;
-        // console.log(sql1);
-
-        // try {
-        //     await conn.beginTransaction();
-        //     await conn.query(sql1, (error, rows) => {
-        //         groupId = rows.insertId;
-        //         uploadGroupImg(req, res, async (err) => {
-        //             console.log(req.file.filename);
-        //             sql2 = `INSERT INTO ClubUser (clubId, userId, role) VALUES (${groupId}, ${req.body.userId}, 'leader')`;
-        //             console.log(sql2);
-        //             conn.query(sql2, (error, rows) => {
-        //                 sql3 = `Update Club SET mainImg = '${req.file.filename}' WHERE id = ${groupId}`;
-        //                 console.log(sql3);
-        //                 conn.query(sql3, (error, rows) => {
-        //                     sql4 = `SELECT * FROM ClubView WHERE id = ${groupId}`;
-        //                     console.log(sql4);
-
-        //                 })
-        //             })
-        //         })
-        //     })
-        // } catch (err) {
-        //     console.log(err);
-        //     await conn.rollback();
-        //     res.send({ result: false });
-        // }
     })
-
-    // sql1 = `INSERT INTO Club (name, location, location_ll, description, keyword) VALUES ('${req.body.name}', '${req.body.location}', ST_GeomFromText('POINT(${req.body.location_ll_x} ${req.body.location_ll_y})', 4326), '${req.body.description}','${req.body.keyword}')` ;
-    // console.log(sql1);
-
-    // try {
-    //     await conn.beginTransaction();
-    //     await conn.query(sql1, (error, rows) => {
-    //         groupId = rows.insertId;
-    //         uploadGroupImg(req, res, async (err) => {
-    //             console.log(req.file.filename);
-    //             sql2 = `INSERT INTO ClubUser (clubId, userId, role) VALUES (${groupId}, ${req.body.userId}, 'leader')`;
-    //             console.log(sql2);
-    //             conn.query(sql2, (error, rows) => {
-    //                 sql3 = `Update Club SET mainImg = '${req.file.filename}' WHERE id = ${groupId}`;
-    //                 console.log(sql3);
-    //                 conn.query(sql3, (error, rows) => {
-    //                     sql4 = `SELECT * FROM ClubView WHERE id = ${groupId}`;
-    //                     console.log(sql4);
-
-    //                 })                    
-    //             })
-    //         })
-    //     })
-    // } catch (err) {
-    //     console.log(err);
-    //     await conn.rollback();
-    //     res.send({ result: false });
-    // }
-
-    // uploadGroupImg(req, res, async (err) => {
-    //     if (err) {
-    //         res.send({fileName : null});
-    //     }
-
-    //     console.log(req.file.filename);
-    //     console.log(req.body);
-
-    //     if (req.params.type == '1') // Club
-    //     {
-    //         console.log('Create Club');
-    //         // sql = `INSERT INTO Club (name, mainImg, location, description) VALUES ('${req.body.name}', '${req.file.filename}', '${req.body.location}', '${req.body.description}')` ;
-    //         sql1 = `INSERT INTO Club (name, location, location_ll, description, keyword) VALUES ('${req.body.name}', '${req.body.location}', ST_GeomFromText('POINT(${req.body.location_ll_x} ${req.body.location_ll_y})', 4326), '${req.body.description}', '${req.body.keyword}')` ;
-    //         console.log(sql1);
-    //         try {
-    //             await conn.beginTransaction();
-    //             await conn.query(sql1, (error, rows) => {
-    //                 // console.log(rows);
-    //                 groupId = rows.insertId;
-    //                 sql2 = `INSERT INTO ClubUser (clubId, userId, role) VALUES (${groupId}, ${req.body.userId}, 'leader')`;
-    //                 console.log(sql2);
-    //                 conn.query(sql2, (error, rows) => {
-    //                     // console.log(rows);
-    //                     sql3 = `UPDATE Club SET mainImg = '${groupId}${req.file.filename}' WHERE id = ${groupId}`;
-    //                     console.log(sql3);
-    //                     conn.query(sql3, (error, rows) => {
-    //                         sql4 = `SELECT * FROM ClubView WHERE id = ${groupId}`;
-    //                         console.log(sql4);
-    //                         conn.query(sql4, (error, rows) => {
-    //                             console.log(rows[0]);
-    //                             conn.commit();
-    //                             res.json(rows[0]);
-    //                         })
-    //                     })
-
-
-    //                 });
-
-                    
-    //             });
-    //         } catch (err) {
-    //             console.log(err)
-    //             await conn.rollback()
-    //             res.send({ result: false });
-    //         }
-    
-            
-            
-    //     } else if (req.params.type == '2') // Spot
-    //     {
-    //         console.log('Create Spot');
-
-    //         sql1 = `INSERT INTO Spot (name, mainImg, location, location_ll, description, keyword, time) VALUES ('${req.body.name}', 'GroupImg/${req.file.filename}', '${req.body.location}', ST_GeomFromText('POINT(${req.body.location_ll_x} ${req.body.location_ll_y})', 4326), '${req.body.description}', '${req.body.keyword}', '${req.body.dateTime}')`;
-    //         console.log(sql1);
-    //         try {
-    //             await conn.beginTransaction();
-    //             await conn.query(sql1, (error, rows) => {
-    //                 if (error) console.log('query error : ' + err);
-    //                 console.log(rows);
-    //                 groupId = rows.insertId;
-    //                 sql2 = `INSERT INTO SpotUser (spotId, userId, role) VALUES (${groupId}, ${req.body.userId}, 'leader')`;
-    //                 console.log(sql2);
-    //                 conn.query(sql2, (error, rows) => {
-    //                     sql3 = `SELECT * FROM Spot WHERE id = ${groupId}`;
-    //                     console.log(sql3);
-    //                     conn.query(sql3, (error, rows) => {
-    //                         console.log(rows[0]);
-    //                         conn.commit();
-    //                         res.json(rows[0]);
-    //                     })
-    //                 });
-    //             });
-    //         } catch (err) {
-    //             console.log(err);
-    //             await conn.rollback()
-    //             res.send({ result: false});
-    //         }
-    //     }
-
-    // });
 
 })
 
@@ -276,7 +157,7 @@ router.put('/:type/:id', async (req, res) => {
                     imgSrc = rows[0].mainImg;
                     if (req.file) {
                         fs.unlink(`./public/${imgSrc}`, (err) => {
-                            err ? console.log(imgSrc) : console.log(`${imgSrc}�?? ?��?��?��?���?? ?��?��?��?��?��?��`);
+                            err ? console.log(imgSrc) : console.log(`${imgSrc}ï¿?? ?ï¿½ï¿½?ï¿½ï¿½?ï¿½ï¿½?ï¿½ï¿½ï¿?? ?ï¿½ï¿½?ï¿½ï¿½?ï¿½ï¿½?ï¿½ï¿½?ï¿½ï¿½?ï¿½ï¿½`);
                         });
                         imgSrc = 'GroupImg/' + req.file.filename;
                     }
@@ -331,7 +212,7 @@ router.delete('/:type/:groupId/', async (req, res) => {
                 if (imgSrc)
                 {
                     fs.unlink(`./public/${imgSrc}`, (err) => {
-                        err ? console.log(imgSrc) : console.log(`${imgSrc}�?? ?��?��?��?���?? ?��?��?��?��?��?��`);
+                        err ? console.log(imgSrc) : console.log(`${imgSrc}ï¿?? ?ï¿½ï¿½?ï¿½ï¿½?ï¿½ï¿½?ï¿½ï¿½ï¿?? ?ï¿½ï¿½?ï¿½ï¿½?ï¿½ï¿½?ï¿½ï¿½?ï¿½ï¿½?ï¿½ï¿½`);
                       })
                 }
                 conn.commit();
@@ -353,7 +234,7 @@ router.get('/Search/:searchKey/:long/:lat', (req, res) => {
     let long = req.params.long ? Number(req.params.long) : 127;
     let lat = req.params.lat ? Number(req.params.lat) : 37;
 
-    // Ref : [ST_Distance_Sphere ?��?��|https://tzara.tistory.com/45]
+    // Ref : [ST_Distance_Sphere ?ï¿½ï¿½?ï¿½ï¿½|https://tzara.tistory.com/45]
     let sql1 = `SELECT * FROM ClubView WHERE (name LIKE '%${req.params.searchKey}%' OR location LIKE '%${req.params.searchKey}%' OR description LIKE '%${req.params.searchKey}%' OR keyword LIKE '%${req.params.searchKey}%') ORDER BY ST_Distance_Sphere(location_ll, point(${long}, ${lat})), numMember`;
 
     conn.query(sql1, function (error, rows, fields) {
