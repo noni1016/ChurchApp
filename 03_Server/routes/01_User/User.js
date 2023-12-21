@@ -31,7 +31,8 @@ router.get('/:userId/Spot', (req, res) => {
     FROM SpotView, SpotUser, User
     WHERE SpotUser.userId = ${req.params.userId}
         AND SpotUser.userId = User.id
-        AND SpotUser.spotId = SpotView.id`;
+        AND SpotUser.spotId = SpotView.id
+    ORDER BY SpotView.past, SpotView.time`;
     console.log(sql)
     conn.query(sql, function (error, rows, fields) { // sql 쿼리 수행
         if (!error) {
