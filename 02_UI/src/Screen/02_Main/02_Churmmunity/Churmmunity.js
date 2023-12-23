@@ -26,6 +26,9 @@ import GroupNotification from '~/Screen/02_Main/02_Churmmunity/Group/GroupNotifi
 import {ProfileMain} from '~/Screen/02_Main/03_Profile/Profile';
 import {TabNavi} from '~/Context/Navi';
 
+import SearchChurchPage from '~/Screen/02_Main/03_Profile/SearchChurchPage';
+import AddChurchPage from '~/Screen/02_Main/03_Profile/AddChurchPage';
+
 
 const Stack = createStackNavigator();
 
@@ -172,6 +175,11 @@ const ChurmmunityStackNavi = () => {
              <Stack.Screen
                 name="SearchLocate"
                 component={SearchLocate}
+                options={{
+                    headerShown: true,
+                    headerBackTitleVisible: true,
+                    title: '지역 찾기',
+                }}
             />
             <Stack.Screen
                 name="SearchGroups"
@@ -187,6 +195,24 @@ const ChurmmunityStackNavi = () => {
             <Stack.Screen
                 name="Profile"
                 component={ProfileMain}
+            />
+            <Stack.Screen
+                name="SearchChurchPage"
+                component={SearchChurchPage}
+                options={{
+                    headerShown: true,
+                    headerBackTitleVisible: true,
+                    title: '교회 찾기',
+                }}
+            />
+            <Stack.Screen
+                name="AddChurchPage"
+                component={AddChurchPage}
+                options={{
+                    headerShown: true,
+                    headerBackTitleVisible: true,
+                    title: '교회 추가',
+                }}
             />
         </Stack.Navigator>
     )
