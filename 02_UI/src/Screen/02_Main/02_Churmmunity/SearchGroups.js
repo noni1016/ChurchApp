@@ -3,6 +3,7 @@ import {View,Text, ActivityIndicator, ScrollView, Button, TouchableOpacity} from
 import Styled from 'styled-components/native';
 import { useForm, Controller, useFieldArray } from "react-hook-form";
 import ClubCard from '~/Components/ClubCard';
+import SpotCard from '~/Components/SpotCard';
 import TagBox from '~/Components/TagBox';
 import AsyncStorage from '@react-native-community/async-storage';
 
@@ -60,7 +61,9 @@ const SearchGroups = ({route, navigation}) => {
     const domain = useContext(DomainContext);
 
     const [clubs, setClubs] = useState();
+    const [spots, setSpots] = useState();
     const [showingClubs, setShowingClubs] = useState();
+    const [showingSpots, setShowingSpots] = useState();
     const [searchHistory, setSearchHistory] = useState([]);
     const { control, handleSubmit, register, setValue } = useForm();
 
@@ -80,13 +83,25 @@ const SearchGroups = ({route, navigation}) => {
         } else {
             setShowingClubs(clubs);
         }   
-    }, [clubs])    
+    }, [clubs])   
+    
+    useEffect(() => {
+        if (spots && spots.length > 2) {
+            setShowingSpots(spots.slice(0,2));
+        } else {
+            setShowingSpots(spots);
+        }   
+    }, [spots])   
 
     /* 서버에서 검색 데이터 받아오기 */
     const getSearchResult = (data) => {
-        fetch(`${domain}/Group/Search/${data.search}/127/37`)
+        fetch(`${domain}/Group/Search/Club/${data.search}/127/37`)
         .then(res => res.json())
         .then(res => {console.log(res); setClubs(res)});
+
+        fetch(`${domain}/Group/Search/Spot/${data.search}/127/37`)
+        .then(res => res.json())
+        .then(res => {console.log(res); setSpots(res)});
 
         // 검색어 히스토리로 저장
         // 이전에 검색한 기록이 있으면 지우고 최상위에 넣기
@@ -168,9 +183,17 @@ const SearchGroups = ({route, navigation}) => {
                 }
                 <Separator />
 
-                {showingClubs && <><Title>번개 {clubs ? clubs.length : 0} 개</Title>
+                {showingSpots && <><Title>번개 {spots ? spots.length : 0} 개</Title>
+
+                {showingSpots.map((v, i) => (
+                        <TouchableOpacity onPress = {() => {
+                            navigation.navigate('SpotPage', {spot : v, navigation: navigation});
+                        }}>
+                            <SpotCard spot={v} style={{ marginBottom: '10px' }} />
+                            <View style={{ height: 20, width: '100%', backgroundColor: 'transparent' }} />
+                        </TouchableOpacity>))}
                 <View style={{ width: "90%" }}>
-                    <Button title="더 보기" onPress={() => alert('번개 모임 더보기')} />
+                    <Button title="더 보기" onPress={() => { navigation.navigate('ShowMoreSpots', { title: `번개 검색 결과 ${spots.length} 개`, spots: spots, navigation: navigation }); }} />
                 </View>
                 </>}
             </View>

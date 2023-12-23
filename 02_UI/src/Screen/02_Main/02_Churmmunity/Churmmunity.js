@@ -11,6 +11,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import SpotCards from '~/Components/SpotCards';
 import ClubCards from '~/Components/ClubCards';
 import ClubCardsColView from '~/Screen/02_Main/02_Churmmunity/Group/ClubCardsColView';
+import SpotCardsColView from '~/Screen/02_Main/02_Churmmunity/Group/SpotCardsColView';
 import ClubPage from '~/Screen/02_Main/02_Churmmunity/Group/ClubPage'
 import SpotPage from '~/Screen/02_Main/02_Churmmunity/Group/SpotPage'
 import Comments from './Group/Comments';
@@ -112,9 +113,18 @@ const ChurmmunityStackNavi = () => {
                     )
                 })}
             />
-             <Stack.Screen
+            <Stack.Screen
                 name="ShowMoreClubs"
                 component={ClubCardsColView}
+                options={{
+                    headerShown: true,
+                    headerBackTitleVisible: false,
+                    title: '내 모임'
+                }}
+            />
+            <Stack.Screen
+                name="ShowMoreSpots"
+                component={SpotCardsColView}
                 options={{
                     headerShown: true,
                     headerBackTitleVisible: false,
