@@ -25,6 +25,24 @@ router.get('/:userId/Club', (req, res) => {
     });
 });
 
+// User's Spot
+router.get('/:userId/Spot', (req, res) => {
+    let sql = `SELECT SpotView.*
+    FROM SpotView, SpotUser, User
+    WHERE SpotUser.userId = ${req.params.userId}
+        AND SpotUser.userId = User.id
+        AND SpotUser.spotId = SpotView.id
+    ORDER BY SpotView.past, SpotView.time`;
+    console.log(sql)
+    conn.query(sql, function (error, rows, fields) { // sql 쿼리 수행
+        if (!error) {
+            res.send(rows);
+        } else {
+            console.log('query error : ' + error);
+        }
+    });
+});
+
 // Get User Data
 router.get('/:userId', (req, res) => {
     let sql = `SELECT * FROM User WHERE id = ${req.params.userId}`;

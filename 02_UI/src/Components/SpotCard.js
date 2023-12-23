@@ -1,9 +1,10 @@
 import React, {useEffect, useContext, useState} from 'react';
 import {Image, Dimensions} from 'react-native';
-import Styled from 'styled-components/native';
+import Styled, {css} from 'styled-components/native';
 import {DomainContext} from '~/Context/Domain';
 import IconE from 'react-native-vector-icons/Entypo';
 import IconM from 'react-native-vector-icons/MaterialCommunityIcons';
+import IconI from 'react-native-vector-icons/Ionicons';
 import ImageSize from 'react-native-image-size';
 
 
@@ -112,6 +113,10 @@ const SpotCard = ({spot}) => {
                     <SpotNumMem>{spot.numMember}</SpotNumMem>
                 </SpotNumBox>
             </SpotTitleAndNumMem>
+            <LocationBox>
+                <IconI name="time" size={15} color="#000000" />
+                <SpotLocation>{spot.time}</SpotLocation>
+            </LocationBox>
             <LocationBox style={{backgroundColor: "transparent"}}>
                 <IconE name="location-pin" size={15} color="#000000" />
                 <SpotLocation>{spot.location}</SpotLocation>
