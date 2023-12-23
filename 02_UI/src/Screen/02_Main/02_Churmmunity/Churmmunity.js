@@ -51,13 +51,15 @@ const ChurmmunityMain = ({route, navigation}) => {
     const domain = useContext(DomainContext);
     var [recClubs, setRecClubs] = useState([initClub]);
     var [recSpots, setRecSpots] = useState([initSpot]);
+    var [pastSpots, setPastSpots] = useState([initSpot]);
     // var [loading, setLoading] = useState([]);
 
     const {userData, userClub, userSpot} = useContext(UserData);
 
     useEffect(() => {
-        fetch(`${domain}/Group/Sort/Club/Rand()/7`).then(res => res.json()).then(res => {setRecClubs(res)});
-        fetch(`${domain}/Group/Sort/Spot/time/7`).then(res => res.json()).then(res => {setRecSpots(res)});
+        fetch(`${domain}/Group/Sort/Club/1/Rand()/7`).then(res => res.json()).then(res => {setRecClubs(res)});
+        fetch(`${domain}/Group/Sort/Spot/past = 0/time/7`).then(res => res.json()).then(res => {setRecSpots(res)});
+        fetch(`${domain}/Group/Sort/Spot/past = 1/time/7`).then(res => res.json()).then(res => {setPastSpots(res)});
         
         console.log('churmmunity main====')
         
@@ -83,6 +85,7 @@ const ChurmmunityMain = ({route, navigation}) => {
             <ClubCards title={'오늘의 모임'} orgDatas={recClubs} stackNavi={navigation}/>
             <SpotCards title={'참여한 번개 모임'} datas={userSpot} stackNavi={navigation}/>
             <SpotCards title={'다가오는 번개 모임'} datas={recSpots} stackNavi={navigation}/>
+            <SpotCards title={'지난 번개 모임'} datas={pastSpots} stackNavi={navigation}/>
             <EmptyArea />
         </ScrollView>
     );
