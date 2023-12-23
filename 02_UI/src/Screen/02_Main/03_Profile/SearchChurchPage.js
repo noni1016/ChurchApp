@@ -45,11 +45,23 @@ const PlusText = Styled.Text`
 
 const SearchChurchPage = ({route, navigation})=>{
     let [serchChurch, setSerchChurch] = useState("교회 이름");
+    let [searchResult, setSearchResult] = useState([]);
     const domain = useContext(DomainContext);
    
     useEffect(() => {
 
     },[])
+
+    useEffect(()=>{
+        console.log("###")
+        console.log("new result")
+        console.log("####")
+
+        for(let i = 0; i<searchResult.length; ++i)
+        {
+            console.log(searchResult[i].name)
+        }
+    },[searchResult])
 
     return (
         <>
@@ -67,17 +79,27 @@ const SearchChurchPage = ({route, navigation})=>{
                     style={Styles.default}
                 />
 
-                <SearchBtn onPress={
-                    () => {
-                        console.log(`${domain}/Find/Church/${serchChurch}`);
-                        fetch(`${domain}/Church/Find/${serchChurch}`).then(res => {
-                            res.json()
-                            console.log(res)
-                            }).then(res => console.log(res.json()));//res => setMembers(res));
-                    }
-                } height = "30%">
+                <SearchBtn onPress={() => fetch(`${domain}/Church/Find/${serchChurch}`).then(res => res.json()).then(res => 
+                {
+                    console.log(res)
+                    setSearchResult(res);
+                }) }
+                height = "30%">
                     <Text> Search Locate </Text>
                 </SearchBtn>
+                {searchResult ?(
+                <>
+                {
+                    searchResult.map((data, index) => (
+                        <SearchBtn onPress = {()=>{
+                            // setRegion(data.place_name);
+                            // setLocation({longitude: data.x, latitude: data.y});
+                        }}><Text style={Styles.default}>{data.name}</Text>
+                        </SearchBtn>
+                    ))
+                }
+                </>
+            ) : (<Text style={Styles.default}>교회를 검색하세요.</Text>)}
 
                 <AddBox onPress={() => {{navigation.navigate('AddChurchPage')}}}>
                     <PlusText>+</PlusText>
