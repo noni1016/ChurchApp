@@ -109,7 +109,7 @@ const SearchLocate = ({route, navigation})=>{
                 //
                 placeName += test.place_name + "\n";
             }
-            let returnRegion = res["documents"][regionIndex];
+            let returnRegion = res["documents"][0];
             setRegionIndex(regionIndex++);
             console.log(returnRegion); 
             console.log(resCount);
@@ -119,9 +119,9 @@ const SearchLocate = ({route, navigation})=>{
             console.log(returnRegion["y"]);
             console.log(returnRegion["place_name"]);
 
-            let zz = res["documents"];
+            let result = res["documents"];
             setRegion(placeName);
-            setSearchRes(zz);
+            setSearchRes(result);
             setLocation({ longitude: returnRegion["x"], latitude: returnRegion["y"] });
         })
         
@@ -229,7 +229,7 @@ const SearchLocate = ({route, navigation})=>{
                 }} height = "30%" >
                 </ChangeBtn>
             </View>
-            
+
             {isFocused && <DaumMap currentRegion={{
                     latitude: parseFloat(location.latitude),
                     longitude: parseFloat(location.longitude),
@@ -243,8 +243,8 @@ const SearchLocate = ({route, navigation})=>{
                         longitude: parseFloat(location.longitude),
                         pinColor: "red",
                         pinColorSelect: "yellow",
-                        title: "marker test",
-                        draggable: false,
+                        title: region,
+                        draggable: true,
                         allClear: true,
                    }]}
                 />}
