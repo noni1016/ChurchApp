@@ -359,6 +359,11 @@ const EditChurmmunity = ({route, navigation}) => {
 
     return (        
         <ScrollView>
+            <PlusBtnBox onPress={() => {{navigation.navigate('SearchChurchPage', {navigation: navigation})}}}>
+                    <PlusText>+++</PlusText>
+                    <Text style={Styles.default}>교회 수정</Text>
+                </PlusBtnBox>
+
             {!edit && <OptionName>모임 유형</OptionName>}
             {!edit && (<TypeSelectBtnsBox>
                 <TouchableOpacity onPress={() => setCreateType(1)}><TypeSelectBtn isSelected={createType == 1}>공동체</TypeSelectBtn></TouchableOpacity>
