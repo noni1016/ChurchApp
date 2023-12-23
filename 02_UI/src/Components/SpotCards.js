@@ -111,7 +111,7 @@ const SpotCards = ({title, datas, stackNavi}) => {
                     scrollEnabled={dataLength > 1}
                     onScroll={(event) => {
                         setIndicatorIdx(
-                            Math.round(event.nativeEvent.contentOffset.x / (Dimensions.get('window').width))
+                            Math.ceil(event.nativeEvent.contentOffset.x / (Dimensions.get('window').width))
                         );
                     }}>
                         {datas.map((data, index) => (
