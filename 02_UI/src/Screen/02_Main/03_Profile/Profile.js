@@ -39,6 +39,10 @@ const HeaderBox = styled.View`
     align-items: center;
     height: 100px;
     background-color: transparent;
+    border-bottom-width: 5px;
+    border-color: black;
+    padding-bottom: 3px;
+    margin-bottom: 3px;;
 `;
 
 const HeaderTextArea = styled.View`
@@ -178,6 +182,8 @@ const reqChangeUserInfo = (fetchHeader, changeType, changeValue) => {
                     <Text>{member.church}</Text>
                 </HeaderTextArea>
             </HeaderBox>
+
+
             
             {/* <CommonBtn onPress={() => {{navigation.navigate('SearchLocate', {setLocateProcess : setLocate, setRegionProcess : setRegion, navigation: route})}}}>
                     {/* <PlusText>+</PlusText> }
