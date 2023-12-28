@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useContext} from 'react';
-import { View, Text, ScrollView, Image } from 'react-native';
+import { View, Text, ScrollView, Image, TouchableOpacity } from 'react-native';
 import styled from 'styled-components/native';
 import {DomainContext} from '~/Context/Domain';
 import {UserData} from '~/Context/User';
@@ -12,6 +12,12 @@ import Icon2 from 'react-native-vector-icons/AntDesign';
 
 import {launchImageLibrary} from 'react-native-image-picker';
 import DaumMap from './../../03_Map/DaumMapController';
+
+import { useIsFocused } from '@react-navigation/native';
+
+import Styles from '~/Style';
+
+import PlusBtn from '~/Components/PlusBtn';
 
 const tempUser = {id: 4, name: "짱쎄", photo: 'Profile/짱쎄.jpg', role: 'user'};
 const Stack = createStackNavigator();
@@ -56,10 +62,33 @@ const ChangePhoto = styled.TouchableOpacity`
  margin: 0px 10px 0px 0px; //상 우 하 좌
  `;
 
- const CommonBtn = styled.TouchableOpacity`
+const CommonBtn = styled.TouchableOpacity`
 background-color: green;
 width: 20%;
 border-bottom-width: 3px;
+`;
+
+const InfoArea = styled.View`
+    justify-content: flex-start;
+    align-items: flex-start;
+    width: 100%;
+    background-color: yellow;
+`;
+
+const InfoTextBold = styled.Text`
+    font-size: 20px;
+    font-family: 'DoHyeon-Regular';   
+    margin-top: 5px;
+    margin-bottom: 5px;
+    height: 30px;
+`;
+
+const InfoText = styled.Text`
+    font-size: 16px;
+    font-family: 'DoHyeon-Regular';   
+    margin-top: 5px;
+    margin-bottom: 5px;
+    height: 25px;
 `;
 
 const ProfileMain = ({navigation, route}) => {
@@ -70,6 +99,7 @@ const ProfileMain = ({navigation, route}) => {
     const [locate, setLocate] = useState([0,0]);
     const [region, setRegion] = useState('');
     const [userImgUrl, setUserImgUrl] = useState(`${domain}/Profile/Jesus.png`);
+    const isFocused = useIsFocused();
     
     useEffect(() => {
         setMember(route != undefined ? route.params.member : userData);
@@ -183,19 +213,56 @@ const reqChangeUserInfo = (fetchHeader, changeType, changeValue) => {
                 </HeaderTextArea>
             </HeaderBox>
 
+            <InfoArea>
+                <InfoTextBold>나이 : 만 {member.age} 세</InfoTextBold>
+                <InfoTextBold>활동 지역</InfoTextBold>
+
+                {((member.location == null || member.location_ll == null) ||
+                (member.location_ll != null && member.location_ll.y == null && member.location_ll.x == null)) && 
+                <PlusBtn text='지역 추가' onPress={() => {{navigation.navigate('SearchLocate', {setLocateProcess : setLocate, setRegionProcess : setRegion, navigation: navigation})}}}></PlusBtn>}
+
+
+                {(member.location_ll != null &&
+                member.location_ll.x != null && member.location_ll.y != null) &&
+                (
+                    <>
+                    <InfoText>{member.location}</InfoText>
+                    {isFocused && <DaumMap currentRegion={{
+                        latitude: parseFloat(member.location_ll.y),
+                        longitude: parseFloat(member.location_ll.x),
+                        zoomLevel: 5,
+                       }}
+                        mapType={"Standard"}
+                        style={{ width: 400, height: 400, backgroundColor: 'transparent' }}
+                        
+                        markers={[{
+                            latitude: parseFloat(member.location_ll.y),
+                            longitude: parseFloat(member.location_ll.x),
+                            pinColor: "red",
+                            pinColorSelect: "yellow",
+                            title: "marker test",
+                            draggable: false,
+                            allClear: true,
+                       }]}
+                       /> }
+                       </>
+                )}
+
+            </InfoArea>
+
 
             
             {/* <CommonBtn onPress={() => {{navigation.navigate('SearchLocate', {setLocateProcess : setLocate, setRegionProcess : setRegion, navigation: route})}}}>
                     {/* <PlusText>+</PlusText> }
                     <Text>지역 수정</Text>
                     </CommonBtn> */}
-            <DaumMap currentRegion={{
+            {/* <DaumMap currentRegion={{
                 latitude: parseFloat(100),
                 longitude: parseFloat(100),
                 zoomLevel: 5,
                }}
                 mapType={"Standard"}
-                style={{ width: 400, height: 400, backgroundColor: 'transparent' }}/>
+                style={{ width: 400, height: 400, backgroundColor: 'transparent' }}/> */}
 
         </ScrollView>
     )

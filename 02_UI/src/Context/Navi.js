@@ -7,6 +7,7 @@ const TabNavi = createContext({
 
 const NaviContextProvider = ({children}) => {
     const [tabNavi, setTabNavi] = useState(null);
+    const [stackNavi, setStackNavi] = useState(null);
     
     return (
         <TabNavi.Provider value = {{tabNavi, setTabNavi}}>
