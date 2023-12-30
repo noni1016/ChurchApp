@@ -2,7 +2,7 @@ import React, {useState, useEffect, useContext} from 'react';
 import { View, Text, ScrollView, Image, TouchableOpacity } from 'react-native';
 import styled from 'styled-components/native';
 import {DomainContext} from '~/Context/Domain';
-import {UserData} from '~/Context/User';
+import {KakaoAuthData, UserData, TryGetUserData} from '~/Context/User';
 import {
     createStackNavigator,
 } from '@react-navigation/stack';
@@ -15,9 +15,14 @@ import DaumMap from './../../03_Map/DaumMapController';
 
 import { useIsFocused } from '@react-navigation/native';
 
-import Styles from '~/Style';
-
 import PlusBtn from '~/Components/PlusBtn';
+
+import RectangleBtn from '~/Components/RectangleBtn';
+
+import {logout} from '@react-native-seoul/kakao-login';
+
+import Auth from '~/Screen/01_Auth/Auth';
+
 
 const tempUser = {id: 4, name: "짱쎄", photo: 'Profile/짱쎄.jpg', role: 'user'};
 const Stack = createStackNavigator();
@@ -88,7 +93,14 @@ const InfoText = styled.Text`
     font-family: 'DoHyeon-Regular';   
     margin-top: 5px;
     margin-bottom: 5px;
+    margin-left: 5%;
     height: 25px;
+`;
+
+const ActivityRecordArea = styled.View`
+    width: 90%;
+    background-color: green;
+    margin-left: 5%;
 `;
 
 const ProfileMain = ({navigation, route}) => {
@@ -100,6 +112,8 @@ const ProfileMain = ({navigation, route}) => {
     const [region, setRegion] = useState('');
     const [userImgUrl, setUserImgUrl] = useState(`${domain}/Profile/Jesus.png`);
     const isFocused = useIsFocused();
+    const {kakaoAuthData, setKakaoAuthData} = useContext(KakaoAuthData);
+    const {tryGetUserData, setTryGetUserDataFlag} = useContext(TryGetUserData);
     
     useEffect(() => {
         setMember(route != undefined ? route.params.member : userData);
@@ -111,9 +125,14 @@ const ProfileMain = ({navigation, route}) => {
         setUserImgUrl(`${domain}/Profile/${userData.photo}` + "?cache="+Math.random());
     }, [userData])
 
-    // useEffect(() => {
-    //     console.log(userImgUrl);
-    // }, [userImgUrl])
+    const signOutWithKakao = async() => {
+        const message = await logout();
+        // setLogOutResult(message);
+        console.log("signOut");
+        setUserData(null);
+        setKakaoAuthData(null);
+        setTryGetUserDataFlag(false);
+    }
 
     useEffect(() => {
         if (member)
@@ -200,71 +219,85 @@ const reqChangeUserInfo = (fetchHeader, changeType, changeValue) => {
   };
 
     return (
-        <ScrollView style={{padding: 10}}>
-            <HeaderBox>
-            <ChangePhoto onPress={() => {showCameraRoll();}}>
-                <Image style={{ width: 70, height: 70, flex: 1, resizeMode: 'contain' }} source={{ uri: userImgUrl }}/>
-            </ChangePhoto>
+        <>
+            {
+                userData &&
+                <ScrollView style={{padding: 10}}>
+                <HeaderBox>
+                <ChangePhoto onPress={() => {showCameraRoll();}}>
+                    <Image style={{ width: 70, height: 70, flex: 1, resizeMode: 'contain' }} source={{ uri: userImgUrl }}/>
+                </ChangePhoto>
 
-            <HeaderTextArea style={{ flex: 3 }}>
-                    <Text style={{ fontWeight: 'bold'}}>{member.name}</Text>
-                    {member.description ? <Text>{member.description}</Text> : <Text>자기소개 없음</Text>}
-                    <Text>{member.church}</Text>
-                </HeaderTextArea>
-            </HeaderBox>
+                <HeaderTextArea style={{ flex: 3 }}>
+                        <Text style={{ fontWeight: 'bold'}}>{member.name}</Text>
+                        {member.description ? <Text>{member.description}</Text> : <Text>자기소개 없음</Text>}
+                        <Text>{member.church}</Text>
+                    </HeaderTextArea>
+                </HeaderBox>
 
-            <InfoArea>
-                <InfoTextBold>나이 : 만 {member.age} 세</InfoTextBold>
-                <InfoTextBold>활동 지역</InfoTextBold>
+                <InfoArea>
+                    <InfoTextBold>나이 : 만 {member.age} 세</InfoTextBold>
+                    <InfoTextBold>활동 지역 : </InfoTextBold>
 
-                {((member.location == null || member.location_ll == null) ||
-                (member.location_ll != null && member.location_ll.y == null && member.location_ll.x == null)) && 
-                <PlusBtn text='지역 추가' onPress={() => {{navigation.navigate('SearchLocate', {setLocateProcess : setLocate, setRegionProcess : setRegion, navigation: navigation})}}}></PlusBtn>}
+                    {((member.location == null || member.location_ll == null) ||
+                    (member.location_ll != null && member.location_ll.y == null && member.location_ll.x == null)) && 
+                    // <PlusBtn text='지역 추가' onPress={() => {{navigation.navigate('SearchLocate', {setLocateProcess : setLocate, setRegionProcess : setRegion, navigation: navigation})}}}></PlusBtn>
+                    <InfoText>아직 설정 안함</InfoText>}
 
 
-                {(member.location_ll != null &&
-                member.location_ll.x != null && member.location_ll.y != null) &&
-                (
-                    <>
-                    <InfoText>{member.location}</InfoText>
-                    {isFocused && <DaumMap currentRegion={{
-                        latitude: parseFloat(member.location_ll.y),
-                        longitude: parseFloat(member.location_ll.x),
-                        zoomLevel: 5,
-                       }}
-                        mapType={"Standard"}
-                        style={{ width: 400, height: 400, backgroundColor: 'transparent' }}
-                        
-                        markers={[{
+                    {(member.location_ll != null &&
+                    member.location_ll.x != null && member.location_ll.y != null) &&
+                    (
+                        <>
+                        <InfoText>{member.location}</InfoText>
+                        {isFocused && <DaumMap currentRegion={{
                             latitude: parseFloat(member.location_ll.y),
                             longitude: parseFloat(member.location_ll.x),
-                            pinColor: "red",
-                            pinColorSelect: "yellow",
-                            title: "marker test",
-                            draggable: false,
-                            allClear: true,
-                       }]}
-                       /> }
-                       </>
-                )}
+                            zoomLevel: 5,
+                        }}
+                            mapType={"Standard"}
+                            style={{ width: 400, height: 400, backgroundColor: 'transparent' }}
+                            
+                            markers={[{
+                                latitude: parseFloat(member.location_ll.y),
+                                longitude: parseFloat(member.location_ll.x),
+                                pinColor: "red",
+                                pinColorSelect: "yellow",
+                                title: "marker test",
+                                draggable: false,
+                                allClear: true,
+                        }]}
+                        /> }
+                        </>
+                    )}
+                    <InfoTextBold>활동 기록</InfoTextBold>
+                    <ActivityRecordArea>
+                        <InfoTextBold>소속 공동체</InfoTextBold>
+                        <InfoText>여기에 소속 공동체와 참여한 번개를 넣는게 좋을까요?</InfoText>
+                        <InfoTextBold>참여한 번개</InfoTextBold>
+                    </ActivityRecordArea>
 
-            </InfoArea>
+                </InfoArea>
+                <RectangleBtn color='blue' text='로그아웃' onPress={() => signOutWithKakao()}/>
+                <RectangleBtn color='red' text='계정 삭제' onPress={() => alert('계정 삭제')}/>
 
+                
+                {/* <CommonBtn onPress={() => {{navigation.navigate('SearchLocate', {setLocateProcess : setLocate, setRegionProcess : setRegion, navigation: route})}}}>
+                        {/* <PlusText>+</PlusText> }
+                        <Text>지역 수정</Text>
+                        </CommonBtn> */}
+                {/* <DaumMap currentRegion={{
+                    latitude: parseFloat(100),
+                    longitude: parseFloat(100),
+                    zoomLevel: 5,
+                }}
+                    mapType={"Standard"}
+                    style={{ width: 400, height: 400, backgroundColor: 'transparent' }}/> */}
 
-            
-            {/* <CommonBtn onPress={() => {{navigation.navigate('SearchLocate', {setLocateProcess : setLocate, setRegionProcess : setRegion, navigation: route})}}}>
-                    {/* <PlusText>+</PlusText> }
-                    <Text>지역 수정</Text>
-                    </CommonBtn> */}
-            {/* <DaumMap currentRegion={{
-                latitude: parseFloat(100),
-                longitude: parseFloat(100),
-                zoomLevel: 5,
-               }}
-                mapType={"Standard"}
-                style={{ width: 400, height: 400, backgroundColor: 'transparent' }}/> */}
-
-        </ScrollView>
+            </ScrollView>
+        }
+        {userData == null && <Auth />}
+        </>
     )
 }
 
