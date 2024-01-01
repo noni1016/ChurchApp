@@ -177,46 +177,53 @@ const ProfileMain = ({navigation, route}) => {
 
 
     // Camera Roll
- const showCameraRoll = () => {
-    launchImageLibrary(options, (response) => {
-        if (response.didCancel) {
+    const showCameraRoll = () => {
+        launchImageLibrary(options, (response) => {
+            if (response.didCancel) {
+                alert('프사변경취소');
+                return;
+            }
+            if (response.error) {
+                console.log('LaunchCamera Error: ', response.error);
+                return;
+            }
+            if (response.assets.length > 0) {
+                setImgSrc(response.assets[0]);
+                return;
+            }
             alert('프사변경취소');
-            return;
-        }
-        if (response.error) {
-            console.log('LaunchCamera Error: ', response.error);
-            return;
-        }
-        if (response.assets.length > 0) {
-            setImgSrc(response.assets[0]);
-            return;
-        }
-        alert('프사변경취소');
-    });
-}
+        });
+    }
 
-const reqChangeUserInfo = (fetchHeader, changeType, changeValue) => {
-    console.log(changeType, changeValue);
-    console.log(userData);
-    let fetchUrl = `${domain}/User/${userData.id}/${changeType}`;
-    console.log(fetchUrl);
-    
-    fetch(fetchUrl, {
-      method: 'PUT',
-      body: changeValue,
-      headers: fetchHeader
-    }).then(res => res.json()).then(res => {
-        console.log('[query result]');
-        console.log(res);
-        if (res.id) {
-            setUserData(res);
-        }
-    }).catch(e => {
-      alert('프로필 사진 변경에 실패하였습니다.');
-      console.log("[ChangeFail]");
-      console.log(e);
-    });
-  };
+    const reqChangeUserInfo = (fetchHeader, changeType, changeValue) => {
+        console.log(changeType, changeValue);
+        console.log(userData);
+        let fetchUrl = `${domain}/User/${userData.id}/${changeType}`;
+        console.log(fetchUrl);
+        
+        fetch(fetchUrl, {
+        method: 'PUT',
+        body: changeValue,
+        headers: fetchHeader
+        }).then(res => res.json()).then(res => {
+            console.log('[query result]');
+            console.log(res);
+            if (res.id) {
+                setUserData(res);
+            }
+        }).catch(e => {
+        alert('프로필 사진 변경에 실패하였습니다.');
+        console.log("[ChangeFail]");
+        console.log(e);
+        });
+    };
+
+    const withdrawal = () => {
+        // Delete user info from database
+        fetch(`${domain}/User/${userData.id}`, {method: 'DELETE', headers: {'Content-Type': 'application/json'}}).then(res=>res.json()).then((res) => alert(`Delete User ${res}`));
+        // LogOut
+        signOutWithKakao();
+    }
 
     return (
         <>
@@ -279,7 +286,7 @@ const reqChangeUserInfo = (fetchHeader, changeType, changeValue) => {
 
                 </InfoArea>
                 <RectangleBtn color='blue' text='로그아웃' onPress={() => signOutWithKakao()}/>
-                <RectangleBtn color='red' text='계정 삭제' onPress={() => alert('계정 삭제')}/>
+                <RectangleBtn color='red' text='계정 삭제' onPress={() => withdrawal()}/>
 
                 
                 {/* <CommonBtn onPress={() => {{navigation.navigate('SearchLocate', {setLocateProcess : setLocate, setRegionProcess : setRegion, navigation: route})}}}>
@@ -296,7 +303,7 @@ const reqChangeUserInfo = (fetchHeader, changeType, changeValue) => {
 
             </ScrollView>
         }
-        {userData == null && kakaoAuthData == null && tryGetUserData == false && <Auth />}
+        {userData == null && <Auth />}
         </>
     )
 }
