@@ -31,8 +31,8 @@ router.get('/:type/:id', (req, res) => {
 })
 
 // All Group with Sorting
-router.get('/Sort/:type/:method/:num', (req, res) => {
-    let sql = `SELECT * FROM ${req.params.type}View ORDER BY ${req.params.method} LIMIT 0, ${req.params.num}`; // Club ?��?��블에?�� Sorting ?��?�� num �? 까�???�� 값을 �??��?��
+router.get('/Sort/:type/:condition/:method/:num', (req, res) => {
+    let sql = `SELECT * FROM ${req.params.type}View WHERE ${req.params.condition} ORDER BY ${req.params.method} LIMIT 0, ${req.params.num}`; // Club ?��?��블에?�� Sorting ?��?�� num �? 까�???�� 값을 �??��?��
     console.log(sql);
     conn.query(sql, function (error, rows, fields) { // sql 쿼리 ?��?��
         if (!error) {
@@ -229,13 +229,13 @@ router.delete('/:type/:groupId/', async (req, res) => {
 })
 
 
-router.get('/Search/:searchKey/:long/:lat', (req, res) => {
+router.get('/Search/:type/:searchKey/:long/:lat', (req, res) => {
 
     let long = req.params.long ? Number(req.params.long) : 127;
     let lat = req.params.lat ? Number(req.params.lat) : 37;
 
     // Ref : [ST_Distance_Sphere ?ï¿½ï¿½?ï¿½ï¿½|https://tzara.tistory.com/45]
-    let sql1 = `SELECT * FROM ClubView WHERE (name LIKE '%${req.params.searchKey}%' OR location LIKE '%${req.params.searchKey}%' OR description LIKE '%${req.params.searchKey}%' OR keyword LIKE '%${req.params.searchKey}%') ORDER BY ST_Distance_Sphere(location_ll, point(${long}, ${lat})), numMember`;
+    let sql1 = `SELECT * FROM ${req.params.type}View WHERE (name LIKE '%${req.params.searchKey}%' OR location LIKE '%${req.params.searchKey}%' OR description LIKE '%${req.params.searchKey}%' OR keyword LIKE '%${req.params.searchKey}%') ORDER BY ST_Distance_Sphere(location_ll, point(${long}, ${lat})), numMember`;
 
     conn.query(sql1, function (error, rows, fields) {
         if (!error) {
