@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import { Dimensions, ScrollView, Text } from 'react-native';
-import Styled from 'styled-components/native';
+import Styled, {css} from 'styled-components/native';
 import SpotCard from './SpotCard';
 
 
@@ -27,6 +27,11 @@ const Body = Styled.TouchableOpacity`
     align-items: center;
     justify-content: center;
     width: ${Dimensions.get('window').width / 2}px;
+    ${props => props.isPast &&
+        css`
+            background-color: gray;
+        `
+    }
     /* background-color: #ffff00; */
     /* border-color: black; */
     /* border-width: 2px; */
@@ -106,11 +111,11 @@ const SpotCards = ({title, datas, stackNavi}) => {
                     scrollEnabled={dataLength > 1}
                     onScroll={(event) => {
                         setIndicatorIdx(
-                            Math.round(event.nativeEvent.contentOffset.x / (Dimensions.get('window').width))
+                            Math.ceil(event.nativeEvent.contentOffset.x / (Dimensions.get('window').width))
                         );
                     }}>
                         {datas.map((data, index) => (
-                             <Body activeOpacity={1} key={index} onPress = {() => {stackNavi.navigate('SpotPage', {spot : data});}} > 
+                             <Body isPast={data.past} activeOpacity={1} key={index} onPress = {() => {stackNavi.navigate('SpotPage', {spot : data});}} > 
                                 <SpotCard spot={data} />
                             </Body> 
                         ))}

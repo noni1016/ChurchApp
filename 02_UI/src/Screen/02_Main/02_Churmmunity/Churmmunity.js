@@ -11,6 +11,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import SpotCards from '~/Components/SpotCards';
 import ClubCards from '~/Components/ClubCards';
 import ClubCardsColView from '~/Screen/02_Main/02_Churmmunity/Group/ClubCardsColView';
+import SpotCardsColView from '~/Screen/02_Main/02_Churmmunity/Group/SpotCardsColView';
 import ClubPage from '~/Screen/02_Main/02_Churmmunity/Group/ClubPage'
 import SpotPage from '~/Screen/02_Main/02_Churmmunity/Group/SpotPage'
 import Comments from './Group/Comments';
@@ -25,6 +26,10 @@ import SearchGroups from './SearchGroups';
 import GroupNotification from '~/Screen/02_Main/02_Churmmunity/Group/GroupNotification';
 import {ProfileMain} from '~/Screen/02_Main/03_Profile/Profile';
 import {TabNavi} from '~/Context/Navi';
+
+import SearchChurchPage from '~/Screen/02_Main/03_Profile/SearchChurchPage';
+import AddChurchPage from '~/Screen/02_Main/03_Profile/AddChurchPage';
+import ChurchView from '~/Screen/02_Main/03_Profile/ChurchView';
 
 
 const Stack = createStackNavigator();
@@ -51,13 +56,15 @@ const ChurmmunityMain = ({route, navigation}) => {
     const domain = useContext(DomainContext);
     var [recClubs, setRecClubs] = useState([initClub]);
     var [recSpots, setRecSpots] = useState([initSpot]);
+    var [pastSpots, setPastSpots] = useState([initSpot]);
     // var [loading, setLoading] = useState([]);
 
     const {userData, userClub, userSpot} = useContext(UserData);
 
     useEffect(() => {
-        fetch(`${domain}/Group/Sort/Club/Rand()/7`).then(res => res.json()).then(res => {setRecClubs(res)});
-        fetch(`${domain}/Group/Sort/Spot/time/7`).then(res => res.json()).then(res => {setRecSpots(res)});
+        fetch(`${domain}/Group/Sort/Club/1/Rand()/7`).then(res => res.json()).then(res => {setRecClubs(res)});
+        fetch(`${domain}/Group/Sort/Spot/past = 0/time/7`).then(res => res.json()).then(res => {setRecSpots(res)});
+        fetch(`${domain}/Group/Sort/Spot/past = 1/time/7`).then(res => res.json()).then(res => {setPastSpots(res)});
         
         console.log('churmmunity main====')
         
@@ -83,6 +90,7 @@ const ChurmmunityMain = ({route, navigation}) => {
             <ClubCards title={'오늘의 모임'} orgDatas={recClubs} stackNavi={navigation}/>
             <SpotCards title={'참여한 번개 모임'} datas={userSpot} stackNavi={navigation}/>
             <SpotCards title={'다가오는 번개 모임'} datas={recSpots} stackNavi={navigation}/>
+            <SpotCards title={'지난 번개 모임'} datas={pastSpots} stackNavi={navigation}/>
             <EmptyArea />
         </ScrollView>
     );
@@ -106,9 +114,18 @@ const ChurmmunityStackNavi = () => {
                     )
                 })}
             />
-             <Stack.Screen
+            <Stack.Screen
                 name="ShowMoreClubs"
                 component={ClubCardsColView}
+                options={{
+                    headerShown: true,
+                    headerBackTitleVisible: false,
+                    title: '내 모임'
+                }}
+            />
+            <Stack.Screen
+                name="ShowMoreSpots"
+                component={SpotCardsColView}
                 options={{
                     headerShown: true,
                     headerBackTitleVisible: false,
@@ -172,6 +189,11 @@ const ChurmmunityStackNavi = () => {
              <Stack.Screen
                 name="SearchLocate"
                 component={SearchLocate}
+                options={{
+                    headerShown: true,
+                    headerBackTitleVisible: true,
+                    title: '지역 찾기',
+                }}
             />
             <Stack.Screen
                 name="SearchGroups"
@@ -187,6 +209,32 @@ const ChurmmunityStackNavi = () => {
             <Stack.Screen
                 name="Profile"
                 component={ProfileMain}
+            />
+            <Stack.Screen
+                name="SearchChurchPage"
+                component={SearchChurchPage}
+                options={{
+                    headerShown: true,
+                    headerBackTitleVisible: true,
+                    title: '교회 찾기',
+                }}
+            />
+            <Stack.Screen
+                name="AddChurchPage"
+                component={AddChurchPage}
+                options={{
+                    headerShown: true,
+                    headerBackTitleVisible: true,
+                    title: '교회 추가',
+                }}
+            />
+            <Stack.Screen
+                name="ChurchView"
+                component={ChurchView}
+                options={{
+                    headerShown: true,
+                    headerBackTitleVisible: true,
+                }}
             />
         </Stack.Navigator>
     )

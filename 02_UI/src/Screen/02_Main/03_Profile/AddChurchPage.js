@@ -2,7 +2,7 @@ import React, {useState, useEffect, createContext} from 'react';
 import { useContext } from 'react/cjs/react.development';
 import { ScrollView, View, Text, Image } from 'react-native';
 import Styled from 'styled-components/native';
-import DaumMap from './DaumMapController';
+import DaumMap from '../../03_Map/DaumMapController';
 import Geolocation from 'react-native-geolocation-service';
 import { useIsFocused } from '@react-navigation/native';
 import Styles from '~/Style';
@@ -57,7 +57,7 @@ const UserContextProvider = ({children}) => {
     )
 }
 
-const SearchLocate = ({route, navigation})=>{
+const AddChurchPage = ({route, navigation})=>{
     const isFocused = useIsFocused();
 
     let defaultLocation = {latitude: 1000.0, longitude: 1000.0};
@@ -254,4 +254,4 @@ const SearchLocate = ({route, navigation})=>{
 
 
 export {MapData, UserContextProvider};
-export default SearchLocate;
+export default AddChurchPage;
