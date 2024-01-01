@@ -29,6 +29,7 @@ import {TabNavi} from '~/Context/Navi';
 
 import SearchChurchPage from '~/Screen/02_Main/03_Profile/SearchChurchPage';
 import AddChurchPage from '~/Screen/02_Main/03_Profile/AddChurchPage';
+import ChurchView from '~/Screen/02_Main/03_Profile/ChurchView';
 
 
 const Stack = createStackNavigator();
@@ -225,6 +226,14 @@ const ChurmmunityStackNavi = () => {
                     headerShown: true,
                     headerBackTitleVisible: true,
                     title: '교회 추가',
+                }}
+            />
+            <Stack.Screen
+                name="ChurchView"
+                component={ChurchView}
+                options={{
+                    headerShown: true,
+                    headerBackTitleVisible: true,
                 }}
             />
         </Stack.Navigator>

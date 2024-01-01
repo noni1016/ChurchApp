@@ -184,5 +184,20 @@ router.put('/:userId/:column', async (req, res) => {
     });
 });
 
+// User delete
+router.delete('/:userId', (req, res) => {
+    let sql = `DELETE FROM User WHERE id=${req.params.userId}`;
+    console.log(sql);
+
+    conn.query(sql, function (error, rows, fields) {
+        if (!error) {
+            console.log(rows);
+            res.send(rows);
+        } else {
+            console.log('query error : ' + error);
+        }
+    });
+})
+
 
 module.exports = router;

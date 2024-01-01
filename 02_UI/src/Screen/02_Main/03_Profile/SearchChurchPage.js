@@ -16,9 +16,9 @@ border-bottom-width: 3px;
 
 const SearchBtn = Styled.TouchableOpacity`
 background-color: green;
-width: 30%;
-height: 30px;
+width: 40%;
 border-bottom-width: 3px;
+align-items: center;
 `;
 
 const AddBox = Styled.TouchableOpacity`
@@ -43,9 +43,16 @@ const PlusText = Styled.Text`
     margin: 10px 0px 10px 0px; //상 우 하 좌
 `;
 
+const ChurchInfoBtn = Styled.TouchableOpacity`
+
+width: 100%;
+height: 30px;
+border-bottom-width: 3px;
+`;
+
 const SearchChurchPage = ({route, navigation})=>{
     let [serchChurch, setSerchChurch] = useState("교회 이름");
-    let [searchResult, setSearchResult] = useState([]);
+    const [searchResult, setSearchResult] = useState([]);
     const domain = useContext(DomainContext);
    
     useEffect(() => {
@@ -53,20 +60,13 @@ const SearchChurchPage = ({route, navigation})=>{
     },[])
 
     useEffect(()=>{
-        console.log("###")
-        console.log("new result")
-        console.log("####")
-
-        for(let i = 0; i<searchResult.length; ++i)
-        {
-            console.log(searchResult[i].name)
-        }
     },[searchResult])
 
     return (
         <>
             <ScrollView>
-            <Input
+                <View style={{flexDirection: "row", justifyContent:"space-between"}}>
+                    <Input
                     autoFocus={false}
                     autoCapitalize="none"
                     autoCorrect={false}
@@ -77,25 +77,33 @@ const SearchChurchPage = ({route, navigation})=>{
                         serchChurch = setSerchChurch(value);
                     }}
                     style={Styles.default}
-                />
+                    />
+                
+                    <SearchBtn onPress={() => fetch(`${domain}/Church/Find/${serchChurch}`).then(res => res.json()).then(res => 
+                    {
+                        console.log(res)
+                        setSearchResult(res);
+                    })}
+                    >
+                    <Text>교회 찾기</Text>
+                    </SearchBtn>
+                </View>
+            
 
-                <SearchBtn onPress={() => fetch(`${domain}/Church/Find/${serchChurch}`).then(res => res.json()).then(res => 
-                {
-                    console.log(res)
-                    setSearchResult(res);
-                }) }
-                height = "30%">
-                    <Text> Search Locate </Text>
-                </SearchBtn>
+                
                 {searchResult ?(
                 <>
                 {
                     searchResult.map((data, index) => (
-                        <SearchBtn onPress = {()=>{
-                            // setRegion(data.place_name);
-                            // setLocation({longitude: data.x, latitude: data.y});
-                        }}><Text style={Styles.default}>{data.name}</Text>
-                        </SearchBtn>
+                        
+                        <ChurchInfoBtn onPress = {()=>{
+                            {navigation.navigate('ChurchView', {setLocateProcess : setSearchResult, navigation: navigation})}
+                        }}>
+                            <View style={{flexDirection: "row", justifyContent:"space-between"}}>
+                                <Text style={Styles.default}>{data.name}</Text>
+                                <Text style={Styles.default}>{data.membercount + "명"}</Text>
+                            </View>
+                        </ChurchInfoBtn>
                     ))
                 }
                 </>
