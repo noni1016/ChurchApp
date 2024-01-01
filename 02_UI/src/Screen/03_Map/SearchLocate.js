@@ -65,6 +65,7 @@ const SearchLocate = ({route, navigation})=>{
     let [lastSerchRegion, setLastSerchRigion] = useState(""); //마지막으로 검색한 내용
     let [resCount, setResCount] = useState(1);
     let [regionIndex, setRegionIndex] = useState(0);
+    let [selectFlag, setSelectRegion] = useState(false);
 
     const [location, setLocation] = useState(defaultLocation);
     const [region, setRegion] = useState("");
@@ -167,6 +168,7 @@ const SearchLocate = ({route, navigation})=>{
                         <SearchResultBtn onPress = {()=>{
                             setRegion(data.place_name);
                             setLocation({longitude: data.x, latitude: data.y});
+                            setSelectRegion(true);
                         }}><Text style={Styles.default}>{data.place_name}</Text>
                         </SearchResultBtn>
                     ))
@@ -218,6 +220,11 @@ const SearchLocate = ({route, navigation})=>{
                 </SearchBtn>
                 
                 <ChangeBtn onPress={() => {
+                    if(selectFlag == false)
+                    {
+                        alert('지역을 선택 해 주세요.');
+                        return;
+                    }
                     if (location.longitude == 1000.0 && location.latitude == 1000.0)
                         <Text> Default Loacate! need search! </Text>
 
