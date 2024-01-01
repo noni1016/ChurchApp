@@ -29,9 +29,9 @@ const PlusText = Styled.Text`
     margin 10px 0px 10px 0px; //╩С ©Л го аб
 `;
 
-const PlusBtn = ({text}) => {
+const PlusBtn = ({text, onPress}) => {
     return (
-        <PlusBtnBox>
+        <PlusBtnBox onPress={() => onPress()}>
             <PlusText>+</PlusText>
             <Text style={Styles.default}>{text}</Text>
         </PlusBtnBox>
