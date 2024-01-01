@@ -130,8 +130,8 @@ const ProfileMain = ({navigation, route}) => {
         // setLogOutResult(message);
         console.log("signOut");
         setUserData(null);
-        setKakaoAuthData(null);
         setTryGetUserDataFlag(false);
+        setKakaoAuthData(null);
     }
 
     useEffect(() => {
@@ -296,7 +296,7 @@ const reqChangeUserInfo = (fetchHeader, changeType, changeValue) => {
 
             </ScrollView>
         }
-        {userData == null && <Auth />}
+        {userData == null && kakaoAuthData == null && tryGetUserData == false && <Auth />}
         </>
     )
 }
