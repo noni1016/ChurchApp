@@ -22,6 +22,7 @@ import RectangleBtn from '~/Components/RectangleBtn';
 import {logout} from '@react-native-seoul/kakao-login';
 
 import Auth from '~/Screen/01_Auth/Auth';
+import GroupTile from '~/Components/GroupTile';
 
 
 const tempUser = {id: 4, name: "짱쎄", photo: 'Profile/짱쎄.jpg', role: 'user'};
@@ -105,7 +106,7 @@ const ActivityRecordArea = styled.View`
 
 const ProfileMain = ({navigation, route}) => {
     const domain = useContext(DomainContext);
-    const {userData, setUserData} = useContext(UserData);
+    const {userData, setUserData, userClub, userSpot} = useContext(UserData);
     const [member, setMember] = useState(route ? route.params.member : userData);
     const [imgSrc, setImgSrc] = useState('');
     const [locate, setLocate] = useState([0,0]);
@@ -277,10 +278,13 @@ const ProfileMain = ({navigation, route}) => {
                         /> }
                         </>
                     )}
-                    <InfoTextBold>활동 기록</InfoTextBold>
+                    <InfoTextBold>활동</InfoTextBold>
                     <ActivityRecordArea>
                         <InfoTextBold>소속 공동체</InfoTextBold>
                         <InfoText>여기에 소속 공동체와 참여한 번개를 넣는게 좋을까요?</InfoText>
+                        {userClub.map((data, index) => (
+                            <GroupTile key={index} group={data} type='Club'/>
+                        ))}
                         <InfoTextBold>참여한 번개</InfoTextBold>
                     </ActivityRecordArea>
 

@@ -147,7 +147,7 @@ const ChurmmunityStackNavi = () => {
                 options={{
                     headerShown: false,
                     headerBackTitleVisible: false,
-                    title: '소모임 상세보기'
+                    title: '번개 상세보기'
                 }}
             />
             <Stack.Screen
