@@ -95,10 +95,7 @@ const SearchChurchPage = ({route, navigation})=>{
                 <>
                 {
                     searchResult.map((data, index) => (
-                        
-                        <ChurchInfoBtn onPress = {()=>{
-                            {navigation.navigate('ChurchView', {setLocateProcess : setSearchResult, navigation: navigation})}
-                        }}>
+                        <ChurchInfoBtn onPress={() => {{navigation.navigate('ChurchView', {churchInfo: data, navigation: navigation})}}}>
                             <View style={{flexDirection: "row", justifyContent:"space-between"}}>
                                 <Text style={Styles.default}>{data.name}</Text>
                                 <Text style={Styles.default}>{data.membercount + "명"}</Text>

@@ -52,7 +52,8 @@ border-bottom-width: 3px;
 
 const ChurchView = ({route, navigation})=>{
     const domain = useContext(DomainContext);
-   
+    if (route) var [data, setData] = useState(route.params.churchInfo);
+
     useEffect(() => {
     },[])
 
@@ -60,9 +61,11 @@ const ChurchView = ({route, navigation})=>{
         <>
             <ScrollView>
                 <View style={{flexDirection: "row", justifyContent:"space-between"}}>
-                    {console.log(route)}
-                    <Text style={Styles.default}>교회를 검색하세요.</Text>
-                    <Text style={Styles.default}>교회를 검색하세요.</Text>
+                    {console.log(data)}
+                    <Text style={Styles.default}>{data.pastor}</Text>
+                    <Text style={Styles.default}>{data.name}</Text>
+                    <Text style={Styles.default}>{data.membercount}</Text>
+                    <Text style={Styles.default}>{data.location_ll}</Text>
                 </View>
             </ScrollView>
         </>
