@@ -89,7 +89,7 @@ const ClubCards = ({title, orgDatas, stackNavi}) => {
                     }}>
                         {datas.map((data, index) => (
                              <Body activeOpacity={1} key={index} onPress = {() => {
-                                stackNavi.navigate('ClubPage', {club : data});}}> 
+                                stackNavi.navigate('ClubPage', {group : data});}}> 
                                 <ClubCard club={data} />
                             </Body>
                         ))}

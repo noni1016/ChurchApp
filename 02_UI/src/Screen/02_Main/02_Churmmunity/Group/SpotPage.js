@@ -61,9 +61,7 @@ const tempSpot = {id: 1, name: '막무가내 리코더 합주', mainImg: 'GroupI
 const SpotPage = ({route, navigation}) => {
     const domain = useContext(DomainContext);
     const {userData} = useContext(UserData);   
-    // var [data, setData] = useState(tempSpot);
-    if (route) var [data, setData] = useState(route.params.spot);
-    else var [data, setData] = useState(tempSpot);
+    const data = route.params.group;
     var [url, setUrl] = useState('');
     var [resizedWidth, setResizedWidth] = useState(100);
     var [resizedHeight, setResizedHeight] = useState(100);

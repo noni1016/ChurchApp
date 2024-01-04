@@ -33,15 +33,13 @@ const CtrlArea = styled.View`
 `;
 
 // type: (Club, Spot)
-const GroupTile = ({group, type}) => {
+const GroupTile = ({group, type, stackNavi}) => {
     const domain = useContext(DomainContext);
     const {userData} = useContext(UserData);
     const [imgUrl, setImgUrl] = useState(`${domain}/${type}MainImg/${group.mainImg}`);
     const [isLeader, setIsLeader] = useState(false);
 
     useEffect(() => {
-        console.log(group);
-        console.log(userData);
         setIsLeader(group.leader == userData.id);
     }, [])
 
@@ -61,7 +59,7 @@ const GroupTile = ({group, type}) => {
     }
 
     return (
-        <GroupTileBox>
+        <GroupTileBox onPress={() => {stackNavi.navigate(`${type}Page`, {group: group})}}>
             <Image style={{width: 50, height: 50, flex: 2, resizeMode: 'contain'}} source={{uri: imgUrl}}/>
             <TextArea>
                 <Text>{group.name}</Text>

@@ -24,6 +24,9 @@ import {logout} from '@react-native-seoul/kakao-login';
 import Auth from '~/Screen/01_Auth/Auth';
 import GroupTile from '~/Components/GroupTile';
 
+import ClubPage from '~/Screen/02_Main/02_Churmmunity/Group/ClubPage'
+import SpotPage from '~/Screen/02_Main/02_Churmmunity/Group/SpotPage'
+
 
 const tempUser = {id: 4, name: "짱쎄", photo: 'Profile/짱쎄.jpg', role: 'user'};
 const Stack = createStackNavigator();
@@ -300,11 +303,11 @@ const ProfileMain = ({navigation, route}) => {
                         <InfoTextBold>소속 공동체</InfoTextBold>
                         <InfoText>여기에 소속 공동체와 참여한 번개를 넣는게 좋을까요?</InfoText>
                         {userClub.map((data, index) => (
-                            <GroupTile key={index} group={data} type='Club'/>
+                            <GroupTile key={index} group={data} type='Club' stackNavi={navigation}/>
                         ))}
                         <InfoTextBold>참여한 번개</InfoTextBold>
                         {userSpot.map((data, index) => (
-                            <GroupTile key={index} group={data} type='Spot'/>
+                            <GroupTile key={index} group={data} type='Spot' stackNavi={navigation}/>
                         ))}
                     </ActivityRecordArea>
 
@@ -341,7 +344,24 @@ const ProfileStackNavi = ({tabNavi}) => {
             name={'ProfileMain'}
             children={({navigation}) => <ProfileMain navigation={navigation} tabNavi={tabNavi} />}        
         />
-
+        <Stack.Screen
+            name="ClubPage"
+            component={ClubPage}
+            options={{
+                headerShown: false,
+                headerBackTitleVisible: false,
+                title: '소모임 상세보기'
+            }}
+        />
+        <Stack.Screen
+            name="SpotPage"
+            component={SpotPage}
+            options={{
+                headerShown: false,
+                headerBackTitleVisible: false,
+                title: '번개 상세보기'
+            }}
+        />
       </Stack.Navigator>  
     );
 }
