@@ -65,7 +65,8 @@ const GroupTile = ({group, type}) => {
             <Image style={{width: 50, height: 50, flex: 2, resizeMode: 'contain'}} source={{uri: imgUrl}}/>
             <TextArea>
                 <Text>{group.name}</Text>
-                <Text>{group.location}</Text>
+                {type == 'Club' && <Text>{group.location}</Text>}
+                {type == 'Spot' && <Text>{group.time}</Text>}
             </TextArea>
             <CtrlArea>
                 {isLeader && <FontAwesome5 name="crown" color={'blue'} size={20} />}
