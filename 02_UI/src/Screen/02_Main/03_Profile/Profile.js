@@ -81,7 +81,7 @@ const InfoArea = styled.View`
     justify-content: flex-start;
     align-items: flex-start;
     width: 100%;
-    background-color: yellow;
+    background-color: transparent;
 `;
 
 const InfoTextBold = styled.Text`
@@ -103,7 +103,7 @@ const InfoText = styled.Text`
 
 const ActivityRecordArea = styled.View`
     width: 90%;
-    background-color: green;
+    background-color: transparent;
     margin-left: 5%;
 `;
 
@@ -301,7 +301,6 @@ const ProfileMain = ({navigation, route}) => {
                     <InfoTextBold>활동</InfoTextBold>
                     <ActivityRecordArea>
                         <InfoTextBold>소속 공동체</InfoTextBold>
-                        <InfoText>여기에 소속 공동체와 참여한 번개를 넣는게 좋을까요?</InfoText>
                         {userClub.map((data, index) => (
                             <GroupTile key={index} group={data} type='Club' stackNavi={navigation}/>
                         ))}
