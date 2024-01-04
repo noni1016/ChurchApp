@@ -220,6 +220,23 @@ const ProfileMain = ({navigation, route}) => {
     };
 
     const withdrawal = () => {
+        // Check if the user have a group with leader
+        // let isLeaderOfGroup = false;
+        
+        for (i = 0; userClub.length; i++) {
+            if (userClub[i].leader == userData.id) {
+                alert('공동체의 리더는 먼저 리더를 변경한 후 탈퇴할 수 있습니다. 리더인 공동체에서 리더를 변경해주세요.');
+                return;
+            }
+        }
+
+        for (i = 0; userSpot.length; i++) {
+            if (userSpot[i].leader == userData.id) {
+                alert('공동체의 리더는 먼저 리더를 변경한 후 탈퇴할 수 있습니다. 리더인 공동체에서 리더를 변경해주세요.');
+                return;
+            }
+        }
+
         // Delete user info from database
         fetch(`${domain}/User/${userData.id}`, {method: 'DELETE', headers: {'Content-Type': 'application/json'}}).then(res=>res.json()).then((res) => alert(`Delete User ${res}`));
         // LogOut
