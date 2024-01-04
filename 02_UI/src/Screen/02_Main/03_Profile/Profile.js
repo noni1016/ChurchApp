@@ -286,6 +286,9 @@ const ProfileMain = ({navigation, route}) => {
                             <GroupTile key={index} group={data} type='Club'/>
                         ))}
                         <InfoTextBold>참여한 번개</InfoTextBold>
+                        {userSpot.map((data, index) => (
+                            <GroupTile key={index} group={data} type='Spot'/>
+                        ))}
                     </ActivityRecordArea>
 
                 </InfoArea>
