@@ -27,6 +27,10 @@ import GroupTile from '~/Components/GroupTile';
 import ClubPage from '~/Screen/02_Main/02_Churmmunity/Group/ClubPage'
 import SpotPage from '~/Screen/02_Main/02_Churmmunity/Group/SpotPage'
 
+import EditProfile from './EditProfile';
+
+import ShowProfileImg from './ShowProfileImg';
+
 
 const tempUser = {id: 4, name: "짱쎄", photo: 'Profile/짱쎄.jpg', role: 'user'};
 const Stack = createStackNavigator();
@@ -148,7 +152,7 @@ const ProfileMain = ({navigation, route}) => {
                     <HeaderButtonsContainer>
                         {userData.id != member.id && <Icon2 name="notification" size={26} onPress={() => alert('신고하기')} />}
                         <Icon2 name="message1" size={26} onPress={() => alert('채팅')} />
-                        {userData.id == member.id && <Icon1 name="settings-outline" size={26} onPress={() => alert('프로필 수정')} />}
+                        {userData.id == member.id && <Icon1 name="settings-outline" size={26} onPress={() => {navigation.navigate('EditProfile', {navigation: navigation})}} />}
                     </HeaderButtonsContainer>
                 )
             });
@@ -199,28 +203,6 @@ const ProfileMain = ({navigation, route}) => {
         });
     }
 
-    const reqChangeUserInfo = (fetchHeader, changeType, changeValue) => {
-        console.log(changeType, changeValue);
-        console.log(userData);
-        let fetchUrl = `${domain}/User/${userData.id}/${changeType}`;
-        console.log(fetchUrl);
-        
-        fetch(fetchUrl, {
-        method: 'PUT',
-        body: changeValue,
-        headers: fetchHeader
-        }).then(res => res.json()).then(res => {
-            console.log('[query result]');
-            console.log(res);
-            if (res.id) {
-                setUserData(res);
-            }
-        }).catch(e => {
-        alert('프로필 사진 변경에 실패하였습니다.');
-        console.log("[ChangeFail]");
-        console.log(e);
-        });
-    };
 
     const withdrawal = () => {
         // Check if the user have a group with leader
@@ -252,7 +234,7 @@ const ProfileMain = ({navigation, route}) => {
                 userData &&
                 <ScrollView style={{padding: 10}}>
                 <HeaderBox>
-                <ChangePhoto onPress={() => {showCameraRoll();}}>
+                <ChangePhoto onPress={() => {navigation.navigate('ShowProfileImg')}}>
                     <Image style={{ width: 70, height: 70, flex: 1, resizeMode: 'contain' }} source={{ uri: userImgUrl }}/>
                 </ChangePhoto>
 
@@ -359,6 +341,24 @@ const ProfileStackNavi = ({tabNavi}) => {
                 headerShown: false,
                 headerBackTitleVisible: false,
                 title: '번개 상세보기'
+            }}
+        />
+        <Stack.Screen
+            name="EditProfile"
+            component={EditProfile}
+            options={{
+                headerShown: true,
+                headerBackTitleVisible: true,
+                title: '프로필 수정'
+            }}
+        />
+        <Stack.Screen
+            name="ShowProfileImg"
+            component={ShowProfileImg}
+            options={{
+                headerShown: false,
+                headerBackTitleVisible: false,
+                title: '프로필 크게보기'
             }}
         />
       </Stack.Navigator>  
