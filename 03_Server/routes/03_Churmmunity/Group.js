@@ -64,12 +64,12 @@ const uploadGroupImg = multer({
             var group = ``;
             if (req.params.type == 1) // Club
             {
-                sql1 = `INSERT INTO Club (name, location, location_ll, description, keyword) VALUES ('${req.body.name}', '${req.body.location}', ST_GeomFromText('POINT(${req.body.location_ll_x} ${req.body.location_ll_y})', 4326), '${req.body.description}','${req.body.keyword}')`;
+                sql1 = `INSERT INTO Club (name, location, location_ll, description, keyword, leader) VALUES ('${req.body.name}', '${req.body.location}', ST_GeomFromText('POINT(${req.body.location_ll_x} ${req.body.location_ll_y})', 4326), '${req.body.description}','${req.body.keyword}', '${req.body.userId}')`;
                 group = `Club`;
             }
             else if (req.params.type == 2) // Spot
             {
-                sql1 = `INSERT INTO Spot (name, location, location_ll, description, keyword, dateTime) VALUES ('${req.body.name}', '${req.body.location}', ST_GeomFromText('POINT(${req.body.location_ll_x} ${req.body.location_ll_y})', 4326), '${req.body.description}','${req.body.keyword}', '${req.body.dateTime}')`;
+                sql1 = `INSERT INTO Spot (name, location, location_ll, description, keyword, time, leader) VALUES ('${req.body.name}', '${req.body.location}', ST_GeomFromText('POINT(${req.body.location_ll_x} ${req.body.location_ll_y})', 4326), '${req.body.description}','${req.body.keyword}', '${req.body.time}', '${req.body.userId}')`;
                 group = 'Spot';
             }
 
@@ -114,18 +114,13 @@ const uploadGroupImg = multer({
 }).single('file');
 
 router.post('/:type', async (req, res) => {
-    let sql1 = ``;
-    let sql2 = ``;
-    let sql3 = ``;
-    let sql4 = ``;
 
     uploadGroupImg(req, res, async (err) => {
         if (err) {
             res.send({result: false});
         }
         else {
-            res.json(returnTableValue);
-        }
+            res.json(returnTableValue);        }
 
     })
 
@@ -250,7 +245,7 @@ router.get('/Search/:type/:searchKey/:long/:lat', (req, res) => {
 // Join Group 
 router.get('/Join/:type/:groupId/:userId', (req, res) => {
     // console.log('Join Group');
-    let sql = `INSERT INTO ${req.params.type}User (${req.params.type}Id, userId, role) VALUES (${req.params.groupId}, ${req.params.userId}, 'user')`;
+    let sql = `INSERT INTO ${req.params.type}User (${req.params.type}Id, userId, role) VALUES (${req.params.groupId}, ${req.params.userId}, 0)`;
     console.log(sql);
 
     conn.query(sql, function (error, rows, fields) {
