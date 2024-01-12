@@ -16,7 +16,7 @@ router.get('/:userId/Club', (req, res) => {
         AND ClubUser.userId = User.id
         AND ClubUser.clubId = ClubView.id`;
     console.log(sql)
-    conn.query(sql, function (error, rows, fields) { // sql ì¿¼ë¦¬ ìˆ˜í–‰
+    conn.query(sql, function (error, rows, fields) { // sql ì¿¼ë¦¬ ?ˆ˜?–‰
         if (!error) {
             res.send(rows);
         } else {
@@ -34,7 +34,7 @@ router.get('/:userId/Spot', (req, res) => {
         AND SpotUser.spotId = SpotView.id
     ORDER BY SpotView.past, SpotView.time`;
     console.log(sql)
-    conn.query(sql, function (error, rows, fields) { // sql ì¿¼ë¦¬ ìˆ˜í–‰
+    conn.query(sql, function (error, rows, fields) { // sql ì¿¼ë¦¬ ?ˆ˜?–‰
         if (!error) {
             res.send(rows);
         } else {
@@ -47,7 +47,7 @@ router.get('/:userId/Spot', (req, res) => {
 router.get('/:userId', (req, res) => {
     let sql = `SELECT * FROM User WHERE id = ${req.params.userId}`;
     console.log(sql)
-    conn.query(sql, function (error, rows, fields) { // sql ì¿¼ë¦¬ ìˆ˜í–‰
+    conn.query(sql, function (error, rows, fields) { // sql ì¿¼ë¦¬ ?ˆ˜?–‰
         if (!error) {
             console.log(rows);
             res.send(rows);
@@ -61,7 +61,7 @@ router.get('/:userId', (req, res) => {
 router.get('/Domain/:domain/:id_domain', (req, res) => {
     let sql = `SELECT * FROM User WHERE id_${req.params.domain} = ${req.params.id_domain}`;
     console.log(sql)
-    conn.query(sql, function (error, rows, fields) { // sql ì¿¼ë¦¬ ìˆ˜í–‰
+    conn.query(sql, function (error, rows, fields) { // sql ì¿¼ë¦¬ ?ˆ˜?–‰
         if (!error) {
             console.log(rows);
             res.send(rows);
@@ -96,6 +96,29 @@ router.post('/Domain/:domain', async (req, res) => {
 
 // Update(Put) User Information
 // Update(Put) User Img
+
+router.get('/:userId/photo/default', (req, res) => {
+    let sql1 = `UPDATE User SET photo = 'Jesus.png'`;
+    let sql2 = `SELECT * FROM User WHERE id = ${req.params.userId}`;
+
+    console.log(sql1);
+    conn.query(sql1, function (err, rows, fields) {
+        if (!err) {
+            console.log(sql2)
+            conn.query(sql2, function (err, rows, fields) {
+                if (!err) {
+                    console.log(rows)
+                    res.send(rows[0]);
+                } else {
+                    console.log('query error' + err);
+                }
+            })
+        } else {
+            console.log('query error' + err);
+        }
+    })
+})
+
 let fileName = '';
 var queryRes;
 const putUserImg = multer({
@@ -148,7 +171,7 @@ router.put('/:userId/photo', async (req, res, next) => {
     // let queryRes = false;
     // let sql = `UPDATE User SET photo = '${domain}/Profile/${fileName}' WHERE id = ${req.params.userId}`;
     // console.log(sql);
-    // conn.query(sql, function (error, rows, fields) { // sql ì¿¼ë¦¬ ìˆ˜í–‰
+    // conn.query(sql, function (error, rows, fields) { // sql ì¿¼ë¦¬ ?ˆ˜?–‰
     //     if (!error) {
     //         console.log(rows.affectedRows);
     //         if (rows.affectedRows === 1) queryRes = true;
@@ -164,6 +187,8 @@ router.put('/:userId/photo', async (req, res, next) => {
 
 
 
+
+
 router.put('/:userId/:column', async (req, res) => {
     let queryRes;
     let sql1 = `UPDATE User SET ${req.params.column} = '${req.body.data}' WHERE id = ${req.params.userId}`;
@@ -172,7 +197,7 @@ router.put('/:userId/:column', async (req, res) => {
 
 
 
-    conn.query(sql, function (error, rows, fields) { // sql ì¿¼ë¦¬ ìˆ˜í–‰
+    conn.query(sql, function (error, rows, fields) { // sql ì¿¼ë¦¬ ?ˆ˜?–‰
         if (!error) {
             console.log(rows.affectedRows);
             if (rows.affectedRows === 1) queryRes = true;
