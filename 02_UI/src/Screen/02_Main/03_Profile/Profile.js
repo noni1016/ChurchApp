@@ -1,8 +1,8 @@
 import React, {useState, useEffect, useContext} from 'react';
-import { View, Text, ScrollView, Image } from 'react-native';
+import { View, Text, ScrollView, Image, TouchableOpacity } from 'react-native';
 import styled from 'styled-components/native';
 import {DomainContext} from '~/Context/Domain';
-import {UserData} from '~/Context/User';
+import {KakaoAuthData, UserData, TryGetUserData} from '~/Context/User';
 import {
     createStackNavigator,
 } from '@react-navigation/stack';
@@ -12,6 +12,25 @@ import Icon2 from 'react-native-vector-icons/AntDesign';
 
 import {launchImageLibrary} from 'react-native-image-picker';
 import DaumMap from './../../03_Map/DaumMapController';
+
+import { useIsFocused } from '@react-navigation/native';
+
+import PlusBtn from '~/Components/PlusBtn';
+
+import RectangleBtn from '~/Components/RectangleBtn';
+
+import {logout} from '@react-native-seoul/kakao-login';
+
+import Auth from '~/Screen/01_Auth/Auth';
+import GroupTile from '~/Components/GroupTile';
+
+import ClubPage from '~/Screen/02_Main/02_Churmmunity/Group/ClubPage'
+import SpotPage from '~/Screen/02_Main/02_Churmmunity/Group/SpotPage'
+
+import EditProfile from './EditProfile';
+
+import ShowProfileImg from './ShowProfileImg';
+
 
 const tempUser = {id: 4, name: "짱쎄", photo: 'Profile/짱쎄.jpg', role: 'user'};
 const Stack = createStackNavigator();
@@ -39,6 +58,10 @@ const HeaderBox = styled.View`
     align-items: center;
     height: 100px;
     background-color: transparent;
+    border-bottom-width: 5px;
+    border-color: black;
+    padding-bottom: 3px;
+    margin-bottom: 3px;;
 `;
 
 const HeaderTextArea = styled.View`
@@ -52,20 +75,53 @@ const ChangePhoto = styled.TouchableOpacity`
  margin: 0px 10px 0px 0px; //상 우 하 좌
  `;
 
- const CommonBtn = styled.TouchableOpacity`
+const CommonBtn = styled.TouchableOpacity`
 background-color: green;
 width: 20%;
 border-bottom-width: 3px;
 `;
 
+const InfoArea = styled.View`
+    justify-content: flex-start;
+    align-items: flex-start;
+    width: 100%;
+    background-color: transparent;
+`;
+
+const InfoTextBold = styled.Text`
+    font-size: 20px;
+    font-family: 'DoHyeon-Regular';   
+    margin-top: 5px;
+    margin-bottom: 5px;
+    height: 30px;
+`;
+
+const InfoText = styled.Text`
+    font-size: 16px;
+    font-family: 'DoHyeon-Regular';   
+    margin-top: 5px;
+    margin-bottom: 5px;
+    margin-left: 5%;
+    height: 25px;
+`;
+
+const ActivityRecordArea = styled.View`
+    width: 90%;
+    background-color: transparent;
+    margin-left: 5%;
+`;
+
 const ProfileMain = ({navigation, route}) => {
     const domain = useContext(DomainContext);
-    const {userData, setUserData} = useContext(UserData);
+    const {userData, setUserData, userClub, userSpot} = useContext(UserData);
     const [member, setMember] = useState(route ? route.params.member : userData);
     const [imgSrc, setImgSrc] = useState('');
     const [locate, setLocate] = useState([0,0]);
     const [region, setRegion] = useState('');
     const [userImgUrl, setUserImgUrl] = useState(`${domain}/Profile/Jesus.png`);
+    const isFocused = useIsFocused();
+    const {kakaoAuthData, setKakaoAuthData} = useContext(KakaoAuthData);
+    const {tryGetUserData, setTryGetUserDataFlag} = useContext(TryGetUserData);
     
     useEffect(() => {
         setMember(route != undefined ? route.params.member : userData);
@@ -77,9 +133,14 @@ const ProfileMain = ({navigation, route}) => {
         setUserImgUrl(`${domain}/Profile/${userData.photo}` + "?cache="+Math.random());
     }, [userData])
 
-    // useEffect(() => {
-    //     console.log(userImgUrl);
-    // }, [userImgUrl])
+    const signOutWithKakao = async() => {
+        const message = await logout();
+        // setLogOutResult(message);
+        console.log("signOut");
+        setUserData(null);
+        setTryGetUserDataFlag(false);
+        setKakaoAuthData(null);
+    }
 
     useEffect(() => {
         if (member)
@@ -91,7 +152,7 @@ const ProfileMain = ({navigation, route}) => {
                     <HeaderButtonsContainer>
                         {userData.id != member.id && <Icon2 name="notification" size={26} onPress={() => alert('신고하기')} />}
                         <Icon2 name="message1" size={26} onPress={() => alert('채팅')} />
-                        {userData.id == member.id && <Icon1 name="settings-outline" size={26} onPress={() => alert('프로필 수정')} />}
+                        {userData.id == member.id && <Icon1 name="settings-outline" size={26} onPress={() => {navigation.navigate('EditProfile', {navigation: navigation})}} />}
                     </HeaderButtonsContainer>
                 )
             });
@@ -124,74 +185,134 @@ const ProfileMain = ({navigation, route}) => {
 
 
     // Camera Roll
- const showCameraRoll = () => {
-    launchImageLibrary(options, (response) => {
-        if (response.didCancel) {
+    const showCameraRoll = () => {
+        launchImageLibrary(options, (response) => {
+            if (response.didCancel) {
+                alert('프사변경취소');
+                return;
+            }
+            if (response.error) {
+                console.log('LaunchCamera Error: ', response.error);
+                return;
+            }
+            if (response.assets.length > 0) {
+                setImgSrc(response.assets[0]);
+                return;
+            }
             alert('프사변경취소');
-            return;
-        }
-        if (response.error) {
-            console.log('LaunchCamera Error: ', response.error);
-            return;
-        }
-        if (response.assets.length > 0) {
-            setImgSrc(response.assets[0]);
-            return;
-        }
-        alert('프사변경취소');
-    });
-}
+        });
+    }
 
-const reqChangeUserInfo = (fetchHeader, changeType, changeValue) => {
-    console.log(changeType, changeValue);
-    console.log(userData);
-    let fetchUrl = `${domain}/User/${userData.id}/${changeType}`;
-    console.log(fetchUrl);
-    
-    fetch(fetchUrl, {
-      method: 'PUT',
-      body: changeValue,
-      headers: fetchHeader
-    }).then(res => res.json()).then(res => {
-        console.log('[query result]');
-        console.log(res);
-        if (res.id) {
-            setUserData(res);
+
+    const withdrawal = () => {
+        // Check if the user have a group with leader
+        // let isLeaderOfGroup = false;
+        
+        for (i = 0; userClub.length; i++) {
+            if (userClub[i].leader == userData.id) {
+                alert('공동체의 리더는 먼저 리더를 변경한 후 탈퇴할 수 있습니다. 리더인 공동체에서 리더를 변경해주세요.');
+                return;
+            }
         }
-    }).catch(e => {
-      alert('프로필 사진 변경에 실패하였습니다.');
-      console.log("[ChangeFail]");
-      console.log(e);
-    });
-  };
+
+        for (i = 0; userSpot.length; i++) {
+            if (userSpot[i].leader == userData.id) {
+                alert('공동체의 리더는 먼저 리더를 변경한 후 탈퇴할 수 있습니다. 리더인 공동체에서 리더를 변경해주세요.');
+                return;
+            }
+        }
+
+        // Delete user info from database
+        fetch(`${domain}/User/${userData.id}`, {method: 'DELETE', headers: {'Content-Type': 'application/json'}}).then(res=>res.json()).then((res) => alert(`Delete User ${res}`));
+        // LogOut
+        signOutWithKakao();
+    }
 
     return (
-        <ScrollView style={{padding: 10}}>
-            <HeaderBox>
-            <ChangePhoto onPress={() => {showCameraRoll();}}>
-                <Image style={{ width: 70, height: 70, flex: 1, resizeMode: 'contain' }} source={{ uri: userImgUrl }}/>
-            </ChangePhoto>
+        <>
+            {
+                userData &&
+                <ScrollView style={{padding: 10}}>
+                <HeaderBox>
+                <ChangePhoto onPress={() => {navigation.navigate('ShowProfileImg')}}>
+                    <Image style={{ width: 70, height: 70, flex: 1, resizeMode: 'contain' }} source={{ uri: userImgUrl }}/>
+                </ChangePhoto>
 
-            <HeaderTextArea style={{ flex: 3 }}>
-                    <Text style={{ fontWeight: 'bold'}}>{member.name}</Text>
-                    {member.description ? <Text>{member.description}</Text> : <Text>자기소개 없음</Text>}
-                    <Text>{member.church}</Text>
-                </HeaderTextArea>
-            </HeaderBox>
-            
-            {/* <CommonBtn onPress={() => {{navigation.navigate('SearchLocate', {setLocateProcess : setLocate, setRegionProcess : setRegion, navigation: route})}}}>
-                    {/* <PlusText>+</PlusText> }
-                    <Text>지역 수정</Text>
-                    </CommonBtn> */}
-            <DaumMap currentRegion={{
-                latitude: parseFloat(100),
-                longitude: parseFloat(100),
-                zoomLevel: 5,
-               }}
-                mapType={"Standard"}
-                style={{ width: 400, height: 400, backgroundColor: 'transparent' }}/>
+                <HeaderTextArea style={{ flex: 3 }}>
+                        <Text style={{ fontWeight: 'bold'}}>{member.name}</Text>
+                        {member.description ? <Text>{member.description}</Text> : <Text>자기소개 없음</Text>}
+                        <Text>{member.church}</Text>
+                    </HeaderTextArea>
+                </HeaderBox>
 
-        </ScrollView>
+                <InfoArea>
+                    <InfoTextBold>나이 : 만 {member.age} 세</InfoTextBold>
+                    <InfoTextBold>활동 지역 : </InfoTextBold>
+
+                    {((member.location == null || member.location_ll == null) ||
+                    (member.location_ll != null && member.location_ll.y == null && member.location_ll.x == null)) && 
+                    // <PlusBtn text='지역 추가' onPress={() => {{navigation.navigate('SearchLocate', {setLocateProcess : setLocate, setRegionProcess : setRegion, navigation: navigation})}}}></PlusBtn>
+                    <InfoText>아직 설정 안함</InfoText>}
+
+
+                    {(member.location_ll != null &&
+                    member.location_ll.x != null && member.location_ll.y != null) &&
+                    (
+                        <>
+                        <InfoText>{member.location}</InfoText>
+                        {isFocused && <DaumMap currentRegion={{
+                            latitude: parseFloat(member.location_ll.y),
+                            longitude: parseFloat(member.location_ll.x),
+                            zoomLevel: 5,
+                        }}
+                            mapType={"Standard"}
+                            style={{ width: 400, height: 400, backgroundColor: 'transparent' }}
+                            
+                            markers={[{
+                                latitude: parseFloat(member.location_ll.y),
+                                longitude: parseFloat(member.location_ll.x),
+                                pinColor: "red",
+                                pinColorSelect: "yellow",
+                                title: "marker test",
+                                draggable: false,
+                                allClear: true,
+                        }]}
+                        /> }
+                        </>
+                    )}
+                    <InfoTextBold>활동</InfoTextBold>
+                    <ActivityRecordArea>
+                        <InfoTextBold>소속 공동체</InfoTextBold>
+                        {userClub.map((data, index) => (
+                            <GroupTile key={index} group={data} type='Club' stackNavi={navigation}/>
+                        ))}
+                        <InfoTextBold>참여한 번개</InfoTextBold>
+                        {userSpot.map((data, index) => (
+                            <GroupTile key={index} group={data} type='Spot' stackNavi={navigation}/>
+                        ))}
+                    </ActivityRecordArea>
+
+                </InfoArea>
+                <RectangleBtn color='blue' text='로그아웃' onPress={() => signOutWithKakao()}/>
+                <RectangleBtn color='red' text='계정 삭제' onPress={() => withdrawal()}/>
+
+                
+                {/* <CommonBtn onPress={() => {{navigation.navigate('SearchLocate', {setLocateProcess : setLocate, setRegionProcess : setRegion, navigation: route})}}}>
+                        {/* <PlusText>+</PlusText> }
+                        <Text>지역 수정</Text>
+                        </CommonBtn> */}
+                {/* <DaumMap currentRegion={{
+                    latitude: parseFloat(100),
+                    longitude: parseFloat(100),
+                    zoomLevel: 5,
+                }}
+                    mapType={"Standard"}
+                    style={{ width: 400, height: 400, backgroundColor: 'transparent' }}/> */}
+
+            </ScrollView>
+        }
+        {userData == null && <Auth />}
+        </>
     )
 }
 
@@ -204,7 +325,42 @@ const ProfileStackNavi = ({tabNavi}) => {
             name={'ProfileMain'}
             children={({navigation}) => <ProfileMain navigation={navigation} tabNavi={tabNavi} />}        
         />
-
+        <Stack.Screen
+            name="ClubPage"
+            component={ClubPage}
+            options={{
+                headerShown: false,
+                headerBackTitleVisible: false,
+                title: '소모임 상세보기'
+            }}
+        />
+        <Stack.Screen
+            name="SpotPage"
+            component={SpotPage}
+            options={{
+                headerShown: false,
+                headerBackTitleVisible: false,
+                title: '번개 상세보기'
+            }}
+        />
+        <Stack.Screen
+            name="EditProfile"
+            component={EditProfile}
+            options={{
+                headerShown: true,
+                headerBackTitleVisible: true,
+                title: '프로필 수정'
+            }}
+        />
+        <Stack.Screen
+            name="ShowProfileImg"
+            component={ShowProfileImg}
+            options={{
+                headerShown: false,
+                headerBackTitleVisible: false,
+                title: '프로필 크게보기'
+            }}
+        />
       </Stack.Navigator>  
     );
 }

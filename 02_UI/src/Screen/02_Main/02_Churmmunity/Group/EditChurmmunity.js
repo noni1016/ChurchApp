@@ -134,7 +134,7 @@ color: black;
 
 const EditChurmmunity = ({route, navigation}) => {
     const domain = useContext(DomainContext);
-    const {userData, updateUserClub} = useContext(UserData);
+    const {userData, updateUserClub, updateUserSpot} = useContext(UserData);
     const edit = route.params.edit ? route.params.edit : 0;
     const editData = route.params.editData;
     const [createType, setCreateType] = useState(route.params.createType);
@@ -359,11 +359,6 @@ const EditChurmmunity = ({route, navigation}) => {
 
     return (        
         <ScrollView>
-            <PlusBtnBox onPress={() => {{navigation.navigate('SearchChurchPage', {navigation: navigation})}}}>
-                    <PlusText>+++</PlusText>
-                    <Text style={Styles.default}>교회 수정</Text>
-                </PlusBtnBox>
-
             {!edit && <OptionName>모임 유형</OptionName>}
             {!edit && (<TypeSelectBtnsBox>
                 <TouchableOpacity onPress={() => setCreateType(1)}><TypeSelectBtn isSelected={createType == 1}>공동체</TypeSelectBtn></TouchableOpacity>

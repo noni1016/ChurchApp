@@ -60,10 +60,8 @@ const tempSpot = {id: 1, name: '막무가내 리코더 합주', mainImg: 'GroupI
 
 const SpotPage = ({route, navigation}) => {
     const domain = useContext(DomainContext);
-    const {userData} = useContext(UserData);   
-    // var [data, setData] = useState(tempSpot);
-    if (route) var [data, setData] = useState(route.params.spot);
-    else var [data, setData] = useState(tempSpot);
+    const {userData, updateUserSpot} = useContext(UserData);   
+    const data = route.params.group;
     var [url, setUrl] = useState('');
     var [resizedWidth, setResizedWidth] = useState(100);
     var [resizedHeight, setResizedHeight] = useState(100);
@@ -85,6 +83,9 @@ const SpotPage = ({route, navigation}) => {
     useEffect(() => {
         if (data == null) return;
         setUrl(`${domain}/SpotMainImg/${data.mainImg}`);
+        if (data.leader === userData.id) {
+            setIsLeader(true);
+        }
     }, [data]);    
 
     /* Group 상단 사진의 사이즈를 화면 사이즈에 맞게 설정 */
@@ -109,11 +110,11 @@ const SpotPage = ({route, navigation}) => {
 
     /* 멤버 정보 불러왓으면 현재 유저가 그룹 멤버인지 확인. 리더 여부도 확인 */
     useEffect(() => {
+        console.log("member changed");
         members.map((member, index) => {
             if (member.role === 1)
             {
-                setLeader(member);
-                setIsLeader(true);                
+                setLeader(member);              
             }       
             if (member.id === userData.id) {
                 setMember(true);
@@ -146,6 +147,7 @@ const SpotPage = ({route, navigation}) => {
         setIsMember(curUserIsMemOfThisGroup);
         if (curUserIsMemOfThisGroup) setJoinText('참가중!');
         else setJoinText('함께하기');
+        updateUserSpot();
     };
 
     return data ? (

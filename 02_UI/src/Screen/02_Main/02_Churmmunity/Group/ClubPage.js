@@ -45,7 +45,7 @@ const Footer = Styled.View`
 const ClubPage = ({route, navigation}) => {
     const domain = useContext(DomainContext);
     const {userData} = useContext(UserData);
-    const data = route.params.club;
+    const data = route.params.group;
     const [tabIdx, setTabIdx] = useState(0); 
     var [resizedWidth, setResizedWidth] = useState(100);
     var [resizedHeight, setResizedHeight] = useState(100);
@@ -108,8 +108,11 @@ const ClubPage = ({route, navigation}) => {
     const setMember = (curUserIsMemOfThisGroup) => {
         console.log('SetMember Called!')
         setIsMember(curUserIsMemOfThisGroup);
-        fetch(`${domain}/Club/${data.id}/Member`).then(res => res.json()).then(res => {setMembers(res);});
     };
+    /* ClubPageHome 에서 Join, Exit 서버 요청 처리 되고 난 다음에 멤버 새로고침 하도록 함수 분리함 (딜레이 넣기) */
+    useEffect(() => {
+        fetch(`${domain}/Club/${data.id}/Member`).then(res => res.json()).then(res => {setMembers(res);});
+    }, [isMember])
 
    
 

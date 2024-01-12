@@ -58,10 +58,10 @@ const SpotPageHome = ({data, members, isLeader, leader, stackNavi}) => {
                     draggable: false,
                 }]}
                 
-                /> }
-                <Divider />
-                <Title>리더</Title>
-                <GroupMemProfile member={leader} isLeader={isLeader} />
+            /> }
+            <Divider />
+            <Title>리더</Title>
+            <GroupMemProfile member={leader} isLeader={true} />
         </Container>
     )
 };

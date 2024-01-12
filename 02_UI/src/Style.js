@@ -20,6 +20,7 @@ const Styles = StyleSheet.create({
         color: 'black',
         fontSize: 20,
         fontFamily: 'DoHyeon-Regular',
+        height: 25
     }
 })
 

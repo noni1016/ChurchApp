@@ -58,10 +58,11 @@ const NumGroupMemCont = Styled.View`
 
 const ClubPageHome = ({data, members, isMember, isLeader, setMember, stackNavi}) => {
     const domain = useContext(DomainContext);    
-    const {userData, setUserData} = useContext(UserData);
+    const {userData, setUserData, updateUserClub} = useContext(UserData);
     var [numClubMem, setNumClubMem] = useState(0);
     const isFocused = useIsFocused();
     const {tabNavi} = useContext(TabNavi);
+    const [reload, setReload] = useState(false);
 
     var [button, setButton] = useState((<JoinBtn onPress={()=>{alert('로딩중')}}>
                     <JoinBtnText>가입하기</JoinBtnText>
@@ -76,7 +77,7 @@ const ClubPageHome = ({data, members, isMember, isLeader, setMember, stackNavi})
         if (isMember) {
             setButton((<JoinBtn onPress={()=>{
                 if (!isLeader)
-                    fetch(`${domain}/Club/${data.id}/Exit/${userData.id}`).then(setMember(false));
+                    fetch(`${domain}/Group/Exit/Club/${data.id}/${userData.id}`).then(setMember(false));
                 else
                     Alert.alert("리더 탈주 감지!", "리더는 탈퇴할 수 없습니다. 멤버 관리 페이지에서 먼저 리더를 변경하세요.");
                 }}>
@@ -84,11 +85,18 @@ const ClubPageHome = ({data, members, isMember, isLeader, setMember, stackNavi})
                 </JoinBtn>));
         } else {
             setButton((<JoinBtn onPress={()=>{
-                fetch(`${domain}/Club/${data.id}/Join/${userData.id}`).then(setMember(true));}}>
+                fetch(`${domain}/Group/Join/Club/${data.id}/${userData.id}`).then(setMember(true));}}>
                         <JoinBtnText>가입하기</JoinBtnText>
                     </JoinBtn>));
         }        
+        updateUserClub();
+        setReload(!reload);
     }, [isMember])
+
+    useEffect(() => {
+        console.log("reload?");
+        console.log(reload);
+    }, [reload])
 
     return (
         <Container>
