@@ -122,15 +122,11 @@ const ProfileMain = ({navigation, route}) => {
     const isFocused = useIsFocused();
     const {kakaoAuthData, setKakaoAuthData} = useContext(KakaoAuthData);
     const {tryGetUserData, setTryGetUserDataFlag} = useContext(TryGetUserData);
+    const [memberClub, setMemberClub] = useState([]);
+    const [memberSpot, setMemberSpot] = useState([]);
     
     useEffect(() => {
         setMember(route != undefined ? route.params.member : userData);
-    }, [])
-
-    useEffect(() => {
-        console.log('[useEffect: userData]')
-        console.log(userData);
-        setUserImgUrl(`${domain}/Profile/${userData.photo}` + "?cache="+Math.random());
     }, [userData])
 
     const signOutWithKakao = async() => {
@@ -156,6 +152,17 @@ const ProfileMain = ({navigation, route}) => {
                     </HeaderButtonsContainer>
                 )
             });
+
+            if (member.id == userData.id)
+            {
+                setMemberClub(userClub);
+                setMemberSpot(userSpot);
+            }
+            else
+            {
+                fetch(`${domain}/User/${member.id}/Club`).then(res => res.json()).then(res => {setMemberClub(res)});
+                fetch(`${domain}/User/${member.id}/Spot`).then(res => res.json()).then(res => {setMemberSpot(res)});
+            }
         }
 
 
@@ -235,7 +242,7 @@ const ProfileMain = ({navigation, route}) => {
                 <ScrollView style={{padding: 10}}>
                 <HeaderBox>
                 <ChangePhoto onPress={() => {navigation.navigate('ShowProfileImg')}}>
-                    <Image style={{ width: 70, height: 70, flex: 1, resizeMode: 'contain' }} source={{ uri: userImgUrl }}/>
+                    <Image style={{ width: 70, height: 70, flex: 1, resizeMode: 'contain' }} source={{ uri: `${domain}/Profile/${member.photo}` + "?cache="+Math.random() }}/>
                 </ChangePhoto>
 
                 <HeaderTextArea style={{ flex: 3 }}>
@@ -283,18 +290,18 @@ const ProfileMain = ({navigation, route}) => {
                     <InfoTextBold>활동</InfoTextBold>
                     <ActivityRecordArea>
                         <InfoTextBold>소속 공동체</InfoTextBold>
-                        {userClub.map((data, index) => (
-                            <GroupTile key={index} group={data} type='Club' stackNavi={navigation}/>
+                        {member && memberClub.map((data, index) => (
+                            <GroupTile key={index} group={data} type='Club' isCurrentUser={member.id == userData.id}stackNavi={navigation}/>
                         ))}
                         <InfoTextBold>참여한 번개</InfoTextBold>
-                        {userSpot.map((data, index) => (
-                            <GroupTile key={index} group={data} type='Spot' stackNavi={navigation}/>
+                        {member && memberSpot.map((data, index) => (
+                            <GroupTile key={index} group={data} type='Spot' isCurrentUser={member.id == userData.id} stackNavi={navigation}/>
                         ))}
                     </ActivityRecordArea>
 
                 </InfoArea>
-                <RectangleBtn color='blue' text='로그아웃' onPress={() => signOutWithKakao()}/>
-                <RectangleBtn color='red' text='계정 삭제' onPress={() => withdrawal()}/>
+                {/* <RectangleBtn color='blue' text='로그아웃' onPress={() => signOutWithKakao()}/>
+                <RectangleBtn color='red' text='계정 삭제' onPress={() => withdrawal()}/> */}
 
                 
                 {/* <CommonBtn onPress={() => {{navigation.navigate('SearchLocate', {setLocateProcess : setLocate, setRegionProcess : setRegion, navigation: route})}}}>
