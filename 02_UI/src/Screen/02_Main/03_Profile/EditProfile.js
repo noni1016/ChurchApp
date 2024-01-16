@@ -83,7 +83,7 @@ const TitleInput = styled.TextInput`
 const EditProfile = ({navigation}) => {
     const domain = useContext(DomainContext);
     const {userData, setUserData, userClub, userSpot} = useContext(UserData);
-    const {setKakaoAuthData} = useContext(KakaoAuthData);
+    const {kakaoAuthData, setKakaoAuthData} = useContext(KakaoAuthData);
     const {setTryGetUserDataFlag} = useContext(TryGetUserData);
     const isFocused = useIsFocused();
     const [imgSrc, setImgSrc] = useState('');

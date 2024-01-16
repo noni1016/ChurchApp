@@ -37,6 +37,7 @@ const UserContextProvider = ({children}) => {
             updateUserClub();
             updateUserSpot();
         }
+        console.log(kakaoAuthData);
     }, [userData])
 
     const updateUserClub = () => {

@@ -225,6 +225,7 @@ const EditChurmmunity = ({route, navigation}) => {
                 onPress: () => 
                 {
                     console.log('모임해산!!!!!!!');
+                    console.log(`${domain}/Group/${createType}/${editData.id}`);
                     fetch(`${domain}/Group/${createType}/${editData.id}`, {
                         method: 'DELETE',
                         headers: {
