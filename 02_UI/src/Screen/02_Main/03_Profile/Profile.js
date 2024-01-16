@@ -26,6 +26,7 @@ import GroupTile from '~/Components/GroupTile';
 
 import ClubPage from '~/Screen/02_Main/02_Churmmunity/Group/ClubPage'
 import SpotPage from '~/Screen/02_Main/02_Churmmunity/Group/SpotPage'
+import SearchLocate from '~/Screen/03_Map/SearchLocate';
 
 import EditProfile from './EditProfile';
 
@@ -366,6 +367,15 @@ const ProfileStackNavi = ({tabNavi}) => {
                 headerShown: false,
                 headerBackTitleVisible: false,
                 title: '프로필 크게보기'
+            }}
+        />
+        <Stack.Screen
+            name="SearchLocate"
+            component={SearchLocate}
+            options={{
+                headerShown: true,
+                headerBackTitleVisible: true,
+                title: '지역 찾기',
             }}
         />
       </Stack.Navigator>  
