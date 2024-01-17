@@ -71,13 +71,24 @@ const ProfileImgToDefaultBtn = styled.TouchableOpacity`
 const TitleInput = styled.TextInput`
     width: 90%;
     background-color: transparent;
-    padding: 0px;
+    padding: 5px;
     margin: 10px 10px 10px 20px; //상 우 하 좌
-    border-bottom-width: 1px;
     font-size: 18px;
     color: black;
     border-width: 2px;
     height: 50px;
+`;
+
+const DescInput = styled.TextInput`
+    width: 90%;
+    height: 200px;
+    border-width: 2px;
+    border-color: black;
+    background-color: transparent;
+    padding: 5px;
+    margin: 10px 10px 10px 20px; //상 우 하 좌
+    font-size: 18px;
+    text-align-vertical: top;
 `;
 
 const EditProfile = ({navigation}) => {
@@ -241,6 +252,8 @@ const EditProfile = ({navigation}) => {
             </ChangePhotoArea>            
             <InfoTextBold>이름</InfoTextBold>
             <TitleInput placeholderTextColor="gray" maxLength={20} value={content.name} placeholder={'최대 20자'} onChangeText={(v)=>{setContent((current) => {let newContent = {...current}; newContent.name = v; return newContent})}}/>
+            <InfoTextBold>교회</InfoTextBold>
+            <RectangleBtn color='skyblue' text='교회찾기' onPress={() => navigation.navigate('SearchChurchPage', {navigation: navigation})} />
             <InfoTextBold>활동 지역</InfoTextBold>
             {((content.location == null || content.location_ll == null) ||
             (content.location_ll != null && content.location_ll.y == null && content.location_ll.x == null)) && 
@@ -268,7 +281,19 @@ const EditProfile = ({navigation}) => {
                }]}
                />} 
             </>)}
-
+            <InfoTextBold>소개</InfoTextBold>
+            <DescInput
+                multiline
+                autoFocus={false}
+                autoCapitalize="none"
+                autoCorrect={false}
+                placeholder="공동체에 나를 표현해줄 한마디!"
+                returnKeyType="done"
+                maxLength={200}
+                onChangeText={(v) => {setContent((current) => {let newContent = {...current}; newContent.description = v; return newContent})}}
+                value={content.description}
+                color="black" placeholderTextColor="gray"
+            />
             <RectangleBtn color='blue' text='로그아웃' onPress={() => signOutWithKakao()} />
             <RectangleBtn color='red' text='계정 삭제' onPress={() => withdrawal()} />
         </ScrollView>

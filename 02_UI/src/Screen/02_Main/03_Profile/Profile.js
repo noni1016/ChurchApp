@@ -22,7 +22,9 @@ import SearchLocate from '~/Screen/03_Map/SearchLocate';
 import EditProfile from './EditProfile';
 import ShowProfileImg from './ShowProfileImg';
 import EditChurmmunity from '~/Screen/02_Main/02_Churmmunity/Group/EditChurmmunity';
-
+import SearchChurchPage from '~/Screen/02_Main/03_Profile/SearchChurchPage';
+import ChurchView from '~/Screen/02_Main/03_Profile/ChurchView'
+import AddChurchPage from '~/Screen/02_Main/03_Profile/AddChurchPage';
 
 const tempUser = {id: 4, name: "짱쎄", photo: 'Profile/짱쎄.jpg', role: 'user'};
 const Stack = createStackNavigator();
@@ -376,6 +378,33 @@ const ProfileStackNavi = ({tabNavi}) => {
                 headerShown: true,
                 headerBackTitleVisible: false,
                 title: '새 모임',
+            }}
+        />
+        <Stack.Screen
+            name="SearchChurchPage"
+            component={SearchChurchPage}
+            options={{
+                headerShown: true,
+                headerBackTitleVisible: true,
+                title: '교회 찾기',
+            }}
+        />
+        <Stack.Screen
+            name="ChurchView"
+            component={ChurchView}
+            options={{
+                headerShown: true,
+                headerBackTitleVisible: true,
+                title: '교회 찾기',
+            }}
+        />
+        <Stack.Screen
+            name="AddChurchPage"
+            component={AddChurchPage}
+            options={{
+                headerShown: true,
+                headerBackTitleVisible: true,
+                title: '교회 추가',
             }}
         />
       </Stack.Navigator>  
