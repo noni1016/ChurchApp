@@ -8,6 +8,7 @@ import PlusBtn from '~/Components/PlusBtn';
 import { useIsFocused } from '@react-navigation/native';
 import RectangleBtn from '~/Components/RectangleBtn';
 import {logout} from '@react-native-seoul/kakao-login';
+import DaumMap from './../../03_Map/DaumMapController';
 
 const options = {
     title: 'Load Photo',
@@ -100,7 +101,7 @@ const EditProfile = ({navigation}) => {
     const [imgSrc, setImgSrc] = useState('');
     const [imgUrl, setImgUrl] = useState('');
     const [reload, setReload] = useState(false);
-    const [content, setContent] = useState({...userData});
+    const [content, setContent] = useState({...userData, location_ll: {x: null, y: null}});
     const [locate, setLocate] = useState([0,0]);
     const [region, setRegion] = useState('');
     let fetchHeader = {
