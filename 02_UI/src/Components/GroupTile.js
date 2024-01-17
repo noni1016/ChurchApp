@@ -68,7 +68,7 @@ const GroupTile = ({group, type, isCurrentUser, stackNavi}) => {
             </TextArea>
             <CtrlArea>
                 {isLeader && <FontAwesome5 name="crown" color={'blue'} size={20} />}
-                {isLeader && isCurrentUser && <Entypo name="cross" color={'grey'} size={25} onPress={() => alert('리더는 강퇴 할 수 없습니다. 먼저 리더를 변경하세요.')}/>}
+                {isLeader && isCurrentUser && <Entypo name="cross" color={'grey'} size={25} onPress={() => alert('리더는 탈퇴할 수 없습니다. 리더를 변경하거나 모임을 해산하세요.')}/>}
                 {!isLeader && isCurrentUser && <Entypo name="cross" color={'black'} size={25} onPress={onPressCrossBtn}/>}
             </CtrlArea>
             {type == 'club' && <Text>GroupTile</Text>}

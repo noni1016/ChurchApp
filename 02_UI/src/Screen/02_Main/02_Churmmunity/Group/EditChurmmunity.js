@@ -231,7 +231,10 @@ const EditChurmmunity = ({route, navigation}) => {
                         headers: {
                             'Content-Type': 'application/json'
                         },
-                    }).then((res) => res.json()).then((res) => { alert(`${editData.id} Group 삭제`); updateUserClub(); navigation.navigate('ChurmmunityMain', { navigation: navigation }) })
+                    }).then((res) => res.json()).then((res) => { alert(`${editData.id} Group 삭제`); 
+                    updateUserClub(); 
+                    updateUserSpot();
+                    navigation.popToTop(); })
                 },
                     
             },

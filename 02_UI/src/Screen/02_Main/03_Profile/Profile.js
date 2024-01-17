@@ -6,31 +6,22 @@ import {KakaoAuthData, UserData, TryGetUserData} from '~/Context/User';
 import {
     createStackNavigator,
 } from '@react-navigation/stack';
-
 import Icon1 from 'react-native-vector-icons/Ionicons';
 import Icon2 from 'react-native-vector-icons/AntDesign';
-
 import {launchImageLibrary} from 'react-native-image-picker';
 import DaumMap from './../../03_Map/DaumMapController';
-
 import { useIsFocused } from '@react-navigation/native';
-
 import PlusBtn from '~/Components/PlusBtn';
-
 import RectangleBtn from '~/Components/RectangleBtn';
-
 import {logout} from '@react-native-seoul/kakao-login';
-
 import Auth from '~/Screen/01_Auth/Auth';
 import GroupTile from '~/Components/GroupTile';
-
 import ClubPage from '~/Screen/02_Main/02_Churmmunity/Group/ClubPage'
 import SpotPage from '~/Screen/02_Main/02_Churmmunity/Group/SpotPage'
 import SearchLocate from '~/Screen/03_Map/SearchLocate';
-
 import EditProfile from './EditProfile';
-
 import ShowProfileImg from './ShowProfileImg';
+import EditChurmmunity from '~/Screen/02_Main/02_Churmmunity/Group/EditChurmmunity';
 
 
 const tempUser = {id: 4, name: "짱쎄", photo: 'Profile/짱쎄.jpg', role: 'user'};
@@ -218,14 +209,14 @@ const ProfileMain = ({navigation, route}) => {
         
         for (i = 0; userClub.length; i++) {
             if (userClub[i].leader == userData.id) {
-                alert('공동체의 리더는 먼저 리더를 변경한 후 탈퇴할 수 있습니다. 리더인 공동체에서 리더를 변경해주세요.');
+                alert('공동체의 리더는 먼저 리더를 변경한 후 탈퇴할 수 있습니다. 리더인 공동체에서 리더를 변경하거나 모임을 해산하세요.');
                 return;
             }
         }
 
         for (i = 0; userSpot.length; i++) {
             if (userSpot[i].leader == userData.id) {
-                alert('공동체의 리더는 먼저 리더를 변경한 후 탈퇴할 수 있습니다. 리더인 공동체에서 리더를 변경해주세요.');
+                alert('공동체의 리더는 먼저 리더를 변경한 후 탈퇴할 수 있습니다. 리더인 공동체에서 리더를 변경하거나 모임을 해산하세요.');
                 return;
             }
         }
@@ -294,15 +285,15 @@ const ProfileMain = ({navigation, route}) => {
                         {member && memberClub.map((data, index) => (
                             <GroupTile key={index} group={data} type='Club' isCurrentUser={member.id == userData.id}stackNavi={navigation}/>
                         ))}
+                        {memberClub.length == 0 && <InfoText>없음</InfoText>}
                         <InfoTextBold>참여한 번개</InfoTextBold>
                         {member && memberSpot.map((data, index) => (
                             <GroupTile key={index} group={data} type='Spot' isCurrentUser={member.id == userData.id} stackNavi={navigation}/>
                         ))}
+                        {memberSpot.length == 0 && <InfoText>없음</InfoText>}
                     </ActivityRecordArea>
 
                 </InfoArea>
-                {/* <RectangleBtn color='blue' text='로그아웃' onPress={() => signOutWithKakao()}/>
-                <RectangleBtn color='red' text='계정 삭제' onPress={() => withdrawal()}/> */}
 
                 
                 {/* <CommonBtn onPress={() => {{navigation.navigate('SearchLocate', {setLocateProcess : setLocate, setRegionProcess : setRegion, navigation: route})}}}>
@@ -376,6 +367,15 @@ const ProfileStackNavi = ({tabNavi}) => {
                 headerShown: true,
                 headerBackTitleVisible: true,
                 title: '지역 찾기',
+            }}
+        />
+        <Stack.Screen
+            name="EditChurmmunity"
+            component={EditChurmmunity}
+            options={{
+                headerShown: true,
+                headerBackTitleVisible: false,
+                title: '새 모임',
             }}
         />
       </Stack.Navigator>  
