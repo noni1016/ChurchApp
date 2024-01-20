@@ -16,7 +16,7 @@ router.get('/:userId/Club', (req, res) => {
         AND ClubUser.userId = User.id
         AND ClubUser.clubId = ClubView.id`;
     console.log(sql)
-    conn.query(sql, function (error, rows, fields) { // sql ì¿¼ë¦¬ ?ˆ˜?–‰
+    conn.query(sql, function (error, rows, fields) { // sql ì¿¼ë¦¬ ?ï¿½ï¿½?ï¿½ï¿½
         if (!error) {
             res.send(rows);
         } else {
@@ -34,7 +34,7 @@ router.get('/:userId/Spot', (req, res) => {
         AND SpotUser.spotId = SpotView.id
     ORDER BY SpotView.past, SpotView.time`;
     console.log(sql)
-    conn.query(sql, function (error, rows, fields) { // sql ì¿¼ë¦¬ ?ˆ˜?–‰
+    conn.query(sql, function (error, rows, fields) { // sql ì¿¼ë¦¬ ?ï¿½ï¿½?ï¿½ï¿½
         if (!error) {
             res.send(rows);
         } else {
@@ -47,7 +47,7 @@ router.get('/:userId/Spot', (req, res) => {
 router.get('/:userId', (req, res) => {
     let sql = `SELECT * FROM User WHERE id = ${req.params.userId}`;
     console.log(sql)
-    conn.query(sql, function (error, rows, fields) { // sql ì¿¼ë¦¬ ?ˆ˜?–‰
+    conn.query(sql, function (error, rows, fields) { // sql ì¿¼ë¦¬ ?ï¿½ï¿½?ï¿½ï¿½
         if (!error) {
             console.log(rows);
             res.send(rows);
@@ -61,7 +61,7 @@ router.get('/:userId', (req, res) => {
 router.get('/Domain/:domain/:id_domain', (req, res) => {
     let sql = `SELECT * FROM User WHERE id_${req.params.domain} = ${req.params.id_domain}`;
     console.log(sql)
-    conn.query(sql, function (error, rows, fields) { // sql ì¿¼ë¦¬ ?ˆ˜?–‰
+    conn.query(sql, function (error, rows, fields) { // sql ì¿¼ë¦¬ ?ï¿½ï¿½?ï¿½ï¿½
         if (!error) {
             console.log(rows);
             res.send(rows);
@@ -71,10 +71,27 @@ router.get('/Domain/:domain/:id_domain', (req, res) => {
     });
 });
 
+
+const convertAgeRangeToEnum = (ageRange) => {
+    if (ageRange == "AGE_0_9") return "ì–´ë¦°ì´";
+    else if (ageRange == "AGE_10_14") return "14ì„¸ ì´í•˜"
+    else if (ageRange == "AGE_15_19") return "ì²­ì†Œë…„"
+    else if (ageRange == "AGE_20_29") return "20 ëŒ€"
+    else if (ageRange == "AGE_30_39") return "30 ëŒ€"
+    else if (ageRange == "AGE_40_49") return "40 ëŒ€"
+    else if (ageRange == "AGE_50_59") return "50 ëŒ€"
+    else if (ageRange == "AGE_60_69") return "60 ëŒ€"
+    else if (ageRange == "AGE_70_79") return "70 ëŒ€"
+    else if (ageRange == "AGE_80_89") return "80 ëŒ€"
+    else if (ageRange == "AGE_90_ABOVE") return "90 ëŒ€ ì´ìƒ"
+    else return 11;
+}
+
 // Join(Upload) User
 router.post('/Domain/:domain', async (req, res) => {
     let queryResult;
-    let sql1 = `INSERT INTO User (name, photo, church, age, level, role, id_${req.params.domain}) VALUES ('${req.body.name}', '${req.body.photo}', '${req.body.church}', '${req.body.age}', '${req.body.level}', '${req.body.role}', '${req.body.id_domain}')`;
+    let age = convertAgeRangeToEnum(req.body.age);
+    let sql1 = `INSERT INTO User (name, photo, church, age, level, role, id_${req.params.domain}) VALUES ('${req.body.name}', '${req.body.photo}', '${req.body.church}', '${age}', '${req.body.level}', '${req.body.role}', '${req.body.id_domain}')`;
     let sql2 = `SELECT * FROM User WHERE id_${req.params.domain} = ${req.body.id_domain}`;
     console.log(sql1);
     console.log(sql2);
@@ -85,6 +102,7 @@ router.post('/Domain/:domain', async (req, res) => {
             queryResult = rows;
             console.log(queryResult);
             await conn.commit();
+            // queryResult[0].age = convertAgeRangeEnumToAgeRange(rows[0].age);
             res.send(queryResult);
         });
     } catch (err) {
@@ -171,7 +189,7 @@ router.put('/:userId/photo', async (req, res, next) => {
     // let queryRes = false;
     // let sql = `UPDATE User SET photo = '${domain}/Profile/${fileName}' WHERE id = ${req.params.userId}`;
     // console.log(sql);
-    // conn.query(sql, function (error, rows, fields) { // sql ì¿¼ë¦¬ ?ˆ˜?–‰
+    // conn.query(sql, function (error, rows, fields) { // sql ì¿¼ë¦¬ ?ï¿½ï¿½?ï¿½ï¿½
     //     if (!error) {
     //         console.log(rows.affectedRows);
     //         if (rows.affectedRows === 1) queryRes = true;
@@ -197,7 +215,7 @@ router.put('/:userId/:column', async (req, res) => {
 
 
 
-    conn.query(sql, function (error, rows, fields) { // sql ì¿¼ë¦¬ ?ˆ˜?–‰
+    conn.query(sql, function (error, rows, fields) { // sql ì¿¼ë¦¬ ?ï¿½ï¿½?ï¿½ï¿½
         if (!error) {
             console.log(rows.affectedRows);
             if (rows.affectedRows === 1) queryRes = true;
