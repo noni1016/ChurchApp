@@ -68,7 +68,7 @@ const JoinPage = () => {
 
     const JoinUser = () => {
         // console.log(kakaoAuthData);
-        let sendCommentUserData = { name: nickName == '' ? kakaoAuthData.nickname : nickName, photo: 'Jesus.png', church: churchName, age: 10, level: 99, role: 0, id_domain: kakaoAuthData.id };
+        let sendCommentUserData = { name: nickName == '' ? kakaoAuthData.nickname : nickName, photo: 'Jesus.png', church: churchName, age: 10, level: 99, role: 0, id_domain: kakaoAuthData.id, age: kakaoAuthData.ageRange };
         console.log(sendCommentUserData);
         fetch(domain + '/User/Domain/kakao', {
             method: 'POST',

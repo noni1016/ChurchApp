@@ -247,7 +247,7 @@ const ProfileMain = ({navigation, route}) => {
                 </HeaderBox>
 
                 <InfoArea>
-                    <InfoTextBold>나이 : 만 {member.age} 세</InfoTextBold>
+                    <InfoTextBold>나이 : {member.age}</InfoTextBold>
                     <InfoTextBold>활동 지역 : </InfoTextBold>
 
                     {((member.location == null || member.location_ll == null) ||
