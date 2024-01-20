@@ -225,12 +225,16 @@ const EditChurmmunity = ({route, navigation}) => {
                 onPress: () => 
                 {
                     console.log('모임해산!!!!!!!');
+                    console.log(`${domain}/Group/${createType}/${editData.id}`);
                     fetch(`${domain}/Group/${createType}/${editData.id}`, {
                         method: 'DELETE',
                         headers: {
                             'Content-Type': 'application/json'
                         },
-                    }).then((res) => res.json()).then((res) => { alert(`${editData.id} Group 삭제`); updateUserClub(); navigation.navigate('ChurmmunityMain', { navigation: navigation }) })
+                    }).then((res) => res.json()).then((res) => { alert(`${editData.id} Group 삭제`); 
+                    updateUserClub(); 
+                    updateUserSpot();
+                    navigation.popToTop(); })
                 },
                     
             },

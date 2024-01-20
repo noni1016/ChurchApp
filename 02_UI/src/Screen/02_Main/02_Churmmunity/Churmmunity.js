@@ -71,7 +71,7 @@ const ChurmmunityMain = ({route, navigation}) => {
         // fetch(domain + '/Churmmunity/GetMyLightDatas').then(res => res.json()).then(res => {setMyLightDatas(res)});
         // fetch(domain + '/Churmmunity/GetRecGroupsOrderRand').then(res => res.json()).then(res => {setRecGroups(res)});
         // fetch(domain + '/Churmmunity/GetRecLightsOrderTime').then(res => res.json()).then(res => {setRecLights(res)});
-    }, []);
+    }, [userClub, userSpot]);
 
     useEffect(() => {
         console.log('UserClub changed')
