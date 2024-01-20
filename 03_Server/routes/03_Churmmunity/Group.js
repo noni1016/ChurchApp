@@ -206,7 +206,7 @@ router.delete('/:type/:groupId/', async (req, res) => {
             await conn.query(sql2, (error, rows) => {
                 if (imgSrc)
                 {
-                    fs.unlink(`./public/${imgSrc}`, (err) => {
+                    fs.unlink(`./public/ClubMainImg/${imgSrc}`, (err) => {
                         err ? console.log(imgSrc) : console.log(`${imgSrc}ï¿?? ?ï¿½ï¿½?ï¿½ï¿½?ï¿½ï¿½?ï¿½ï¿½ï¿?? ?ï¿½ï¿½?ï¿½ï¿½?ï¿½ï¿½?ï¿½ï¿½?ï¿½ï¿½?ï¿½ï¿½`);
                       })
                 }
