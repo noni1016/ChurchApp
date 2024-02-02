@@ -242,6 +242,30 @@ const EditProfile = ({navigation}) => {
         signOutWithKakao();
     }
 
+    const putProfile = () => {
+        // Check inputs
+        if (content.name == '') {
+            alert('이름을 입력해주세요');
+            return;
+        // } else if (content.church == null) {
+        //     alert('출석 교회를 입력해주세요');
+        //     return;
+        } else if (content.location == '') {
+            alert('활동 지역을 설정해 주세요');
+            return;
+        }
+        sendUserInfo();
+    }
+
+    const sendUserInfo = () => {
+        console.log(content);
+        fetch(`${domain}/User/${userData.id}`, {
+            method: 'PUT',
+            body: JSON.stringify({name: content.name, church: 1, description: content.description, location: content.location, location_ll_x: content.location_ll.x, location_ll_y: content.location_ll.y}),
+            headers: {'Content-Type': 'application/json'}
+        }).then(res => res.json()).then(res => {console.log(res); setUserData(res); navigation.goBack();});
+    }
+
     return (
         <ScrollView style={{paddingVertical: 20, paddingHorizontal: 10, backgroundColor: 'transparent'}}>
             <ChangePhotoArea>
@@ -295,6 +319,7 @@ const EditProfile = ({navigation}) => {
                 value={content.description}
                 color="black" placeholderTextColor="gray"
             />
+            <RectangleBtn color='green' text='정보 업데이트' onPress={() => putProfile()} />
             <RectangleBtn color='blue' text='로그아웃' onPress={() => signOutWithKakao()} />
             <RectangleBtn color='red' text='계정 삭제' onPress={() => withdrawal()} />
         </ScrollView>

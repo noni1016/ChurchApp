@@ -107,7 +107,7 @@ const ActivityRecordArea = styled.View`
 
 const ProfileMain = ({navigation, route}) => {
     const domain = useContext(DomainContext);
-    const {userData, setUserData, userClub, userSpot} = useContext(UserData);
+    const {userData, userClub, userSpot} = useContext(UserData);
     const [member, setMember] = useState(route ? route.params.member : userData);
     const [imgSrc, setImgSrc] = useState('');
     const [locate, setLocate] = useState([0,0]);
@@ -118,19 +118,11 @@ const ProfileMain = ({navigation, route}) => {
     const {tryGetUserData, setTryGetUserDataFlag} = useContext(TryGetUserData);
     const [memberClub, setMemberClub] = useState([]);
     const [memberSpot, setMemberSpot] = useState([]);
-    
+    const [churchName, setChurchName] = useState('');
+
     useEffect(() => {
         setMember(route != undefined ? route.params.member : userData);
     }, [userData])
-
-    const signOutWithKakao = async() => {
-        const message = await logout();
-        // setLogOutResult(message);
-        console.log("signOut");
-        setUserData(null);
-        setTryGetUserDataFlag(false);
-        setKakaoAuthData(null);
-    }
 
     useEffect(() => {
         if (member)
@@ -157,9 +149,13 @@ const ProfileMain = ({navigation, route}) => {
                 fetch(`${domain}/User/${member.id}/Club`).then(res => res.json()).then(res => {setMemberClub(res)});
                 fetch(`${domain}/User/${member.id}/Spot`).then(res => res.json()).then(res => {setMemberSpot(res)});
             }
+            
+            console.log(member.church);
+            if (member.church)
+            {
+                fetch(`${domain}/Church/${member.church}`).then(res => res.json()).then(res => {console.log(res);setChurchName(res.name);});
+            }
         }
-
-
     }, [member])
 
     useEffect(() => {
@@ -185,50 +181,6 @@ const ProfileMain = ({navigation, route}) => {
     }, [imgSrc])
 
 
-    // Camera Roll
-    const showCameraRoll = () => {
-        launchImageLibrary(options, (response) => {
-            if (response.didCancel) {
-                alert('프사변경취소');
-                return;
-            }
-            if (response.error) {
-                console.log('LaunchCamera Error: ', response.error);
-                return;
-            }
-            if (response.assets.length > 0) {
-                setImgSrc(response.assets[0]);
-                return;
-            }
-            alert('프사변경취소');
-        });
-    }
-
-
-    const withdrawal = () => {
-        // Check if the user have a group with leader
-        // let isLeaderOfGroup = false;
-        
-        for (i = 0; userClub.length; i++) {
-            if (userClub[i].leader == userData.id) {
-                alert('공동체의 리더는 먼저 리더를 변경한 후 탈퇴할 수 있습니다. 리더인 공동체에서 리더를 변경하거나 모임을 해산하세요.');
-                return;
-            }
-        }
-
-        for (i = 0; userSpot.length; i++) {
-            if (userSpot[i].leader == userData.id) {
-                alert('공동체의 리더는 먼저 리더를 변경한 후 탈퇴할 수 있습니다. 리더인 공동체에서 리더를 변경하거나 모임을 해산하세요.');
-                return;
-            }
-        }
-
-        // Delete user info from database
-        fetch(`${domain}/User/${userData.id}`, {method: 'DELETE', headers: {'Content-Type': 'application/json'}}).then(res=>res.json()).then((res) => alert(`Delete User ${res}`));
-        // LogOut
-        signOutWithKakao();
-    }
-
     return (
         <>
             {
@@ -242,7 +194,7 @@ const ProfileMain = ({navigation, route}) => {
                 <HeaderTextArea style={{ flex: 3 }}>
                         <Text style={{ fontWeight: 'bold'}}>{member.name}</Text>
                         {member.description ? <Text>{member.description}</Text> : <Text>자기소개 없음</Text>}
-                        <Text>{member.church}</Text>
+                        <Text>{churchName}</Text>
                     </HeaderTextArea>
                 </HeaderBox>
 
