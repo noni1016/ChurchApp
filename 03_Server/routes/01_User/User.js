@@ -159,9 +159,9 @@ const putUserImg = multer({
                 try {
                     await conn.beginTransaction();
                     await conn.query(sql1);
-                    console.log(sql2);
-                    await conn.query(sql2, async (error, rows) => {
-                        queryRes = rows[0];
+                        console.log(sql2);
+                        await conn.query(sql2, async (error, rows) => {
+                                                        queryRes = rows[0];
                         await conn.commit();
                     });
                 } catch (err) {
@@ -185,26 +185,31 @@ router.put('/:userId/photo', async (req, res, next) => {
             res.json(queryRes);
         }
     })
-
-    // let queryRes = false;
-    // let sql = `UPDATE User SET photo = '${domain}/Profile/${fileName}' WHERE id = ${req.params.userId}`;
-    // console.log(sql);
-    // conn.query(sql, function (error, rows, fields) { // sql 쿼리 ?��?��
-    //     if (!error) {
-    //         console.log(rows.affectedRows);
-    //         if (rows.affectedRows === 1) queryRes = true;
-    //         // console.log('query success')
-    //         res.send(queryRes);
-    //     } else {
-    //         console.log('query error : ' + error);
-    //         res.send(queryRes);
-    //     }
-    // });
-
 })
 
 
+router.put('/:userId', async (req, res) => {
+    console.log(req.body);
+    let sql1 = `UPDATE User SET name = '${req.body.name}', church = '${req.body.church}', location = '${req.body.location}', location_ll = ST_GeomFromText('POINT(${req.body.location_ll_x} ${req.body.location_ll_y})', 4326), description = '${req.body.description}' WHERE id = ${req.params.userId}`;
+    let sql2 = `SELECT * FROM User WHERE id = ${req.params.userId}`;
 
+    try {
+        await conn.beginTransaction();
+        console.log(sql1);
+        await conn.query(sql1, async (error, rows) => {
+            console.log(sql2);
+            await conn.query(sql2, async (error, rows) => {
+                console.log(rows[0]);
+                conn.commit();
+                res.json(rows[0]);
+            });
+        });
+    } catch (err) {
+        console.log(err);
+        await conn.rollback()
+        res.json({res: false});
+    }
+})
 
 
 router.put('/:userId/:column', async (req, res) => {
