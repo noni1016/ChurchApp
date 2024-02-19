@@ -60,7 +60,7 @@ const SpotMembersView = ({data, members, isLeader, stackNavi}) => {
                     </NumGroupMemCont>
                     {/* <Divider/> */}
                     <Padding/>
-                    {members.map((member, index) => (<GroupMemProfile key={index.toString()} member={member} isLeader={member.id == userData.id} onPress={() => {
+                    {members.map((member, index) => (<GroupMemProfile key={index.toString()} member={member} isLeader={member.id == data.leader} onPress={() => {
                         if (member.id == userData.id) tabNavi.navigate('Profile', { member: member });
                         else stackNavi.navigate('Profile', { member: member });
                     }} />))}
