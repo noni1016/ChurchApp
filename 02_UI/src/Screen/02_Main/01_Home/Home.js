@@ -6,8 +6,8 @@ import { UserData } from '~/Context/User';
 import {NativeModules, Button} from 'react-native';
 import { getUniqueId, getManufacturer, isEmulator } from 'react-native-device-info';
 import PlusBtn from '~/Components/PlusBtn';
-import SearchChurchPage from '~/Screen/02_Main/03_Profile/SearchChurchPage';
-import ChurchView from '~/Screen/02_Main/03_Profile/ChurchView'
+import SearchChurchPage from '~/Screen/02_Main/04_Profile/SearchChurchPage';
+import ChurchView from '~/Screen/02_Main/04_Profile/ChurchView'
 import {createStackNavigator} from '@react-navigation/stack';
 const Stack = createStackNavigator();
 
