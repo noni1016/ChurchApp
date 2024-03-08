@@ -76,7 +76,6 @@ const SearchChurchPage = ({route, navigation})=>{
                         console.log(value);
                         serchChurch = setSerchChurch(value);
                     }}
-                    style={Styles.default}
                     />
                 
                     <SearchBtn onPress={() => fetch(`${domain}/Church/Find/${serchChurch}`).then(res => res.json()).then(res => 
@@ -106,7 +105,7 @@ const SearchChurchPage = ({route, navigation})=>{
                 </>
             ) : (<Text style={Styles.default}>교회를 검색하세요.</Text>)}
 
-                <AddBox onPress={() => {{navigation.navigate('AddChurchPage')}}}>
+                <AddBox onPress={() => {{navigation.navigate('AddChurchPage', {navigation: navigation})}}}>
                     <PlusText>+</PlusText>
                     <Text style={Styles.default}>교회 추가</Text>
                 </AddBox>
