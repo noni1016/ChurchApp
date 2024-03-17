@@ -91,22 +91,23 @@ const SearchChurchPage = ({route, navigation})=>{
                 {searchResult ?(
                 <>
                 {
-                    searchResult.length > 0 ?
-                    (
-                        searchResult.map((data, index) => (
+                    // searchResult.length > 0 ?
+                    (<>
+                        {searchResult.map((data, index) => (
                             <ChurchInfoBtn onPress={() => {{navigation.navigate('ChurchView', {churchInfo: data, navigation: navigation})}}}>
                                 <View style={{flexDirection: "row", justifyContent:"space-between"}}>
                                     <Text style={Styles.default}>{data.name}</Text>
                                     <Text style={Styles.default}>{data.membercount + "명"}</Text>
                                 </View>
                             </ChurchInfoBtn>
-                        ))
-                    ) : (
-                         
+                        )
+                        )}
                 <AddBox onPress={() => {{navigation.navigate('AddChurchPage', {navigation: navigation})}}}>
-                <PlusText>+</PlusText>
-                <Text style={Styles.default}>교회 추가</Text>
+                    <PlusText>+</PlusText>
+                    <Text style={Styles.default}>교회 추가</Text>
                 </AddBox>
+                <Text>찾는 교회가 없습니까</Text>
+                </>
                     )
                     
                 }

@@ -8,6 +8,7 @@ import {
     createStackNavigator,
 } from '@react-navigation/stack';
 import SearchChurchPage from './SearchChurchPage';
+import AddChurchPage from './AddChurchPage';
 
 const Stack = createStackNavigator();
 
@@ -62,6 +63,10 @@ const Church = ({navigation}) => {
             <Stack.Screen 
                 name={'SearchChurchPage'}
                 component={SearchChurchPage}
+            />
+            <Stack.Screen 
+                name={'AddChurchPage'}
+                component={AddChurchPage}
             />
         </Stack.Navigator>
     );
