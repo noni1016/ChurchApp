@@ -52,7 +52,7 @@ border-bottom-width: 3px;
 
 const SearchChurchPage = ({route, navigation})=>{
     let [serchChurch, setSerchChurch] = useState("교회 이름");
-    const [searchResult, setSearchResult] = useState([]);
+    const [searchResult, setSearchResult] = useState();
     const domain = useContext(DomainContext);
    
     useEffect(() => {
@@ -76,7 +76,6 @@ const SearchChurchPage = ({route, navigation})=>{
                         console.log(value);
                         serchChurch = setSerchChurch(value);
                     }}
-                    style={Styles.default}
                     />
                 
                     <SearchBtn onPress={() => fetch(`${domain}/Church/Find/${serchChurch}`).then(res => res.json()).then(res => 
@@ -89,32 +88,38 @@ const SearchChurchPage = ({route, navigation})=>{
                     </SearchBtn>
                 </View>
             
-
-                
                 {searchResult ?(
                 <>
                 {
-                    searchResult.map((data, index) => (
-                        <ChurchInfoBtn onPress={() => {{navigation.navigate('ChurchView', {churchInfo: data, navigation: navigation})}}}>
-                            <View style={{flexDirection: "row", justifyContent:"space-between"}}>
-                                <Text style={Styles.default}>{data.name}</Text>
-                                <Text style={Styles.default}>{data.membercount + "명"}</Text>
-                            </View>
-                        </ChurchInfoBtn>
-                    ))
+                    searchResult.length > 0 ?
+                    (
+                        searchResult.map((data, index) => (
+                            <ChurchInfoBtn onPress={() => {{navigation.navigate('ChurchView', {churchInfo: data, navigation: navigation})}}}>
+                                <View style={{flexDirection: "row", justifyContent:"space-between"}}>
+                                    <Text style={Styles.default}>{data.name}</Text>
+                                    <Text style={Styles.default}>{data.membercount + "명"}</Text>
+                                </View>
+                            </ChurchInfoBtn>
+                        ))
+                    ) : (
+                         
+                <AddBox onPress={() => {{navigation.navigate('AddChurchPage', {navigation: navigation})}}}>
+                <PlusText>+</PlusText>
+                <Text style={Styles.default}>교회 추가</Text>
+                </AddBox>
+                    )
+                    
                 }
                 </>
-            ) : (<Text style={Styles.default}>교회를 검색하세요.</Text>)}
-
-                <AddBox onPress={() => {{navigation.navigate('AddChurchPage')}}}>
-                    <PlusText>+</PlusText>
-                    <Text style={Styles.default}>교회 추가</Text>
-                </AddBox>
-
+            ) : (
+            <>
+                <Text style={Styles.default}>교회를 검색하세요.</Text>
+                
+            </>
+            )}
             </ScrollView>
         </>
     )
 }
-
 
 export default SearchChurchPage;
