@@ -1,10 +1,71 @@
 import React, { useEffect, useState, useContext } from 'react';
+import { Controller } from 'react-hook-form';
 import { ScrollView, Text } from 'react-native';
+import Styled from 'styled-components/native';
+import Icon from 'react-native-vector-icons/MaterialIcons';
+import {TabNavi} from '~/Context/Navi';
+import {
+    createStackNavigator,
+} from '@react-navigation/stack';
+import SearchChurchPage from './SearchChurchPage';
 
-const Church = () => {
+const Stack = createStackNavigator();
+
+const SearchArea = Styled.TouchableOpacity`
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
+    background-color: transparent;
+`;
+
+const SearchBox = Styled.View`
+    width: 90%;
+    height: 50px;
+    background-color: yellow;
+    border: 3px solid black;
+    border-radius: 5px;
+    justify-content: center;
+    align-items: center;
+`;
+
+const ChurchMain = ({navigation}) => {
     return (
-        <Text>Church</Text>
+        <ScrollView style={{padding: 10, backgroundColor: "skyblue"}}>
+            <SearchArea onPress={() => {navigation.navigate('SearchChurchPage')}}>
+                <SearchBox>
+                    <Text>
+                        교회 이름, 지역, 목사님 성함으로 검색하세요
+                    </Text>
+                </SearchBox>
+                <Icon name="search" size={26}/>
+            </SearchArea>
+
+            
+
+        </ScrollView>
     )
+}
+
+const Church = ({navigation}) => {
+    const {setTabNavi} = useContext(TabNavi);
+
+    useEffect(() => {
+        setTabNavi(navigation);
+    }, [navigation]);
+
+    return (
+        <Stack.Navigator>
+            <Stack.Screen
+                name={'ChurchMain'}
+                component={ChurchMain}
+            />
+            <Stack.Screen 
+                name={'SearchChurchPage'}
+                component={SearchChurchPage}
+            />
+        </Stack.Navigator>
+    );
 };
+
 
 export default Church;

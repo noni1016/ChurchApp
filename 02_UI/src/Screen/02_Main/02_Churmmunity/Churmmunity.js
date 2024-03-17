@@ -27,7 +27,7 @@ import GroupNotification from '~/Screen/02_Main/02_Churmmunity/Group/GroupNotifi
 import {ProfileMain} from '~/Screen/02_Main/04_Profile/Profile';
 import {TabNavi} from '~/Context/Navi';
 
-import SearchChurchPage from '~/Screen/02_Main/04_Profile/SearchChurchPage';
+import SearchChurchPage from '~/Screen/02_Main/03_Church/SearchChurchPage';
 import AddChurchPage from '~/Screen/02_Main/04_Profile/AddChurchPage';
 import ChurchView from '~/Screen/02_Main/04_Profile/ChurchView';
 

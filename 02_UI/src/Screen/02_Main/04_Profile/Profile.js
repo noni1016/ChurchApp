@@ -22,7 +22,7 @@ import SearchLocate from '~/Screen/03_Map/SearchLocate';
 import EditProfile from './EditProfile';
 import ShowProfileImg from './ShowProfileImg';
 import EditChurmmunity from '~/Screen/02_Main/02_Churmmunity/Group/EditChurmmunity';
-import SearchChurchPage from '~/Screen/02_Main/04_Profile/SearchChurchPage';
+import SearchChurchPage from '~/Screen/02_Main/03_Church/SearchChurchPage';
 import ChurchView from '~/Screen/02_Main/04_Profile/ChurchView'
 import AddChurchPage from '~/Screen/02_Main/04_Profile/AddChurchPage';
 
