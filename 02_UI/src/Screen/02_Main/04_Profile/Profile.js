@@ -24,7 +24,7 @@ import ShowProfileImg from './ShowProfileImg';
 import EditChurmmunity from '~/Screen/02_Main/02_Churmmunity/Group/EditChurmmunity';
 import SearchChurchPage from '~/Screen/02_Main/03_Church/SearchChurchPage';
 import ChurchView from '~/Screen/02_Main/04_Profile/ChurchView'
-import AddChurchPage from '~/Screen/02_Main/04_Profile/AddChurchPage';
+import AddChurchPage from '~/Screen/02_Main/03_Church/AddChurchPage';
 
 const tempUser = {id: 4, name: "짱쎄", photo: 'Profile/짱쎄.jpg', role: 'user'};
 const Stack = createStackNavigator();
