@@ -7,6 +7,7 @@ import Geolocation from 'react-native-geolocation-service';
 import { useIsFocused } from '@react-navigation/native';
 import Styles from '~/Style';
 import {DomainContext} from '~/Context/Domain';
+import ChurchCard from '~/Components/ChurchCard';
 
 const Input = Styled.TextInput`
 background-color: yellow;
@@ -94,12 +95,13 @@ const SearchChurchPage = ({route, navigation})=>{
                     // searchResult.length > 0 ?
                     (<>
                         {searchResult.map((data, index) => (
-                            <ChurchInfoBtn onPress={() => {{navigation.navigate('ChurchView', {churchInfo: data, navigation: navigation})}}}>
-                                <View style={{flexDirection: "row", justifyContent:"space-between"}}>
-                                    <Text style={Styles.default}>{data.name}</Text>
-                                    <Text style={Styles.default}>{data.membercount + "명"}</Text>
-                                </View>
-                            </ChurchInfoBtn>
+                            // <ChurchInfoBtn onPress={() => {{navigation.navigate('ChurchView', {churchInfo: data, navigation: navigation})}}}>
+                            //     <View style={{flexDirection: "row", justifyContent:"space-between"}}>
+                            //         <Text style={Styles.default}>{data.name}</Text>
+                            //         <Text style={Styles.default}>{data.numMember + "명"}</Text>
+                            //     </View>
+                            // </ChurchInfoBtn>
+                            <ChurchCard key={index} church={data} onPress={() => {console.log(`${data.name}`)}}></ChurchCard>
                         )
                         )}
                 <AddBox onPress={() => {{navigation.navigate('AddChurchPage', {navigation: navigation})}}}>
