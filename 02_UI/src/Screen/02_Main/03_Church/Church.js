@@ -3,11 +3,13 @@ import { Controller } from 'react-hook-form';
 import { ScrollView, Text } from 'react-native';
 import Styled from 'styled-components/native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import {DomainContext} from '~/Context/Domain';
 import {TabNavi} from '~/Context/Navi';
 import {
     createStackNavigator,
 } from '@react-navigation/stack';
 import SearchChurchPage from './SearchChurchPage';
+import ChurchCard from '~/Components/ChurchCard';
 import AddChurchPage from './AddChurchPage';
 
 const Stack = createStackNavigator();
@@ -30,6 +32,13 @@ const SearchBox = Styled.View`
 `;
 
 const ChurchMain = ({navigation}) => {
+    const domain = useContext(DomainContext);
+    const [churches, setChurches] = useState([]);
+
+    useEffect(() => {
+        fetch(`${domain}/Church`).then(res => res.json()).then(res => {setChurches(res)});
+    }, [])
+
     return (
         <ScrollView style={{padding: 10, backgroundColor: "skyblue"}}>
             <SearchArea onPress={() => {navigation.navigate('SearchChurchPage')}}>
@@ -40,7 +49,7 @@ const ChurchMain = ({navigation}) => {
                 </SearchBox>
                 <Icon name="search" size={26}/>
             </SearchArea>
-
+            {churches.length > 0 && churches.map((data, index) => (<ChurchCard church={data}/>))}
             
 
         </ScrollView>
