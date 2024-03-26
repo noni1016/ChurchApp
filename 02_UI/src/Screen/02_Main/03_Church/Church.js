@@ -1,9 +1,8 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { Controller } from 'react-hook-form';
 import { ScrollView, Text } from 'react-native';
 import Styled from 'styled-components/native';
-import Icon from 'react-native-vector-icons/MaterialIcons';
 import {DomainContext} from '~/Context/Domain';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 import {TabNavi} from '~/Context/Navi';
 import {
     createStackNavigator,
@@ -11,6 +10,7 @@ import {
 import SearchChurchPage from './SearchChurchPage';
 import ChurchCard from '~/Components/ChurchCard';
 import AddChurchPage from './AddChurchPage';
+import ChurchPage from './ChurchPage';
 
 const Stack = createStackNavigator();
 
@@ -49,7 +49,7 @@ const ChurchMain = ({navigation}) => {
                 </SearchBox>
                 <Icon name="search" size={26}/>
             </SearchArea>
-            {churches.length > 0 && churches.map((data, index) => (<ChurchCard church={data}/>))}
+            {churches.length > 0 && churches.map((data, index) => (<ChurchCard key={index} church={data} navigation={navigation}/>))}
             
 
         </ScrollView>
@@ -76,6 +76,10 @@ const Church = ({navigation}) => {
             <Stack.Screen 
                 name={'AddChurchPage'}
                 component={AddChurchPage}
+            />
+            <Stack.Screen
+                name={'ChurchPage'}
+                component={ChurchPage}
             />
         </Stack.Navigator>
     );
