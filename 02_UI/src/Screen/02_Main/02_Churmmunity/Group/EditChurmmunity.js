@@ -301,10 +301,10 @@ const EditChurmmunity = ({route, navigation}) => {
             console.log(res);
             if (createType == 1 && res) {
                 updateUserClub();
-                navigation.navigate('ClubPage', {club : res, navigation: navigation});
+                navigation.replace('ClubPage', {group: res, navigation: navigation});
             } else if (createType == 2 && res) {
                 updateUserSpot();
-                navigation.navigate('SpotPage', {spot: res, navigation: navigation});
+                navigation.replace('SpotPage', {group: res, navigation: navigation});
             }
             else {
                 console.log('Call Noni');

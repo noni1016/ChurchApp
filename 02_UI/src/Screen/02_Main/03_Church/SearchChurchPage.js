@@ -7,6 +7,7 @@ import Geolocation from 'react-native-geolocation-service';
 import { useIsFocused } from '@react-navigation/native';
 import Styles from '~/Style';
 import {DomainContext} from '~/Context/Domain';
+import ChurchCard from '~/Components/ChurchCard';
 
 const Input = Styled.TextInput`
 background-color: yellow;
@@ -52,7 +53,7 @@ border-bottom-width: 3px;
 
 const SearchChurchPage = ({route, navigation})=>{
     let [serchChurch, setSerchChurch] = useState("교회 이름");
-    const [searchResult, setSearchResult] = useState([]);
+    const [searchResult, setSearchResult] = useState();
     const domain = useContext(DomainContext);
    
     useEffect(() => {
@@ -76,7 +77,6 @@ const SearchChurchPage = ({route, navigation})=>{
                         console.log(value);
                         serchChurch = setSerchChurch(value);
                     }}
-                    style={Styles.default}
                     />
                 
                     <SearchBtn onPress={() => fetch(`${domain}/Church/Find/${serchChurch}`).then(res => res.json()).then(res => 
@@ -89,32 +89,40 @@ const SearchChurchPage = ({route, navigation})=>{
                     </SearchBtn>
                 </View>
             
-
-                
                 {searchResult ?(
                 <>
                 {
-                    searchResult.map((data, index) => (
-                        <ChurchInfoBtn onPress={() => {{navigation.navigate('ChurchView', {churchInfo: data, navigation: navigation})}}}>
-                            <View style={{flexDirection: "row", justifyContent:"space-between"}}>
-                                <Text style={Styles.default}>{data.name}</Text>
-                                <Text style={Styles.default}>{data.membercount + "명"}</Text>
-                            </View>
-                        </ChurchInfoBtn>
-                    ))
-                }
-                </>
-            ) : (<Text style={Styles.default}>교회를 검색하세요.</Text>)}
-
-                <AddBox onPress={() => {{navigation.navigate('AddChurchPage')}}}>
+                    // searchResult.length > 0 ?
+                    (<>
+                        {searchResult.map((data, index) => (
+                            // <ChurchInfoBtn onPress={() => {{navigation.navigate('ChurchView', {churchInfo: data, navigation: navigation})}}}>
+                            //     <View style={{flexDirection: "row", justifyContent:"space-between"}}>
+                            //         <Text style={Styles.default}>{data.name}</Text>
+                            //         <Text style={Styles.default}>{data.numMember + "명"}</Text>
+                            //     </View>
+                            // </ChurchInfoBtn>
+                            <ChurchCard key={index} church={data} onPress={() => {console.log(`${data.name}`)}}></ChurchCard>
+                        )
+                        )}
+                <AddBox onPress={() => {{navigation.navigate('AddChurchPage', {navigation: navigation})}}}>
                     <PlusText>+</PlusText>
                     <Text style={Styles.default}>교회 추가</Text>
                 </AddBox>
-
+                <Text>찾는 교회가 없습니까</Text>
+                </>
+                    )
+                    
+                }
+                </>
+            ) : (
+            <>
+                <Text style={Styles.default}>교회를 검색하세요.</Text>
+                
+            </>
+            )}
             </ScrollView>
         </>
     )
 }
-
 
 export default SearchChurchPage;

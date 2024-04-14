@@ -8,7 +8,7 @@ import PlusBtn from '~/Components/PlusBtn';
 import { useIsFocused } from '@react-navigation/native';
 import RectangleBtn from '~/Components/RectangleBtn';
 import {logout} from '@react-native-seoul/kakao-login';
-import DaumMap from './../../03_Map/DaumMapController';
+import DaumMap from '../../03_Map/DaumMapController';
 
 const options = {
     title: 'Load Photo',

@@ -24,12 +24,12 @@ import {DomainContext, DomainContextProvider} from '~/Context/Domain';
 import SearchLocate from '~/Screen/03_Map/SearchLocate';
 import SearchGroups from './SearchGroups';
 import GroupNotification from '~/Screen/02_Main/02_Churmmunity/Group/GroupNotification';
-import {ProfileMain} from '~/Screen/02_Main/03_Profile/Profile';
+import {ProfileMain} from '~/Screen/02_Main/04_Profile/Profile';
 import {TabNavi} from '~/Context/Navi';
 
-import SearchChurchPage from '~/Screen/02_Main/03_Profile/SearchChurchPage';
-import AddChurchPage from '~/Screen/02_Main/03_Profile/AddChurchPage';
-import ChurchView from '~/Screen/02_Main/03_Profile/ChurchView';
+import SearchChurchPage from '~/Screen/02_Main/03_Church/SearchChurchPage';
+import AddChurchPage from '~/Screen/02_Main/03_Church/AddChurchPage';
+import ChurchView from '~/Screen/02_Main/04_Profile/ChurchView';
 
 
 const Stack = createStackNavigator();

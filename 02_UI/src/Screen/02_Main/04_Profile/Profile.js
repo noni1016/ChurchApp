@@ -9,7 +9,7 @@ import {
 import Icon1 from 'react-native-vector-icons/Ionicons';
 import Icon2 from 'react-native-vector-icons/AntDesign';
 import {launchImageLibrary} from 'react-native-image-picker';
-import DaumMap from './../../03_Map/DaumMapController';
+import DaumMap from '../../03_Map/DaumMapController';
 import { useIsFocused } from '@react-navigation/native';
 import PlusBtn from '~/Components/PlusBtn';
 import RectangleBtn from '~/Components/RectangleBtn';
@@ -22,9 +22,9 @@ import SearchLocate from '~/Screen/03_Map/SearchLocate';
 import EditProfile from './EditProfile';
 import ShowProfileImg from './ShowProfileImg';
 import EditChurmmunity from '~/Screen/02_Main/02_Churmmunity/Group/EditChurmmunity';
-import SearchChurchPage from '~/Screen/02_Main/03_Profile/SearchChurchPage';
-import ChurchView from '~/Screen/02_Main/03_Profile/ChurchView'
-import AddChurchPage from '~/Screen/02_Main/03_Profile/AddChurchPage';
+import SearchChurchPage from '~/Screen/02_Main/03_Church/SearchChurchPage';
+import ChurchView from '~/Screen/02_Main/04_Profile/ChurchView'
+import AddChurchPage from '~/Screen/02_Main/03_Church/AddChurchPage';
 
 const tempUser = {id: 4, name: "짱쎄", photo: 'Profile/짱쎄.jpg', role: 'user'};
 const Stack = createStackNavigator();

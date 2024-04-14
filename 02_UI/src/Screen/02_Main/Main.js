@@ -2,7 +2,7 @@
 import React, { useContext, useEffect } from 'react';
 import {Text} from 'react-native';
 import Styled from 'styled-components/native';
-import Icon2 from 'react-native-vector-icons/AntDesign';
+import Icon2 from 'react-native-vector-icons/FontAwesome5';
 
 //import Navigation modules
 import 'react-native-gesture-handler' //react-navigation 사용하기 위해 최상위에 필요한 모듈
@@ -14,9 +14,9 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 //import custom screens
 import Home from '~/Screen/02_Main/01_Home/Home';
 import Churmmunity from '~/Screen/02_Main/02_Churmmunity/Churmmunity';
-import Profile from '~/Screen/02_Main/03_Profile/Profile';
+import Profile from '~/Screen/02_Main/04_Profile/Profile';
 import Default from '~/Screen/99_Etc/Default';
-import SpotPage from '~/Screen/02_Main/02_Churmmunity/Group/SpotPage';
+import Church from '~/Screen/02_Main/03_Church/Church';
 
 // import contexts
 import {NaviContextProvider} from '~/Context/Navi';
@@ -44,11 +44,11 @@ const BottomTabNavi = () => {
                 }}
             />
             <BottomTab.Screen
-                name="Chat"
-                children={(navigation) => <SpotPage navigation={navigation}/>}
+                name="Church"
+                children={(navigation) => <Church navigation={navigation}/>}
                 options={{
                     headerShown: false,
-                    tabBarIcon: ({ color }) => <Icon2 name="message1" color={color} size={26}/>
+                    tabBarIcon: ({ color }) => <Icon2 name="church" color={color} size={26}/>
                 }}
             />  
             <BottomTab.Screen
