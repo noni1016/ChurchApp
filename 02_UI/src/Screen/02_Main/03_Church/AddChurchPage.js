@@ -9,7 +9,8 @@ import Styles from '~/Style';
 import {DomainContext} from '~/Context/Domain';
 import {launchImageLibrary} from 'react-native-image-picker';
 import { UserData } from '~/Context/User';
-
+import ChurchCard from '~/Components/ChurchCard';
+import { exp } from 'react-native/Libraries/Animated/Easing';
 
 const Input = Styled.TextInput`
 background-color: silver;
@@ -60,6 +61,16 @@ const PlusText = Styled.Text`
     border-radius: 10px;
 `;
 
+const ImageBox = Styled.Image`
+    flex: 2;
+    width: 80px;
+    height: 80px;
+    border-radius: 25px;
+    border-color: black;
+    border: 3px;
+    margin: 5px;
+`;
+
 //맵 데이터 -- 전역으로 쓸 필요가 있을까
 const MapData = createContext({
     mapData : {
@@ -87,6 +98,7 @@ const UserContextProvider = ({children}) => {
 const AddChurchPage = ({route, navigation})=>{
     const isFocused = useIsFocused();
     const [imgSrc, setImgSrc] = useState(undefined);
+    const [churches, setChurches] = useState([]);
 
     let defaultLocation = {latitude: 1000.0, longitude: 1000.0};
     let [serchRigion, setSerchRigion] = useState("지역");
@@ -94,11 +106,13 @@ const AddChurchPage = ({route, navigation})=>{
     let [resCount, setResCount] = useState(1);
     let [regionIndex, setRegionIndex] = useState(0);
     let [pastorName, setPastorName] = useState("");
+    let [churchDesc, setChurchDesc] = useState("");
 
     let [location, setLocation] = useState(defaultLocation);
     let [region, setRegion] = useState("");
     let [searchRes, setSearchRes] = useState();
     let [searchChurch, setSearchChurch] = useState();
+    let [stepState, setStepState] = useState("showNessesaryStep"); //locate, pastor
 
     const [DaumMapModule, setDaumMap] = useState();
     const domain = useContext(DomainContext);
@@ -213,36 +227,34 @@ const AddChurchPage = ({route, navigation})=>{
         });
     }
 
-    return (
-        <>
-        
-            {location ?(
-                <>
-                    <Text style={Styles.default}> ============================== </Text>
+    const showNessesaryStep = () => {
+        if(location)
+        {
+            console.log("showNessesaryStep")
+            return <> 
+                    <Text style={Styles.default}> =========showNessesaryStep======= </Text>
                     <Text style={Styles.default}>Latitude: {location.latitude}</Text>
                     <Text style={Styles.default}>Longitude: {location.longitude}</Text>
-                    <Text style={Styles.default}> ============================== </Text>
-                </>
-            ) : (<Text style={Styles.default}>Loading...</Text>)}
-            
-            <ScrollView>
-            {searchRes ?(
-                <>
-                {
-                    searchRes.map((data, index) => (
-                        <SearchResultBtn onPress = {()=>{
-                            setRegion(data.place_name);
-                            setLocation({longitude: data.x, latitude: data.y});
-                            setSearchChurch(data);
+                    <Text style={Styles.default}> =========showNessesaryStep======= </Text>
+
+                    <ScrollView>
+                    {searchRes ?(
+                    <>
+                    {
+                        searchRes.map((data, index) => (
+                            <SearchResultBtn onPress = {()=>{
+                                setRegion(data.place_name);
+                                setLocation({longitude: data.x, latitude: data.y});
+                                setSearchChurch(data);
                         }}><Text style={Styles.default}>{data.place_name}</Text>
                         </SearchResultBtn>
-                    ))
-                }
-                </>
-            ) : (<Text style={Styles.default}>장소를 검색하세요.</Text>)}
-            </ScrollView>
+                        ))
+                    }
+                    </>
+                    ) : (<Text style={Styles.default}>장소를 검색하세요.</Text>)}
+                    </ScrollView>
 
-            <Input
+                    <Input
                     autoFocus={false}
                     autoCapitalize="none"
                     autoCorrect={false}
@@ -252,38 +264,72 @@ const AddChurchPage = ({route, navigation})=>{
                         console.log(value);
                         serchRigion = setSerchRigion(value);
                     }}
-                    
-                />
+                    />
 
-            <View 
-                style={{flexDirection: "row"}}>
-                <SearchBtn onPress={
-                    () => {
-                        if (lastSerchRegion == serchRigion) {
-                            setRegionIndex(regionIndex+1);
-                            console.log("----------------------------------");
-                            console.log("지역인덱스");
-                            console.log(regionIndex);
-                            console.log("전체개수");
-                            console.log(resCount);
+                <View 
+                    style={{flexDirection: "row"}}>
+                    <SearchBtn onPress={
+                        () => {
+                            if (lastSerchRegion == serchRigion) {
+                                setRegionIndex(regionIndex+1);
+                                console.log("----------------------------------");
+                                console.log("지역인덱스");
+                                console.log(regionIndex);
+                                console.log("전체개수");
+                                console.log(resCount);
                             if (resCount <= regionIndex * 15)
                                 setRegionIndex(1);
                              
-                            console.log("----------------------------------");
+                                console.log("----------------------------------");
+                            }
+                            else
+                            {
+                                setRegionIndex(1);
+                                console.log("======");
+                                console.log(lastSerchRegion);
+                                setLastSerchRigion(serchRigion);
+                                console.log("======");
+                            }
                         }
-                        else
-                        {
-                            setRegionIndex(1);
-                            console.log("======");
-                            console.log(lastSerchRegion);
-                            setLastSerchRigion(serchRigion);
-                            console.log("======");
-                        }
-                    }
-                } height = "30%">
-                    <Text> Search Locate </Text>
-                </SearchBtn>
-                
+                    } height = "30%">
+                        <Text> Search Locate </Text>
+                    </SearchBtn> 
+
+                    
+
+                    </View>
+
+                    {isFocused && <DaumMap currentRegion={{
+                    latitude: parseFloat(location.latitude),
+                    longitude: parseFloat(location.longitude),
+                    zoomLevel: 5,
+                }}
+                    mapType={"Standard"}
+                    style={{ width: 400, height: 150, backgroundColor: 'transparent' }}
+
+                    markers={[{
+                        latitude: parseFloat(location.latitude),
+                        longitude: parseFloat(location.longitude),
+                        pinColor: "red",
+                        pinColorSelect: "yellow",
+                        title: region,
+                        draggable: true,
+                        allClear: true,
+                   }]}
+                />}
+            
+        <Input
+                    autoFocus={false}
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                    placeholder= "담임목사 이름을 입력하세요."
+                    returnKeyType="done"
+                    onChangeText={(value) => {
+                        console.log(value);
+                        pastorName = setPastorName(value);
+                    }}
+                />
+
                 <ChangeBtn onPress={() => {
                     console.log(searchChurch);
                     console.log(searchChurch["category_name"]);
@@ -291,17 +337,96 @@ const AddChurchPage = ({route, navigation})=>{
                     
                     if(searchChurch["category_name"].indexOf("교회") == -1)
                     {
-                        alert("교회가 아닌디용");
-                        return;
+                         alert("교회가 아닌디용");
+                         return;
                     }
                     
                     if(pastorName == "")
                     {
-                        alert("담임목사님은 누구신가용");
-                        return;
+                         alert("담임목사님은 누구신가용");
+                         return;
                     }
+                    let fatchMsg = `${domain}/Church/FindSameChurch/${region}/${location.longitude}/${location.latitude}/${pastorName}`;//${location.latitude}/${pastorName}`;
+                    fetch(fatchMsg).then(res => res.json()).then(res => 
+                        {
+                            console.log(res.length);
+                            if(res.length == 0) //검색결과 없으니 추가
+                            {
+                                
+                                setStepState("SubInfoStep");
+                            }
+                            else
+                            {
+                                setChurches(res);
 
-                    if (location.longitude == 1000.0 && location.latitude == 1000.0)
+                                setStepState("ChooseChurchStep");
+
+                                console.log(res);
+                                console.log(res[0]["pastor"]);
+                                console.log(res[0]["description"]);
+                                console.log(res[0]["name"]);
+                            }
+                        });
+                }} height = "30%" >
+                    <Text> 교회추가하기 </Text>
+                </ChangeBtn>
+            </> 
+        }
+        
+    }
+
+    const showSubInfoStep = () =>
+    {
+        return <>
+        
+        <Text> 교회 : {region} </Text>
+        <Text> {pastorName} 목사님 </Text>
+
+        <DaumMap currentRegion={{
+                    latitude: parseFloat(location.latitude),
+                    longitude: parseFloat(location.longitude),
+                    zoomLevel: 5,
+                }}
+                    mapType={"Standard"}
+                    style={{ width: 400, height: 400, backgroundColor: 'transparent' }}
+
+                    markers={[{
+                        latitude: parseFloat(location.latitude),
+                        longitude: parseFloat(location.longitude),
+                        pinColor: "red",
+                        pinColorSelect: "yellow",
+                        title: region,
+                        draggable: false,
+                        allClear: true,
+                   }]}
+                />
+
+            <Input
+                    autoFocus={false}
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                    placeholder= "교회를 소개 해 주세요!"
+                    returnKeyType="done"
+                    onChangeText={(value) => {
+                        console.log(value);
+                        churchDesc = setChurchDesc(value);
+                    }}
+                />
+
+              {imgSrc && 
+              <ImageBox source={imgSrc}/>
+              }
+                
+        <PlusBtnBox onPress={() => {showCameraRoll();}}>
+                <PlusText>+</PlusText>
+                <Text>버튼을 눌러</Text>
+                <Text>사진을 추가해보세요</Text>
+            </PlusBtnBox>
+
+            <SearchBtn onPress={
+                        () => {
+
+                            if (location.longitude == 1000.0 && location.latitude == 1000.0)
                         <Text> Default Loacate! need search! </Text>
 
                     if (location.longitude != 1000.0 && location.latitude != 1000.0) {
@@ -310,7 +435,7 @@ const AddChurchPage = ({route, navigation})=>{
                         const fd = new FormData(); //사진도 추가할거임
                         fd.append('userId', userData.id)
                         fd.append('location', searchChurch["address_name"]);
-                        fd.append('description', "우리교회는용 짱이에용");
+                        fd.append('description', churchDesc);
                         fd.append('file', {
                             uri: imgSrc.uri,
                             type: imgSrc.type,
@@ -344,48 +469,59 @@ const AddChurchPage = ({route, navigation})=>{
                         //         navigation.goBack();
                         //     })
                     }
-                }} height = "30%" >
-                    <Text> 교회 추가 </Text>
-                </ChangeBtn>
-            </View>
 
-            {isFocused && <DaumMap currentRegion={{
-                    latitude: parseFloat(location.latitude),
-                    longitude: parseFloat(location.longitude),
-                    zoomLevel: 5,
-                }}
-                    mapType={"Standard"}
-                    style={{ width: 400, height: 150, backgroundColor: 'transparent' }}
 
-                    markers={[{
-                        latitude: parseFloat(location.latitude),
-                        longitude: parseFloat(location.longitude),
-                        pinColor: "red",
-                        pinColorSelect: "yellow",
-                        title: region,
-                        draggable: true,
-                        allClear: true,
-                   }]}
-                />}
 
-                <Input
-                    autoFocus={false}
-                    autoCapitalize="none"
-                    autoCorrect={false}
-                    placeholder= "담임목사 이름을 입력하세요."
-                    returnKeyType="done"
-                    onChangeText={(value) => {
-                        console.log(value);
-                        pastorName = setPastorName(value);
-                    }}
-                    
-                />
-                
-            <PlusBtnBox onPress={() => {showCameraRoll();}}>
-                <PlusText>+</PlusText>
-                <Text>버튼을 눌러</Text>
-                <Text>사진을 추가해보세요</Text>
-            </PlusBtnBox>
+
+
+                            alert("교회가 추가됩니다");
+                            return;
+                        }
+                    } height = "30%">
+
+                        <Text> 교회 추가 완료 </Text>
+                    </SearchBtn> 
+
+
+        </>
+    }
+
+    const showChooseChurchStep = ()=>
+    {
+        return <>
+        <Text>{pastorName} 목사님의 {region} 은(는) 이미 있습니다~!</Text>
+        <Text>가입을 진행 해 주세요.</Text>
+        {churches.length > 0 && churches.map((data, index) => (<ChurchCard church={data}/>))}
+
+        <Text> 정보가 틀린가요?? </Text>
+
+        <ChangeBtn onPress={() => {
+        }} height = "30%" >
+            <Text> 수정 요청 </Text>
+        </ChangeBtn>
+        </>
+    }
+
+    const ShowAddChurchPage = () =>
+    {
+        if(stepState == "showNessesaryStep")
+        {
+            return showNessesaryStep();
+        }
+        else if(stepState == "SubInfoStep")
+        {
+            return showSubInfoStep();
+        }
+        else if(stepState == "ChooseChurchStep")
+        {
+            return showChooseChurchStep();
+        }
+    }
+
+    return (
+        <>
+            {ShowAddChurchPage()}
+
         </>
     )
 }
