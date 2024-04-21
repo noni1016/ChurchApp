@@ -45,7 +45,7 @@ const Footer = Styled.View`
 
 const ChurchPage = ({route, navigation}) => {
     const domain = useContext(DomainContext);
-    const {userData} = useContext(UserData);
+    const {userData, userChurch} = useContext(UserData);
     const data = route.params.group;
     const [tabIdx, setTabIdx] = useState(0);
     const [members, setMembers] = useState([]);
@@ -56,10 +56,12 @@ const ChurchPage = ({route, navigation}) => {
     /* 멤버 정보 불러오기 */
     useEffect(() => {
         fetch(`${domain}/Church/Member/${data.id}`).then(res => res.json()).then(res => {setMembers(res)});
-    }, [data]);
+        console.log("update member data");
+    }, [data, userChurch]);
 
     /* 멤버 정보 불러왓으면 현재 유저가 그룹 멤버인지 확인. 리더 여부도 확인 */
-    useEffect(() => {        
+    useEffect(() => {
+        setIsMember(false);        
         members.map((member, index) => {
             if (member.id === userData.id) {
                 setIsMember(true);
@@ -67,6 +69,7 @@ const ChurchPage = ({route, navigation}) => {
                     setIsLeader(true);
             }
         })
+        console.log("update is member");
     }, [members])
 
     return (
@@ -126,6 +129,7 @@ const NumGroupMemCont = Styled.View`
     //background-color: blue;
 `;
 
+
 const ChurchPageHome = ({data, members, isMember, isLeader}) => {
     const domain = useContext(DomainContext);    
     const {userData, setUserData, updateUserChurch} = useContext(UserData);
@@ -133,10 +137,10 @@ const ChurchPageHome = ({data, members, isMember, isLeader}) => {
     const [joinText, setJoinText] = useState('활동 교회로 등록');
 
     useEffect(() => {
+        console.log(`isMember: ${isMember}`)
         if (isMember) {
             setJoinText('활동 교회 떠나기');
-        } else {
-            
+        } else {            
             setJoinText('활동 교회로 등록');
         }
     }, [isMember])
@@ -173,7 +177,7 @@ const ChurchPageHome = ({data, members, isMember, isLeader}) => {
                 /> 
             }
 
-            <RectangleBtn text={joinText} color={isMember? 'gray' : 'skyblue'} onPress={() => alert(joinText)} />
+            <RectangleBtn text={joinText} color={isMember? 'gray' : 'skyblue'} onPress={() => onPressJoinBtn()} />
             
             <NumGroupMemCont>
                 <Text style={Styles.default}>멤버 {data.numMember} 명</Text>
