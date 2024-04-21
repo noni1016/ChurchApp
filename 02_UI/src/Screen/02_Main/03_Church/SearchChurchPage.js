@@ -101,7 +101,7 @@ const SearchChurchPage = ({route, navigation})=>{
                             //         <Text style={Styles.default}>{data.numMember + "명"}</Text>
                             //     </View>
                             // </ChurchInfoBtn>
-                            <ChurchCard key={index} church={data} onPress={() => {console.log(`${data.name}`)}}></ChurchCard>
+                            <ChurchCard key={index} church={data} navigation={navigation}/>
                         )
                         )}
                 <AddBox onPress={() => {{navigation.navigate('AddChurchPage', {navigation: navigation})}}}>
