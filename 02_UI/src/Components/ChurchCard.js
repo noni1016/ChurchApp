@@ -49,11 +49,11 @@ const NumMember = Styled.View`
 `;
 
 
-const ChurchCard = ({church}) => {
+const ChurchCard = ({church, navigation}) => {
     const domain = useContext(DomainContext);
 
     return (
-        <ContainerBox>
+        <ContainerBox onPress={() => navigation.navigate('ChurchPage', {group: church})}>
             <ImageBox source={{uri: `${domain}/ChurchMainImg/${church.mainImg}`}}/>
             <ChurchInfoBox>
                 <ChurchNameBox>
