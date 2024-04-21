@@ -98,7 +98,7 @@ const SearchChurchPage = ({route, navigation})=>{
                             <ChurchCard key={index} church={data} navigation={navigation}/>
                         )
                         )}
-                <AddBox onPress={() => {{navigation.navigate('AddChurchPage', {navigation: navigation})}}}>
+                <AddBox onPress={() => {{navigation.replace('AddChurchPage', {navigation: navigation})}}}>
                     <PlusText>+</PlusText>
                     <Text style={Styles.default}>교회 추가</Text>
                 </AddBox>

@@ -42,7 +42,7 @@ border-bottom-width: 3px;
 const PlusBtnBox = Styled.TouchableOpacity`
     justify-content: center;
     align-items: center;
-    width: 90%;
+    width: 40%;
     height: 200px;
     background-color: transparent;
     margin: 10px 0px 10px 0px;
@@ -416,7 +416,8 @@ const AddChurchPage = ({route, navigation})=>{
               {imgSrc && 
               <ImageBox source={imgSrc}/>
               }
-                
+
+        <ScrollView>
         <PlusBtnBox onPress={() => {showCameraRoll();}}>
                 <PlusText>+</PlusText>
                 <Text>버튼을 눌러</Text>
@@ -450,39 +451,13 @@ const AddChurchPage = ({route, navigation})=>{
             headers: {
                 Accept: 'application/json', 'Content-Type': 'multipart/form-data',
             }
-        }).then(res => {
-            console.log("뭔가왔어");
-            console.log(res.json());
-            return res.json();
-        }).then(res => 
-            {
-                console.log("응답이왔어");
-                console.log(res)
-                //setSearchResult(res);
-                //navigation.goBack();
-            })
-
-                        // fetch(`${domain}/Church/Add/${region}/${locate_x}/${locate_y}/${pastorName}`).then(res => res.json()).then(res => 
-                        //     {
-                        //         console.log(res)
-                        //         //setSearchResult(res);
-                        //         navigation.goBack();
-                        //     })
-                    }
-
-
-
-
-
-                            alert("교회가 추가됩니다");
-                            return;
-                        }
-                    } height = "30%">
-
-                        <Text> 교회 추가 완료 </Text>
-                    </SearchBtn> 
-
-
+        }).then(res => res.json()).then(res => {
+            navigation.replace('ChurchPage', {group: res});
+        })}}
+    } height = "30%">
+        <Text> 교회 추가 완료 </Text>
+        </SearchBtn>
+        </ScrollView>
         </>
     }
 
