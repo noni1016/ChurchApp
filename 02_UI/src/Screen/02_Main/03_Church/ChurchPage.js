@@ -98,7 +98,7 @@ const ChurchPage = ({route, navigation}) => {
                     ))}
                 </TabContainer>
                 {tabIdx == 0 && <ChurchPageHome data={data} members={members} isMember={isMember} isLeader={isLeader}/>}
-                {tabIdx == 1 && <Feeds />}
+                {tabIdx == 1 && <Feeds church={data} navigation={navigation}/>}
                 {tabIdx == 2 && <Photos />}
                 <Footer/>
             </ScrollView>
@@ -189,7 +189,17 @@ const ChurchPageHome = ({data, members, isMember, isLeader}) => {
     )
 };
 
-const Feeds = () => {
+const Feeds = ({church, navigation}) => {
+    const domain = useContext(DomainContext);
+    const [feeds, setFeeds] = useState([]);
+    const isFocused = useIsFocused();
+
+    /* Feed 불러오기 */
+    useEffect(() => {
+        fetch(`${domain}/Church/${church.id}/Feeds`).then(res => res.json()).then(res => {setFeeds(res);});
+    }, [church])
+
+
     return (<Text>Feeds</Text>)
 }
 
