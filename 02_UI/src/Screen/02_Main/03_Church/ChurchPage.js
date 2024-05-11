@@ -12,6 +12,7 @@ import AddBtn from '~/Components/AddBtn';
 import DaumMap from '~/Screen/03_Map/DaumMapController';
 import RectangleBtn from '~/Components/RectangleBtn';
 import GroupMemProfile from '~/Components/GroupMemProfile';
+import Feed from '~/Components/Feed';
 
 const Header = Styled.View`
     flex-direction: row;
@@ -102,7 +103,7 @@ const ChurchPage = ({route, navigation}) => {
                 {tabIdx == 2 && <Photos />}
                 <Footer/>
             </ScrollView>
-            {tabIdx == 1 && <AddBtn OnPressMethod={() => {alert('EditFeed')}}/>}
+            {tabIdx == 1 && <AddBtn OnPressMethod={() => {navigation.navigate('EditFeed', {edit: false, groupType: 'Church', group: data, navigation: navigation});}}/>}
         </>
     )
 }
@@ -199,8 +200,11 @@ const Feeds = ({church, navigation}) => {
         fetch(`${domain}/Church/${church.id}/Feeds`).then(res => res.json()).then(res => {setFeeds(res);});
     }, [church])
 
-
-    return (<Text>Feeds</Text>)
+    return (
+        <>
+            {feeds.map((feed, index) => (<Feed groupType={'Church'} group={church} feed={feed} key={index} navigation={navigation}/>))}
+        </>
+    );
 }
 
 const Photos = () => {

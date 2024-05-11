@@ -147,7 +147,7 @@ const ClubPage = ({route, navigation}) => {
                 {tabIdx == 2 && <Photos club={data}>사진</Photos>}
                 <Footer/>
             </ScrollView>
-            {tabIdx == 1 && <AddBtn OnPressMethod={() => {navigation.navigate('EditFeed', {edit: false, club: data, navigation: navigation});}}/>}
+            {tabIdx == 1 && <AddBtn OnPressMethod={() => {navigation.navigate('EditFeed', {edit: false, groupType: 'Club', group: data, navigation: navigation});}}/>}
         </>
     )
 };

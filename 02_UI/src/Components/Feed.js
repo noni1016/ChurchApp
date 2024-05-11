@@ -84,8 +84,7 @@ const CommentInputContainer = Styled.View`
 
 
 
-const Feed = ({club, feed, onFeedChange, navigation}) => {
-
+const Feed = ({groupType, group, feed, onFeedChange, navigation}) => {
     const domain = useContext(DomainContext);
     const {userData} = useContext(UserData);
     let [feedAuthorData, setFeedAuthorData] = useState();
@@ -102,7 +101,7 @@ const Feed = ({club, feed, onFeedChange, navigation}) => {
     /* 초기 마운팅시 Author 정보, Feed 댓글들을 받아옴 */
     useEffect(() => {
         fetch(`${domain}/User/${feed.authorId}`).then(res => res.json()).then(res => {setFeedAuthorData(res[0])});
-        fetch(`${domain}/Club/${club.id}/Feed/${feed.id}/Comments`).then(res => res.json()).then(res => {setFeedComments(res);});  
+        fetch(`${domain}/${groupType}/${group.id}/Feed/${feed.id}/Comments`).then(res => res.json()).then(res => {setFeedComments(res);});  
     }, [])
     
     useEffect(() => {
@@ -139,7 +138,10 @@ const Feed = ({club, feed, onFeedChange, navigation}) => {
     /* 댓글 등록 */
     const AddInput = (text) => {
         let sendCommentData = {authorId: userData.id, text: text};
-        fetch(`${domain}/Club/${feed.clubId}/Feed/${feed.id}/Comment`, {
+        let groupId = 0;
+        if (groupType == 'Club') groupId = feed.clubId;
+        else if (groupType == 'Church') groupId = feed.churchId;
+        fetch(`${domain}/${groupType}/${groupId}/Feed/${feed.id}/Comment`, {
             method: 'POST',
             body: JSON.stringify(sendCommentData),            
             headers:{
@@ -147,7 +149,7 @@ const Feed = ({club, feed, onFeedChange, navigation}) => {
             }
         })
         setCommentInput('');
-        fetch(`${domain}/Club/${club.id}/Feed/${feed.id}/Comments`).then(res => res.json()).then(res => {setFeedComments(res);});  
+        fetch(`${domain}/${groupType}/${group.id}/Feed/${feed.id}/Comments`).then(res => res.json()).then(res => {setFeedComments(res);});  
     }
 
     return (
@@ -215,9 +217,9 @@ const Feed = ({club, feed, onFeedChange, navigation}) => {
 
             <ActionSheet ref={actionSheetRef}>
                 <View>
-                    <ActionSheetBtn OnPressMethod={() => {navigation.navigate('EditFeed', {edit: true, club: club, feed: feed, navigation: navigation});}}>Edit</ActionSheetBtn>
+                    <ActionSheetBtn OnPressMethod={() => {navigation.navigate('EditFeed', {edit: true, groupType: groupType, group: group, feed: feed, navigation: navigation});}}>Edit</ActionSheetBtn>
                     <ActionSheetBtn OnPressMethod={() => {
-                        fetch(`${domain}/Club/${club.id}/Feed/${feed.id}`, {
+                        fetch(`${domain}/${groupType}/${group.id}/Feed/${feed.id}`, {
                             method: 'DELETE',
                             headers: {
                                 'Content-Type': 'application/json'
