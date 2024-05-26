@@ -12,6 +12,7 @@ import AddBtn from '~/Components/AddBtn';
 import DaumMap from '~/Screen/03_Map/DaumMapController';
 import RectangleBtn from '~/Components/RectangleBtn';
 import GroupMemProfile from '~/Components/GroupMemProfile';
+import EditChurchPage from './EditChurchPage';
 
 const Header = Styled.View`
     flex-direction: row;
@@ -80,7 +81,7 @@ const ChurchPage = ({route, navigation}) => {
                 </Title>
                 <Side>
                     <Icon2 name="notification" size={26} color={'black'} onPress={() => alert('Notification')}/>
-                    {isLeader && <Icon1 name="settings-outline" size={26} color={'black'} onPress={() => alert('EditChurch')} />}
+                    {isLeader && <Icon1 name="settings-outline" size={26} color={'black'} onPress={() => {{navigation.navigate('EditChurchPage', {churchData : data, navigation: navigation})}}} />}
                 </Side>
             </Header>
             <ScrollView>

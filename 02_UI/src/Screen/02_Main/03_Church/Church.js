@@ -12,6 +12,7 @@ import SearchChurchPage from './SearchChurchPage';
 import ChurchCard from '~/Components/ChurchCard';
 import AddChurchPage from './AddChurchPage';
 import ChurchPage from './ChurchPage';
+import EditChurchPage from './EditChurchPage';
 
 const Stack = createStackNavigator();
 
@@ -97,6 +98,10 @@ const Church = ({navigation}) => {
             <Stack.Screen
                 name={'ChurchPage'}
                 component={ChurchPage}
+            />
+            <Stack.Screen
+                name={'EditChurchPage'}
+                component={EditChurchPage}
             />
         </Stack.Navigator>
     );
