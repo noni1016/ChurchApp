@@ -117,10 +117,12 @@ const EditFeed = ({route, navigation}) => {
     
     const edit = route.params.edit;
     console.log('edit:', edit);
-    console.log(route.params);
+    // console.log(route.params);
     const group = route.params.group;
     const groupType = route.params.groupType;
     const isNotice = route.params.isNotice ? 1 : 0;
+    const reload = route.params.reload;
+    const setReload = route.params.setReload;
     const {userData} = useContext(UserData);
     const [userProfileImgUrl, SetUserProfileImgUrl] = useState(null);
     const [textInput, setTextInput] = useState('');
@@ -231,9 +233,9 @@ const EditFeed = ({route, navigation}) => {
 
         fetch(fetchReq, {
             method: fetchMethod,
-            body : JSON.stringify({clubId: group.id, authorId: userData.id, location: location, time: sendDate, contentText: textInput, notice : isNotice}),
+            body : JSON.stringify({groupId: group.id, authorId: userData.id, location: location, time: sendDate, contentText: textInput, notice : isNotice}),
             headers: {'Content-Type': 'application/json'}
-        }).then(res => res.json()).then(res => {navigation.goBack();})
+        }).then(res => res.json()).then(res => {setReload(!reload); navigation.goBack();})
         // }).then(res => res.json()).then(res => {navigation.navigate('ClubPage', {tabIdx: 1, edit: true, navigation: navigation});})
     }
 

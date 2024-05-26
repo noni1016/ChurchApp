@@ -10,10 +10,9 @@ const Temp = Styled.View`
 `;
 
 
-const Feeds = ({club, feedAdded, navigation}) => {
+const Feeds = ({club, feedAdded, reload, setReload, navigation}) => {
     const domain = useContext(DomainContext);
     let [clubFeeds, setClubFeeds] = useState([]);
-    let [reload, setReload] = useState(false);
     const isFocused = useIsFocused();
 
     /* 그룹의 Feed 들을 불러옴 */
@@ -26,7 +25,7 @@ const Feeds = ({club, feedAdded, navigation}) => {
     return (
         <>
             {clubFeeds.map((feed, index) => (
-                <Feed groupType={'Club'} group={club} feed={feed} key={index} onFeedChange={() => setReload(true)} navigation={navigation}/>
+                <Feed groupType={'Club'} group={club} feed={feed} key={index} onFeedChange={() => setReload(!reload)} navigation={navigation}/>
             ))}
             {/* <Temp />             */}
         </>
