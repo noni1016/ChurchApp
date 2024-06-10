@@ -73,16 +73,7 @@ const EditChurchPage = ({route, navigation}) => {
     return (
         <>
             <ScrollView>
-            <Input
-                    autoFocus={false}
-                    autoCapitalize="none"
-                    autoCorrect={false}
-                    placeholder={churchData.name}
-                    returnKeyType="done"
-                    onChangeText={(value) => {
-                        originData.name = value;
-                    }}
-                    />
+            
             <Input
                     autoFocus={false}
                     autoCapitalize="none"
@@ -104,27 +95,50 @@ const EditChurchPage = ({route, navigation}) => {
 <                   SearchBtn onPress={() => {
 
 const fd = new FormData(); //사진도 추가할거임
-// fd.append('userId', userData.id)
-// fd.append('location', churchData["address_name"]);
-// fd.append('description', churchData.description);
-// fd.append('file', {
-//     uri: churchData.mainImg.uri,
-//     type: churchData.imgSrc.type,
-//     name: churchData.imgSrc.fileName,
-//     data: churchData.imgSrc.data
-// })
+ fd.append('userId', userData.id);
+ fd.append('pastor', churchData.pastor);
+ fd.append('location', churchData.location);
+ fd.append('description', churchData.description);
+ fd.append('location_ll_x', churchData.location_ll.x);
+ fd.append('location_ll_y', churchData.location_ll.y);
+ fd.append('name', "church!!!");
+//   fd.append('file', {
+//      uri: churchData.mainImg.uri,
+//      type: churchData.imgSrc.type,
+//      name: churchData.imgSrc.fileName,
+//      data: churchData.imgSrc.data
+//  }
+//  )
 
 console.log(churchData);
+console.log("============");
 
-                    // fetch(`${domain}/Church/${churchData.region}/${churchData.location.longitude}/${churchData.location.latitude}/${churchData.pastor}`, {
-                    //     method: `PUT`,
-                    //     body: fd,
-                    //     headers: {
-                    //         Accept: 'application/json', 'Content-Type': 'multipart/form-data',
-                    //     }
-                    // }).then(res => res.json()).then(res => {
-                    //     navigation.replace('ChurchPage', {group: res});
-                    // })
+console.log(fd);
+console.log("============");
+
+                    fetch(`${domain}/Church/${churchData.id}`, {
+                         method: `PUT`,
+                         body: fd,
+                         headers: {
+                             Accept: 'application/json', 'Content-Type': 'multipart/form-data',
+                         }
+                     }).then(res=>res.json()).then(res=>console.log(res));
+                    // fetch(`${domain}/Church/${churchData.id}`).then(res=>res.json()).then(res=>console.log(res));
+                    //  .then(res => {
+                    //     console.log("============");
+                    //     // console.log(res);
+                    //     // console.log("============");
+                    //     // res.json()
+                    //     // console.log(res.json());
+                    //     //navigation.replace('ChurchPage', {group: res.json()});
+                    //  }
+                    //  ).then(res => {
+
+                    //     console.log("============");
+
+                    //     console.log("============");
+                    //      //navigation.replace('ChurchPage', {group: res});
+                    //  })
                 }
             }
                     >
