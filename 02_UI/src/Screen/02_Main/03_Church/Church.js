@@ -13,6 +13,7 @@ import ChurchCard from '~/Components/ChurchCard';
 import AddChurchPage from './AddChurchPage';
 import ChurchPage from './ChurchPage';
 import EditFeed from '~/Screen/02_Main/02_Churmmunity/Group/EditFeed';
+import Comments from '~/Components/Comments';
 
 const Stack = createStackNavigator();
 
@@ -102,6 +103,10 @@ const Church = ({navigation}) => {
             <Stack.Screen
                 name={'EditFeed'}
                 component={EditFeed}
+            />
+            <Stack.Screen
+                name={'Comments'}
+                component={Comments}
             />
         </Stack.Navigator>
     );
