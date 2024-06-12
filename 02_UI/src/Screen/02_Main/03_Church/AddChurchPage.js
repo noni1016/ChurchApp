@@ -9,6 +9,7 @@ import Styles from '~/Style';
 import {DomainContext} from '~/Context/Domain';
 import {launchImageLibrary} from 'react-native-image-picker';
 import { UserData } from '~/Context/User';
+import ChurchCard from '~/Components/ChurchCard';
 import { exp } from 'react-native/Libraries/Animated/Easing';
 
 const Input = Styled.TextInput`
@@ -41,7 +42,7 @@ border-bottom-width: 3px;
 const PlusBtnBox = Styled.TouchableOpacity`
     justify-content: center;
     align-items: center;
-    width: 90%;
+    width: 40%;
     height: 200px;
     background-color: transparent;
     margin: 10px 0px 10px 0px;
@@ -58,6 +59,16 @@ const PlusText = Styled.Text`
     margin: 10px 0px 10px 0px;
     text-align: center;
     border-radius: 10px;
+`;
+
+const ImageBox = Styled.Image`
+    flex: 2;
+    width: 80px;
+    height: 80px;
+    border-radius: 25px;
+    border-color: black;
+    border: 3px;
+    margin: 5px;
 `;
 
 //맵 데이터 -- 전역으로 쓸 필요가 있을까
@@ -87,6 +98,7 @@ const UserContextProvider = ({children}) => {
 const AddChurchPage = ({route, navigation})=>{
     const isFocused = useIsFocused();
     const [imgSrc, setImgSrc] = useState(undefined);
+    const [churches, setChurches] = useState([]);
 
     let defaultLocation = {latitude: 1000.0, longitude: 1000.0};
     let [serchRigion, setSerchRigion] = useState("지역");
@@ -94,12 +106,13 @@ const AddChurchPage = ({route, navigation})=>{
     let [resCount, setResCount] = useState(1);
     let [regionIndex, setRegionIndex] = useState(0);
     let [pastorName, setPastorName] = useState("");
+    let [churchDesc, setChurchDesc] = useState("");
 
     let [location, setLocation] = useState(defaultLocation);
     let [region, setRegion] = useState("");
     let [searchRes, setSearchRes] = useState();
     let [searchChurch, setSearchChurch] = useState();
-    let [stepState, setStepState] = useState("LocateStep"); //locate, pastor
+    let [stepState, setStepState] = useState("showNessesaryStep"); //locate, pastor
 
     const [DaumMapModule, setDaumMap] = useState();
     const domain = useContext(DomainContext);
@@ -214,15 +227,15 @@ const AddChurchPage = ({route, navigation})=>{
         });
     }
 
-    const showLocateStep = () => {
+    const showNessesaryStep = () => {
         if(location)
         {
-            console.log("showlocatestep")
+            console.log("showNessesaryStep")
             return <> 
-                    <Text style={Styles.default}> =========showLocateStep======= </Text>
+                    <Text style={Styles.default}> =========showNessesaryStep======= </Text>
                     <Text style={Styles.default}>Latitude: {location.latitude}</Text>
                     <Text style={Styles.default}>Longitude: {location.longitude}</Text>
-                    <Text style={Styles.default}> =========showLocateStep======= </Text>
+                    <Text style={Styles.default}> =========showNessesaryStep======= </Text>
 
                     <ScrollView>
                     {searchRes ?(
@@ -282,72 +295,7 @@ const AddChurchPage = ({route, navigation})=>{
                         <Text> Search Locate </Text>
                     </SearchBtn> 
 
-                    <ChangeBtn onPress={() => {
-                    console.log(searchChurch);
-                    console.log(searchChurch["category_name"]);
-                    console.log(searchChurch["address_name"]);
                     
-                    setStepState("PastorStep");
-                    //일단 예외추가 풀어
-                    // if(searchChurch["category_name"].indexOf("교회") == -1)
-                    // {
-                    //     alert("교회가 아닌디용");
-                    //     return;
-                    // }
-                    
-                    // 다음 스텝에 추가
-                    // if(pastorName == "")
-                    // {
-                    //     alert("담임목사님은 누구신가용");
-                    //     return;
-                    // }
-
-                    if (location.longitude == 1000.0 && location.latitude == 1000.0)
-                        <Text> Default Loacate! need search! </Text>
-
-                    if (location.longitude != 1000.0 && location.latitude != 1000.0) {
-                        console.log("sql");
-                        
-                        const fd = new FormData(); //사진도 추가할거임
-                        fd.append('userId', userData.id)
-                        fd.append('location', searchChurch["address_name"]);
-                        fd.append('description', "우리교회는용 짱이에용");
-                        fd.append('file', {
-                            uri: imgSrc.uri,
-                            type: imgSrc.type,
-                            name: imgSrc.fileName,
-                            data: imgSrc.data
-                        })
-
-        console.log(`${domain}/Church/${region}/${location.longitude}/${location.latitude}/${pastorName}`)          
-        fetch(`${domain}/Church/${region}/${location.longitude}/${location.latitude}/${pastorName}`, {
-            method: `POST`,
-            body: fd,
-            headers: {
-                Accept: 'application/json', 'Content-Type': 'multipart/form-data',
-            }
-        }).then(res => {
-            console.log("뭔가왔어");
-            console.log(res.json());
-            return res.json();
-        }).then(res => 
-            {
-                console.log("응답이왔어");
-                console.log(res)
-                //setSearchResult(res);
-                //navigation.goBack();
-            })
-
-                        // fetch(`${domain}/Church/Add/${region}/${locate_x}/${locate_y}/${pastorName}`).then(res => res.json()).then(res => 
-                        //     {
-                        //         console.log(res)
-                        //         //setSearchResult(res);
-                        //         navigation.goBack();
-                        //     })
-                    }
-                }} height = "30%" >
-                    <Text> 교회 추가 </Text>
-                </ChangeBtn>
 
                     </View>
 
@@ -369,14 +317,7 @@ const AddChurchPage = ({route, navigation})=>{
                         allClear: true,
                    }]}
                 />}
-            </> 
-        }
-        
-    }
-
-    const showPastorStep = () => 
-    {
-        return <>
+            
         <Input
                     autoFocus={false}
                     autoCapitalize="none"
@@ -387,38 +328,175 @@ const AddChurchPage = ({route, navigation})=>{
                         console.log(value);
                         pastorName = setPastorName(value);
                     }}
-                    
                 />
+
+                <ChangeBtn onPress={() => {
+                    console.log(searchChurch);
+                    console.log(searchChurch["category_name"]);
+                    console.log(searchChurch["address_name"]);
+                    
+                    if(searchChurch["category_name"].indexOf("교회") == -1)
+                    {
+                         alert("교회가 아닌디용");
+                         return;
+                    }
+                    
+                    if(pastorName == "")
+                    {
+                         alert("담임목사님은 누구신가용");
+                         return;
+                    }
+                    let fatchMsg = `${domain}/Church/FindSameChurch/${region}/${location.longitude}/${location.latitude}/${pastorName}`;//${location.latitude}/${pastorName}`;
+                    fetch(fatchMsg).then(res => res.json()).then(res => 
+                        {
+                            console.log(res.length);
+                            if(res.length == 0) //검색결과 없으니 추가
+                            {
+                                
+                                setStepState("SubInfoStep");
+                            }
+                            else
+                            {
+                                setChurches(res);
+
+                                setStepState("ChooseChurchStep");
+
+                                console.log(res);
+                                console.log(res[0]["pastor"]);
+                                console.log(res[0]["description"]);
+                                console.log(res[0]["name"]);
+                            }
+                        });
+                }} height = "30%" >
+                    <Text> 교회추가하기 </Text>
+                </ChangeBtn>
+            </> 
+        }
+        
+    }
+
+    const showSubInfoStep = () =>
+    {
+        return <>
+        
+        <Text> 교회 : {region} </Text>
+        <Text> {pastorName} 목사님 </Text>
+
+        <DaumMap currentRegion={{
+                    latitude: parseFloat(location.latitude),
+                    longitude: parseFloat(location.longitude),
+                    zoomLevel: 5,
+                }}
+                    mapType={"Standard"}
+                    style={{ width: 400, height: 400, backgroundColor: 'transparent' }}
+
+                    markers={[{
+                        latitude: parseFloat(location.latitude),
+                        longitude: parseFloat(location.longitude),
+                        pinColor: "red",
+                        pinColorSelect: "yellow",
+                        title: region,
+                        draggable: false,
+                        allClear: true,
+                   }]}
+                />
+
+            <Input
+                    autoFocus={false}
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                    placeholder= "교회를 소개 해 주세요!"
+                    returnKeyType="done"
+                    onChangeText={(value) => {
+                        console.log(value);
+                        churchDesc = setChurchDesc(value);
+                    }}
+                />
+
+              {imgSrc && 
+              <ImageBox source={imgSrc}/>
+              }
+
+        <ScrollView>
+        <PlusBtnBox onPress={() => {showCameraRoll();}}>
+                <PlusText>+</PlusText>
+                <Text>버튼을 눌러</Text>
+                <Text>사진을 추가해보세요</Text>
+            </PlusBtnBox>
+
+            <SearchBtn onPress={
+                        () => {
+
+                            if (location.longitude == 1000.0 && location.latitude == 1000.0)
+                        <Text> Default Loacate! need search! </Text>
+
+                    if (location.longitude != 1000.0 && location.latitude != 1000.0) {
+                        console.log("sql");
+                        
+                        const fd = new FormData(); //사진도 추가할거임
+                        fd.append('userId', userData.id)
+                        fd.append('location', searchChurch["address_name"]);
+                        fd.append('description', churchDesc);
+                        fd.append('file', {
+                            uri: imgSrc.uri,
+                            type: imgSrc.type,
+                            name: imgSrc.fileName,
+                            data: imgSrc.data
+                        })
+
+        console.log(`${domain}/Church/${region}/${location.longitude}/${location.latitude}/${pastorName}`)          
+        fetch(`${domain}/Church/${region}/${location.longitude}/${location.latitude}/${pastorName}`, {
+            method: `POST`,
+            body: fd,
+            headers: {
+                Accept: 'application/json', 'Content-Type': 'multipart/form-data',
+            }
+        }).then(res => res.json()).then(res => {
+            navigation.replace('ChurchPage', {group: res});
+        })}}
+    } height = "30%">
+        <Text> 교회 추가 완료 </Text>
+        </SearchBtn>
+        </ScrollView>
+        </>
+    }
+
+    const showChooseChurchStep = ()=>
+    {
+        return <>
+        <Text>{pastorName} 목사님의 {region} 은(는) 이미 있습니다~!</Text>
+        <Text>가입을 진행 해 주세요.</Text>
+        {churches.length > 0 && churches.map((data, index) => (<ChurchCard church={data}/>))}
+
+        <Text> 정보가 틀린가요?? </Text>
+
+        <ChangeBtn onPress={() => {
+        }} height = "30%" >
+            <Text> 수정 요청 </Text>
+        </ChangeBtn>
         </>
     }
 
     const ShowAddChurchPage = () =>
     {
-        if(stepState == "LocateStep")
+        if(stepState == "showNessesaryStep")
         {
-            return showLocateStep();
+            return showNessesaryStep();
         }
-        else if(stepState == "PastorStep")
+        else if(stepState == "SubInfoStep")
         {
-            return showPastorStep();
+            return showSubInfoStep();
+        }
+        else if(stepState == "ChooseChurchStep")
+        {
+            return showChooseChurchStep();
         }
     }
 
     return (
         <>
-            {/* {showLocateStep()} */}
             {ShowAddChurchPage()}
 
-            {/* {showLocateStep()}
-
-            {showPastorStep()} */}
-                
-                
-            <PlusBtnBox onPress={() => {showCameraRoll();}}>
-                <PlusText>+</PlusText>
-                <Text>버튼을 눌러</Text>
-                <Text>사진을 추가해보세요</Text>
-            </PlusBtnBox>
         </>
     )
 }
