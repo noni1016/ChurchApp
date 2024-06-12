@@ -43,6 +43,23 @@ router.get('/:userId/Spot', (req, res) => {
     });
 });
 
+// User's Church
+router.get('/:userId/Church', (req, res) => {
+    let sql = `SELECT ChurchView.*
+    FROM ChurchView, ChurchUser, User
+    WHERE ChurchUser.userId = ${req.params.userId}
+        AND ChurchUser.userId = User.id
+        AND ChurchUser.churchId = ChurchView.id`;
+    console.log(sql)
+    conn.query(sql, function (error, rows, fields) { 
+        if (!error) {
+            res.send(rows);
+        } else {
+            console.log('query error : ' + error);
+        }
+    });
+});
+
 // Get User Data
 router.get('/:userId', (req, res) => {
     let sql = `SELECT * FROM User WHERE id = ${req.params.userId}`;
