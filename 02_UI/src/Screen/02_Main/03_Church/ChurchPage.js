@@ -81,8 +81,11 @@ const ChurchPage = ({route, navigation}) => {
                     {data.name}
                 </Title>
                 <Side>
+                    <Title>
+                    {data.pastor}
+                    </Title>
                     <Icon2 name="notification" size={26} color={'black'} onPress={() => alert('Notification')}/>
-                    {isLeader && <Icon1 name="settings-outline" size={26} color={'black'} onPress={() => alert('EditChurch')} />}
+                    {isLeader && <Icon1 name="settings-outline" size={26} color={'black'} onPress={() => {{navigation.navigate('EditChurchPage', {churchData : data, navigation: navigation})}}} />}
                 </Side>
             </Header>
             <ScrollView>

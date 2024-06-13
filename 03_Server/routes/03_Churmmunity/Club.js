@@ -214,15 +214,15 @@ router.post('/Feed', (req, res) => {
     let sql = ``;
     if (imgUpload)
     {
-        sql = `INSERT INTO Feed (clubId, authorId, location, time, contentImg, contentText, notice) VALUES ('${req.body.clubId}', '${req.body.authorId}', "${req.body.location}", '${req.body.time}', '/FeedImg/${fileName}', "${req.body.contentText}", "${req.body.notice}")`;
+        sql = `INSERT INTO Feed (clubId, authorId, location, time, contentImg, contentText, notice) VALUES ('${req.body.groupId}', '${req.body.authorId}', "${req.body.location}", '${req.body.time}', '/FeedImg/${fileName}', "${req.body.contentText}", "${req.body.notice}")`;
         imgUpload = false;
     }
     else
     {
-        sql = `INSERT INTO Feed (clubId, authorId, location, time, contentText, notice) VALUES ('${req.body.clubId}', '${req.body.authorId}', "${req.body.location}", '${req.body.time}', "${req.body.contentText}", "${req.body.notice}")`;
+        sql = `INSERT INTO Feed (clubId, authorId, location, time, contentText, notice) VALUES ('${req.body.groupId}', '${req.body.authorId}', "${req.body.location}", '${req.body.time}', "${req.body.contentText}", "${req.body.notice}")`;
     }
     console.log(sql);
-    conn.query(sql, function (error, rows, fields) { // sql 쿼리 수행
+    conn.query(sql, function (error, rows, fields) { // sql ���� ����
         if (!error) {
             // console.log(rows);
             // console.log('query success')
@@ -239,15 +239,15 @@ router.put('/Feed/:id', (req, res) => {
     let sql = ``;
     if (imgUpload)
     {
-        sql = `UPDATE Feed SET clubId = '${req.body.clubId}', location = "${req.body.location}", contentImg = "/FeedImg/${fileName}", contentText = "${req.body.contentText}" WHERE id = ${req.params.id}`;
+        sql = `UPDATE Feed SET clubId = '${req.body.groupId}', location = "${req.body.location}", contentImg = "/FeedImg/${fileName}", contentText = "${req.body.contentText}" WHERE id = ${req.params.id}`;
         imgUpload = false;
     }
     else
     {
-        sql = `UPDATE Feed SET clubId = '${req.body.clubId}', location = "${req.body.location}", contentText = "${req.body.contentText}" WHERE id = ${req.params.id}`;
+        sql = `UPDATE Feed SET clubId = '${req.body.groupId}', location = "${req.body.location}", contentText = "${req.body.contentText}" WHERE id = ${req.params.id}`;
     }
     console.log(sql);
-    conn.query(sql, function (error, rows, fields) { // sql 쿼리 수행
+    conn.query(sql, function (error, rows, fields) { // sql ���� ����
         if (!error) {
             // console.log(rows);
             // console.log('query success')
@@ -262,7 +262,7 @@ router.put('/Feed/:id', (req, res) => {
 router.post('/:clubId/Feed/:feedId/Comment', (req, res) => {
     let sql = `INSERT INTO Comment (clubId, feedId, authorId, text) VALUES (${req.params.clubId}, ${req.params.feedId}, ${req.body.authorId}, '${req.body.text}')`;
     console.log(sql);
-    conn.query(sql, function (error, rows, fields) { // sql 쿼리 수행
+    conn.query(sql, function (error, rows, fields) { // sql ���� ����
         if (!error) {
             res.send(rows);
         } else {
@@ -305,7 +305,7 @@ router.delete('/:clubId/Feed/:feedId', async (req, res) => {
 router.get('/:clubId/Notices', (req, res) => {
     let sql = `SELECT * FROM Feed WHERE clubId = ${req.params.clubId} AND notice = true ORDER BY time DESC`
     console.log(sql);
-    conn.query(sql, function (error, rows, fields) { // sql 쿼리 수행
+    conn.query(sql, function (error, rows, fields) { // sql ���� ����
         if (!error) {
             // console.log(rows);
             res.send(rows);
