@@ -14,7 +14,7 @@ import ClubCardsColView from '~/Screen/02_Main/02_Churmmunity/Group/ClubCardsCol
 import SpotCardsColView from '~/Screen/02_Main/02_Churmmunity/Group/SpotCardsColView';
 import ClubPage from '~/Screen/02_Main/02_Churmmunity/Group/ClubPage'
 import SpotPage from '~/Screen/02_Main/02_Churmmunity/Group/SpotPage'
-import Comments from './Group/Comments';
+import Comments from '~/Components/Comments';
 import EditFeed from './Group/EditFeed';
 import EditChurmmunity from './Group/EditChurmmunity';
 import EditMembers from './Group/EditMembers';
