@@ -10,7 +10,7 @@ const Temp = Styled.View`
 `;
 
 
-const Feeds = ({club, feedAdded, reload, setReload, navigation}) => {
+const Feeds = ({club, feedAdded, reload, setReload, isMember, navigation}) => {
     const domain = useContext(DomainContext);
     let [clubFeeds, setClubFeeds] = useState([]);
     const isFocused = useIsFocused();
@@ -25,7 +25,7 @@ const Feeds = ({club, feedAdded, reload, setReload, navigation}) => {
     return (
         <>
             {clubFeeds.map((feed, index) => (
-                <Feed groupType={'Club'} group={club} feed={feed} key={index} onFeedChange={() => setReload(!reload)} navigation={navigation}/>
+                <Feed groupType={'Club'} group={club} feed={feed} key={index} onFeedChange={() => setReload(!reload)} isMember={isMember} navigation={navigation}/>
             ))}
             {/* <Temp />             */}
         </>

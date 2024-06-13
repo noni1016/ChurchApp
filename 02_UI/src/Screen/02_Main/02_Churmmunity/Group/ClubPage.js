@@ -144,11 +144,11 @@ const ClubPage = ({route, navigation}) => {
                     ))}
                 </TabContainer>
                 {tabIdx == 0 && <ClubPageHome data={data} members={members} isMember={isMember} isLeader={isLeader} setMember={(value)=>{setMember(value)}} stackNavi={navigation}/>}
-                {tabIdx == 1 && <Feeds club={data} reload={reload} setReload={setReload} feedAdded={refresh} navigation={navigation}/>}
+                {tabIdx == 1 && <Feeds club={data} reload={reload} setReload={setReload} feedAdded={refresh} isMember={isMember} navigation={navigation}/>}
                 {tabIdx == 2 && <Photos club={data}>사진</Photos>}
                 <Footer/>
             </ScrollView>
-            {tabIdx == 1 && <AddBtn OnPressMethod={() => {navigation.navigate('EditFeed', {edit: false, groupType: 'Club', group: data, reload: reload, setReload: setReload, navigation: navigation});}}/>}
+            {tabIdx == 1 && isMember && <AddBtn OnPressMethod={() => {navigation.navigate('EditFeed', {edit: false, groupType: 'Club', group: data, reload: reload, setReload: setReload, navigation: navigation});}}/>}
         </>
     )
 };

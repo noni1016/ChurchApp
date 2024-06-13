@@ -84,7 +84,7 @@ const CommentInputContainer = Styled.View`
 
 
 
-const Feed = ({groupType, group, feed, onFeedChange, navigation}) => {
+const Feed = ({groupType, group, feed, onFeedChange, isMember, navigation}) => {
     const domain = useContext(DomainContext);
     const {userData} = useContext(UserData);
     let [feedAuthorData, setFeedAuthorData] = useState();
@@ -95,6 +95,7 @@ const Feed = ({groupType, group, feed, onFeedChange, navigation}) => {
     let [resizedWidth, setResizedWidth] = useState();
     let [resizedHeight, setResizedHeight] = useState();
     let [commentInput, setCommentInput] = useState('');
+    let [commentPlaceHolder, setCommentPlaceHolder] = useState("댓글을 쓰려면 먼저 교회 회원으로 등록하세요");
     const actionSheetRef = createRef();
     const {tabNavi} = useContext(TabNavi);
 
@@ -152,6 +153,12 @@ const Feed = ({groupType, group, feed, onFeedChange, navigation}) => {
         fetch(`${domain}/${groupType}/${group.id}/Feed/${feed.id}/Comments`).then(res => res.json()).then(res => {setFeedComments(res);});  
     }
 
+    /* 교회 회원만 댓글을 쓸 수 있음 */
+    useEffect(() => {
+        if(isMember) setCommentPlaceHolder("댓글 추가");
+        else setCommentPlaceHolder("댓글을 쓰려면 먼저 교회 회원으로 등록하세요");
+    }, [isMember])
+
     return (
         <FeedContainer>
             <FeedHeader>
@@ -204,12 +211,13 @@ const Feed = ({groupType, group, feed, onFeedChange, navigation}) => {
                         autoFocus={false}
                         autoCapitalize="none"
                         autoCorrect={false}
-                        placeholder="댓글 추가"
+                        placeholder={commentPlaceHolder}
                         returnKeyType="done"
-                        onChangeText={(value) => setCommentInput(value)}
+                        onChangeText={(value) => {
+                            if(isMember) setCommentInput(value)}}
                         value={commentInput}
                         onSubmitEditing={({nativeEvent}) => {
-                            AddInput(nativeEvent.text);
+                            if(isMember) AddInput(nativeEvent.text);
                         }}
                     />
                 </CommentInputContainer>

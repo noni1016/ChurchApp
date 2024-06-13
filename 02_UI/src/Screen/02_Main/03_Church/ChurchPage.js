@@ -100,11 +100,11 @@ const ChurchPage = ({route, navigation}) => {
                     ))}
                 </TabContainer>
                 {tabIdx == 0 && <ChurchPageHome data={data} members={members} isMember={isMember} isLeader={isLeader}/>}
-                {tabIdx == 1 && <Feeds church={data} reload={reload} setReload={setReload} navigation={navigation}/>}
+                {tabIdx == 1 && <Feeds church={data} reload={reload} setReload={setReload} isMember={isMember} navigation={navigation}/>}
                 {tabIdx == 2 && <Photos />}
                 <Footer/>
             </ScrollView>
-            {tabIdx == 1 && <AddBtn OnPressMethod={() => {navigation.navigate('EditFeed', {edit: false, groupType: 'Church', group: data, reload: reload, setReload: setReload, navigation: navigation});}}/>}
+            {tabIdx == 1 && isMember && <AddBtn OnPressMethod={() => {navigation.navigate('EditFeed', {edit: false, groupType: 'Church', group: data, reload: reload, setReload: setReload, navigation: navigation});}}/>}
         </>
     )
 }
@@ -191,7 +191,7 @@ const ChurchPageHome = ({data, members, isMember, isLeader}) => {
     )
 };
 
-const Feeds = ({church, reload, setReload, navigation}) => {
+const Feeds = ({church, reload, setReload, isMember, navigation}) => {
     const domain = useContext(DomainContext);
     const [feeds, setFeeds] = useState([]);
     const isFocused = useIsFocused();
@@ -203,7 +203,7 @@ const Feeds = ({church, reload, setReload, navigation}) => {
 
     return (
         <>
-            {feeds.map((feed, index) => (<Feed groupType={'Church'} group={church} feed={feed} key={index} onFeedChange={() => {setReload(!reload)}} navigation={navigation}/>))}
+            {feeds.map((feed, index) => (<Feed groupType={'Church'} group={church} feed={feed} key={index} onFeedChange={() => {setReload(!reload)}} isMember={isMember} navigation={navigation}/>))}
         </>
     );
 }
