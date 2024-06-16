@@ -365,5 +365,19 @@ router.post('/:churchId/Feed/:feedId/Comment', (req, res) => {
     });
 })
 
+// Get Feed Images
+router.get('/:churchId/Imgs', (req, res) => {
+    let sql = `SELECT contentImg FROM ChurchFeed WHERE churchId = ${req.params.churchId} AND contentImg != 'NULL' ORDER BY time DESC`
+    console.log(sql);
+    conn.query(sql, function (error, rows, fields) { // sql 쿼리 수행
+        if (!error) {
+            // console.log(rows);
+            res.send(rows);
+        } else {
+            console.log('query error : ' + error);
+        }
+    });
+})
+
 
 module.exports = router;
