@@ -84,8 +84,7 @@ const CommentInputContainer = Styled.View`
 
 
 
-const Feed = ({club, feed, onFeedChange, navigation}) => {
-
+const Feed = ({groupType, group, feed, onFeedChange, isMember, navigation}) => {
     const domain = useContext(DomainContext);
     const {userData} = useContext(UserData);
     let [feedAuthorData, setFeedAuthorData] = useState();
@@ -96,14 +95,15 @@ const Feed = ({club, feed, onFeedChange, navigation}) => {
     let [resizedWidth, setResizedWidth] = useState();
     let [resizedHeight, setResizedHeight] = useState();
     let [commentInput, setCommentInput] = useState('');
+    let [commentPlaceHolder, setCommentPlaceHolder] = useState("댓글을 쓰려면 먼저 교회 회원으로 등록하세요");
     const actionSheetRef = createRef();
     const {tabNavi} = useContext(TabNavi);
 
     /* 초기 마운팅시 Author 정보, Feed 댓글들을 받아옴 */
     useEffect(() => {
         fetch(`${domain}/User/${feed.authorId}`).then(res => res.json()).then(res => {setFeedAuthorData(res[0])});
-        fetch(`${domain}/Club/${club.id}/Feed/${feed.id}/Comments`).then(res => res.json()).then(res => {setFeedComments(res);});  
-    }, [])
+        fetch(`${domain}/${groupType}/${group.id}/Feed/${feed.id}/Comments`).then(res => res.json()).then(res => {setFeedComments(res);});  
+    }, [feed])
     
     useEffect(() => {
         if (feed.contentImg) {
@@ -139,7 +139,10 @@ const Feed = ({club, feed, onFeedChange, navigation}) => {
     /* 댓글 등록 */
     const AddInput = (text) => {
         let sendCommentData = {authorId: userData.id, text: text};
-        fetch(`${domain}/Club/${feed.clubId}/Feed/${feed.id}/Comment`, {
+        let groupId = 0;
+        if (groupType == 'Club') groupId = feed.clubId;
+        else if (groupType == 'Church') groupId = feed.churchId;
+        fetch(`${domain}/${groupType}/${groupId}/Feed/${feed.id}/Comment`, {
             method: 'POST',
             body: JSON.stringify(sendCommentData),            
             headers:{
@@ -147,8 +150,14 @@ const Feed = ({club, feed, onFeedChange, navigation}) => {
             }
         })
         setCommentInput('');
-        fetch(`${domain}/Club/${club.id}/Feed/${feed.id}/Comments`).then(res => res.json()).then(res => {setFeedComments(res);});  
+        fetch(`${domain}/${groupType}/${group.id}/Feed/${feed.id}/Comments`).then(res => res.json()).then(res => {setFeedComments(res);});  
     }
+
+    /* 교회 회원만 댓글을 쓸 수 있음 */
+    useEffect(() => {
+        if(isMember) setCommentPlaceHolder("댓글 추가");
+        else setCommentPlaceHolder("댓글을 쓰려면 먼저 교회 회원으로 등록하세요");
+    }, [isMember])
 
     return (
         <FeedContainer>
@@ -202,12 +211,13 @@ const Feed = ({club, feed, onFeedChange, navigation}) => {
                         autoFocus={false}
                         autoCapitalize="none"
                         autoCorrect={false}
-                        placeholder="댓글 추가"
+                        placeholder={commentPlaceHolder}
                         returnKeyType="done"
-                        onChangeText={(value) => setCommentInput(value)}
+                        onChangeText={(value) => {
+                            if(isMember) setCommentInput(value)}}
                         value={commentInput}
                         onSubmitEditing={({nativeEvent}) => {
-                            AddInput(nativeEvent.text);
+                            if(isMember) AddInput(nativeEvent.text);
                         }}
                     />
                 </CommentInputContainer>
@@ -215,9 +225,9 @@ const Feed = ({club, feed, onFeedChange, navigation}) => {
 
             <ActionSheet ref={actionSheetRef}>
                 <View>
-                    <ActionSheetBtn OnPressMethod={() => {navigation.navigate('EditFeed', {edit: true, club: club, feed: feed, navigation: navigation});}}>Edit</ActionSheetBtn>
+                    <ActionSheetBtn OnPressMethod={() => {navigation.navigate('EditFeed', {edit: true, groupType: groupType, group: group, feed: feed, navigation: navigation});}}>Edit</ActionSheetBtn>
                     <ActionSheetBtn OnPressMethod={() => {
-                        fetch(`${domain}/Club/${club.id}/Feed/${feed.id}`, {
+                        fetch(`${domain}/${groupType}/${group.id}/Feed/${feed.id}`, {
                             method: 'DELETE',
                             headers: {
                                 'Content-Type': 'application/json'

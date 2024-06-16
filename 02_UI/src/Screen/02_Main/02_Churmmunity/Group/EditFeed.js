@@ -117,8 +117,12 @@ const EditFeed = ({route, navigation}) => {
     
     const edit = route.params.edit;
     console.log('edit:', edit);
-    const club = route.params.club;
+    // console.log(route.params);
+    const group = route.params.group;
+    const groupType = route.params.groupType;
     const isNotice = route.params.isNotice ? 1 : 0;
+    const reload = route.params.reload;
+    const setReload = route.params.setReload;
     const {userData} = useContext(UserData);
     const [userProfileImgUrl, SetUserProfileImgUrl] = useState(null);
     const [textInput, setTextInput] = useState('');
@@ -162,10 +166,10 @@ const EditFeed = ({route, navigation}) => {
         let fetchMethod = ``;
 
         if (edit === false) { // AddMode
-            fetchReq = `${domain}/Club/Feed/Img`;
+            fetchReq = `${domain}/${groupType}/Feed/Img`;
             fetchMethod = `POST`;
         } else { // EditMode
-            fetchReq = `${domain}/Club/Feed/Img/${route.params.feed.id}`;
+            fetchReq = `${domain}/${groupType}/Feed/Img/${route.params.feed.id}`;
             fetchMethod = `PUT`;
         }
 
@@ -209,10 +213,10 @@ const EditFeed = ({route, navigation}) => {
         let fetchMethod = ``;
 
         if (edit === false) { // AddMode
-            fetchReq = `${domain}/Club/Feed`
+            fetchReq = `${domain}/${groupType}/Feed`
             fetchMethod = `POST`;
         } else { // EditMode
-            fetchReq = `${domain}/Club/Feed/${route.params.feed.id}`
+            fetchReq = `${domain}/${groupType}/Feed/${route.params.feed.id}`
             fetchMethod = `PUT`;
         }
     
@@ -229,9 +233,9 @@ const EditFeed = ({route, navigation}) => {
 
         fetch(fetchReq, {
             method: fetchMethod,
-            body : JSON.stringify({clubId: club.id, authorId: userData.id, location: location, time: sendDate, contentText: textInput, notice : isNotice}),
+            body : JSON.stringify({groupId: group.id, authorId: userData.id, location: location, time: sendDate, contentText: textInput, notice : isNotice}),
             headers: {'Content-Type': 'application/json'}
-        }).then(res => res.json()).then(res => {navigation.goBack();})
+        }).then(res => res.json()).then(res => {setReload(!reload); navigation.goBack();})
         // }).then(res => res.json()).then(res => {navigation.navigate('ClubPage', {tabIdx: 1, edit: true, navigation: navigation});})
     }
 
@@ -253,7 +257,7 @@ const EditFeed = ({route, navigation}) => {
     return (
         <ScrollView>
         <Container>
-            {route.params.club && <GroupNameBox><GroupTitle>{route.params.club.name}</GroupTitle></GroupNameBox>}
+            {route.params.group && <GroupNameBox><GroupTitle>{route.params.group.name}</GroupTitle></GroupNameBox>}
             {imgSrc == undefined && <PlusBtnBox onPress={() => {showCameraRoll();}}>
                 <PlusText>+</PlusText>
                 <Text>버튼을 눌러</Text>
