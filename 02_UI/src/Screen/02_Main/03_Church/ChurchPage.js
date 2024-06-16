@@ -13,6 +13,7 @@ import DaumMap from '~/Screen/03_Map/DaumMapController';
 import RectangleBtn from '~/Components/RectangleBtn';
 import GroupMemProfile from '~/Components/GroupMemProfile';
 import Feed from '~/Components/Feed';
+import Photos from '~/Components/Photos';
 
 const Header = Styled.View`
     flex-direction: row;
@@ -104,7 +105,7 @@ const ChurchPage = ({route, navigation}) => {
                 </TabContainer>
                 {tabIdx == 0 && <ChurchPageHome data={data} members={members} isMember={isMember} isLeader={isLeader}/>}
                 {tabIdx == 1 && <Feeds church={data} reload={reload} setReload={setReload} isMember={isMember} navigation={navigation}/>}
-                {tabIdx == 2 && <Photos />}
+                {tabIdx == 2 && <Photos groupType='Church' group={data}/>}
                 <Footer/>
             </ScrollView>
             {tabIdx == 1 && isMember && <AddBtn OnPressMethod={() => {navigation.navigate('EditFeed', {edit: false, groupType: 'Church', group: data, reload: reload, setReload: setReload, navigation: navigation});}}/>}
@@ -211,8 +212,5 @@ const Feeds = ({church, reload, setReload, isMember, navigation}) => {
     );
 }
 
-const Photos = () => {
-    return (<Text>Photos</Text>)
-}
 
 export default ChurchPage;
