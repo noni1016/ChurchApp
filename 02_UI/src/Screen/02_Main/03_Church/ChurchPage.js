@@ -103,7 +103,7 @@ const ChurchPage = ({route, navigation}) => {
                         />
                     ))}
                 </TabContainer>
-                {tabIdx == 0 && <ChurchPageHome data={data} members={members} isMember={isMember} isLeader={isLeader}/>}
+                {tabIdx == 0 && <ChurchPageHome data={data} members={members} isMember={isMember} isLeader={isLeader} stackNavi={navigation}/>}
                 {tabIdx == 1 && <Feeds church={data} reload={reload} setReload={setReload} isMember={isMember} navigation={navigation}/>}
                 {tabIdx == 2 && <Photos groupType='Church' group={data}/>}
                 <Footer/>
@@ -136,7 +136,7 @@ const NumGroupMemCont = Styled.View`
 `;
 
 
-const ChurchPageHome = ({data, members, isMember, isLeader}) => {
+const ChurchPageHome = ({data, members, isMember, isLeader, stackNavi}) => {
     const domain = useContext(DomainContext);    
     const {userData, setUserData, updateUserChurch} = useContext(UserData);
     const isFocused = useIsFocused();
@@ -187,7 +187,7 @@ const ChurchPageHome = ({data, members, isMember, isLeader}) => {
             
             <NumGroupMemCont>
                 <Text style={Styles.default}>멤버 {data.numMember} 명</Text>
-                {isLeader && <Icon1 name="settings-outline" size={18} color={'black'} onPress={() => alert('editMembers')} />}
+                {isLeader && <Icon1 name="settings-outline" size={18} color={'black'} onPress={() => stackNavi.navigate('EditMembers', {groupType: 'Church', group: data, members: members, navigation: stackNavi})} />}
             </NumGroupMemCont>
 
             {members.map((member, index) => (<GroupMemProfile key={index.toString()} member={member} isLeader={member.id == data.leader} />))}

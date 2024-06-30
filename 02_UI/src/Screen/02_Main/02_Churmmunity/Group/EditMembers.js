@@ -54,7 +54,7 @@ const IconBox = Styled.View`
 `;
 
 
-const Member = ({member}) => {
+const Member = ({member, groupType}) => {
 
     const domain = useContext(DomainContext);
     var [url, setUrl] = useState('');
@@ -123,6 +123,7 @@ const Member = ({member}) => {
 const EditMembers = ({route, navigation}) => {
     const domain = useContext(DomainContext);    
     const members = route.params.members;
+    const groupType = route.params.groupType;
 
     /* 진입시 페이지 제목 {그룹 이름 - 멤버} 로 수정 */
     useEffect(() => {
@@ -136,7 +137,7 @@ const EditMembers = ({route, navigation}) => {
             <Text fontSize={25}>멤버 {route.params.group.numMember} 명</Text>
         </NumGroupMemCount>
 
-        {members.map((member, idx) => (<Member key={idx} member={member}></Member>))}
+        {members.map((member, idx) => (<Member key={idx} groupType={groupType} member={member}></Member>))}
         </View>
         
     )
