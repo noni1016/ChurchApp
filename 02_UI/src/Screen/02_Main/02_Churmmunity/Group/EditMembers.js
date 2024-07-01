@@ -54,7 +54,7 @@ const IconBox = Styled.View`
 `;
 
 
-const Member = ({member, groupType}) => {
+const Member = ({member, groupType, group, navigation}) => {
 
     const domain = useContext(DomainContext);
     var [url, setUrl] = useState('');
@@ -62,7 +62,7 @@ const Member = ({member, groupType}) => {
     const [isLeader, setIsLeader] = useState(false);
 
     useEffect(() => {        
-        setUrl(`${domain}/${member.photo}`);
+        setUrl(`${domain}/Profile/${member.photo}`);
         setIsLeader(member.id === userData.id);
     }, [])
 
@@ -76,7 +76,17 @@ const Member = ({member, groupType}) => {
             },
             {
                 text: "네",
-                onPress: () => console.log("확인")
+                onPress: () => {
+                    fetch(`${domain}/${groupType}/Leader/${group.id}/${member.id}`, {
+                        method: 'PUT'
+                    }).then(res => res.json()).then(res => {
+                        console.log(res)
+                        if (res.result) {
+                            alert('리더 변경 성공. 교회 페이지로 이동합니다');
+                            navigation.goBack();
+                        }
+                    })
+                }
             }
         ]);
     }
@@ -124,6 +134,7 @@ const EditMembers = ({route, navigation}) => {
     const domain = useContext(DomainContext);    
     const members = route.params.members;
     const groupType = route.params.groupType;
+    const group = route.params.group;
 
     /* 진입시 페이지 제목 {그룹 이름 - 멤버} 로 수정 */
     useEffect(() => {
@@ -137,7 +148,7 @@ const EditMembers = ({route, navigation}) => {
             <Text fontSize={25}>멤버 {route.params.group.numMember} 명</Text>
         </NumGroupMemCount>
 
-        {members.map((member, idx) => (<Member key={idx} groupType={groupType} member={member}></Member>))}
+        {members.map((member, idx) => (<Member key={idx} groupType={groupType} group={group} member={member} navigation={navigation}></Member>))}
         </View>
         
     )

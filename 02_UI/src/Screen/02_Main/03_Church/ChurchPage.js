@@ -55,24 +55,29 @@ const ChurchPage = ({route, navigation}) => {
     const [isLeader, setIsLeader] = useState(false)
     const [reload, setReload] = useState(false);
     const tabs = ['홈', '게시글', '사진'];
+    const isFocused = useIsFocused();
 
     /* 멤버 정보 불러오기 */
     useEffect(() => {
         fetch(`${domain}/Church/Member/${data.id}`).then(res => res.json()).then(res => {setMembers(res)});
         console.log("update member data");
-    }, [data, userChurch]);
+        console.log(isFocused);
+    }, [isFocused, data, userChurch]);
+
 
     /* 멤버 정보 불러왓으면 현재 유저가 그룹 멤버인지 확인. 리더 여부도 확인 */
     useEffect(() => {
-        setIsMember(false);        
+        // console.log(members);
+        setIsMember(false);    
+        setIsLeader(false);    
         members.map((member, index) => {
             if (member.id === userData.id) {
                 setIsMember(true);
                 if (member.role === 1)
-                    setIsLeader(true);
+                    {setIsLeader(true); console.log("updqte isLeader")}
             }
         })
-        console.log("update is member");
+        console.log("update isMember");
     }, [members])
 
     return (
@@ -149,7 +154,7 @@ const ChurchPageHome = ({data, members, isMember, isLeader, stackNavi}) => {
         } else {            
             setJoinText('활동 교회로 등록');
         }
-    }, [isMember])
+    }, [isFocused, isMember])
 
     const onPressJoinBtn = () => {
         if (isMember && !isLeader) {
