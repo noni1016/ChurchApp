@@ -60,7 +60,7 @@ const InfoText = Styled.Text`
 
 const ChurchMain = ({navigation}) => {
     const domain = useContext(DomainContext);
-    const {userChurch} = useContext(UserData);
+    const {userChurch, updateUserChurch} = useContext(UserData);
     const [churches, setChurches] = useState([]);
     const [isRefreshing, setIsRefreshing] = useState(false);
     const [userChurchTopList, setUserChurchTopList] = useState([]);
@@ -98,7 +98,7 @@ const ChurchMain = ({navigation}) => {
             <View>
                 <View style={{flexDirection: 'row', justifyContent: 'space-between', alignContent: 'center'}}>
                     <InfoTextBold>내가 활동 중인 교회 Top 3</InfoTextBold>
-                    <TouchableOpacity onPress={() => {navigation.navigate('ShowMoreChurches', {title: '더보기', fetchChurch:})}}>
+                    <TouchableOpacity onPress={() => {navigation.navigate('ShowMoreChurches', {title: '더보기', churches: userChurch, refreshDataFetch: updateUserChurch})}}>
                         <InfoText>모두 보기</InfoText>
                     </TouchableOpacity>
                 </View>
@@ -108,7 +108,7 @@ const ChurchMain = ({navigation}) => {
             <View>
                 <View style={{flexDirection: 'row', justifyContent: 'space-between', alignContent: 'center'}}>
                     <InfoTextBold>전국 교회 Top 10</InfoTextBold>
-                    <TouchableOpacity onPress={() => {navigation.navigate('ShowMoreChurches', {title: '더보기', churches: userChurch})}}>
+                    <TouchableOpacity onPress={() => {navigation.navigate('ShowMoreChurches', {title: '더보기', churches: churches, refreshDataFetch: handleRefresh})}}>
                         <InfoText>모두 보기</InfoText>
                     </TouchableOpacity>
                 </View>

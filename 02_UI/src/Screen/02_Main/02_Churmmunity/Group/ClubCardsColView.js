@@ -18,12 +18,9 @@ const ClubCardsColView = ({route, navigation}) => {
 
     let title = route.params.title;
     let clubs = route.params.clubs;
+
     navigation.setOptions({title: title});
-
-    // useEffect(() => {
-    //     navigation.setOptions({title: title});
-    // },[]);
-
+    
     return (
         <ClubCardsColViewBox>
             {FlatListItemSeparator}

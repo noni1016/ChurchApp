@@ -17,13 +17,22 @@ const FlatListItemSeparator = () => {
 const ChurchCardsColView = ({route, navigation}) => {
 
     let title = route.params.title;
-    let fetchChurch = route.params.fetchChurch;
-    const [churches, setChurches] = useState([]);
+    let churches = route.params.churches;
+    let [refreshing, setRefreshing] = useState(false);
+
     navigation.setOptions({title: title});
 
-    useEffect(() => {
-        fetchChurch();
-    }, [fetchChurch]);
+    const getRefreshData = async () => {
+        setRefreshing(true);
+        await route.params.refreshDataFetch();
+        setRefreshing(false);
+    }
+
+    const onRefresh = () => {
+        if(!refreshing) {
+            getRefreshData();
+        }
+    }
 
     return (
         <CardsColViewBox>
@@ -39,6 +48,8 @@ const ChurchCardsColView = ({route, navigation}) => {
                         <ChurchCard church={item} navigation={navigation}/>
                 )}
                 ItemSeparatorComponent={FlatListItemSeparator}
+                onRefresh={onRefresh}
+                refreshing={refreshing}
             />
         </CardsColViewBox>
     )
