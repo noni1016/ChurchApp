@@ -9,6 +9,7 @@ const ContainerBox = Styled.TouchableOpacity`
     align-items: center;
     background-color: #f0ffff;
     margin: 5px;
+    width: 100%;
 `;
 
 const ImageBox = Styled.Image`
