@@ -54,7 +54,7 @@ const IconBox = Styled.View`
 `;
 
 
-const Member = ({member, groupType, group, navigation}) => {
+const Member = ({member, groupType, group, onMemberChanged, navigation}) => {
 
     const domain = useContext(DomainContext);
     var [url, setUrl] = useState('');
@@ -101,7 +101,16 @@ const Member = ({member, groupType, group, navigation}) => {
             },
             {
                 text: "네",
-                onPress: () => console.log("확인")
+                onPress: () => {
+                    fetch(`${domain}/${groupType}/Member/${group.id}/${member.id}`, {
+                        method: 'DELETE'
+                    }).then(res => res.json()).then(res => {
+                        console.log(res);
+                        if (res.result) {
+                            onMemberChanged(true);
+                        }
+                    })
+                }
             }
         ]);
     }
@@ -132,7 +141,8 @@ const Member = ({member, groupType, group, navigation}) => {
 
 const EditMembers = ({route, navigation}) => {
     const domain = useContext(DomainContext);    
-    const members = route.params.members;
+    const [members, setMembers] = useState(route.params.members);
+    const updateMember = route.params.updateMember;
     const groupType = route.params.groupType;
     const group = route.params.group;
 
@@ -140,7 +150,11 @@ const EditMembers = ({route, navigation}) => {
     useEffect(() => {
         navigation.setOptions({title: `${route.params.group.name} - 멤버`});
     })
-    
+
+    const onMemberChanged = () => {
+        updateMember(true);
+        fetch(`${domain}/${groupType}/Member/${group.id}`).then(res => res.json()).then(res => {console.log(res); setMembers(res)});
+    }
 
     return (
         <View>
@@ -148,7 +162,7 @@ const EditMembers = ({route, navigation}) => {
             <Text fontSize={25}>멤버 {route.params.group.numMember} 명</Text>
         </NumGroupMemCount>
 
-        {members.map((member, idx) => (<Member key={idx} groupType={groupType} group={group} member={member} navigation={navigation}></Member>))}
+        {members.map((member, idx) => (<Member key={idx} groupType={groupType} group={group} member={member} onMemberChanged={onMemberChanged} navigation={navigation}></Member>))}
         </View>
         
     )
