@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { ScrollView, Button } from 'react-native';
+import { ScrollView, Button, RefreshControl } from 'react-native';
 import styled from 'styled-components/native';
 
 import {
@@ -57,7 +57,7 @@ const ChurmmunityMain = ({route, navigation}) => {
     var [recClubs, setRecClubs] = useState([initClub]);
     var [recSpots, setRecSpots] = useState([initSpot]);
     var [pastSpots, setPastSpots] = useState([initSpot]);
-    // var [loading, setLoading] = useState([]);
+    const [isRefreshing, setIsRefreshing] = useState(false);
 
     const {userData, userClub, userSpot} = useContext(UserData);
 
@@ -82,10 +82,17 @@ const ChurmmunityMain = ({route, navigation}) => {
         console.log(userSpot);
     }, [userSpot])
 
-    // useEffect(() => )
+    const handleRefresh = async () => {
+        console.log('handleRefreshStore');
+        setIsRefreshing(true);
+        fetch(`${domain}/Group/Sort/Club/1/Rand()/7`).then(res => res.json()).then(res => {setRecClubs(res)});
+        fetch(`${domain}/Group/Sort/Spot/past = 0/time/7`).then(res => res.json()).then(res => {setRecSpots(res)});
+        fetch(`${domain}/Group/Sort/Spot/past = 1/time/7`).then(res => res.json()).then(res => {setPastSpots(res)});
+        setIsRefreshing(false);
+    }
 
     return (
-        <ScrollView>
+        <ScrollView refreshControl={<RefreshControl refreshing={isRefreshing} onRefresh={handleRefresh} />}>
             <ClubCards title={'내 모임'} orgDatas={userClub} stackNavi={navigation}/>
             <ClubCards title={'오늘의 모임'} orgDatas={recClubs} stackNavi={navigation}/>
             <SpotCards title={'참여한 번개 모임'} datas={userSpot} stackNavi={navigation}/>

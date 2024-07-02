@@ -54,7 +54,7 @@ const IconBox = Styled.View`
 `;
 
 
-const Member = ({member}) => {
+const Member = ({member, groupType, group, onMemberChanged, navigation}) => {
 
     const domain = useContext(DomainContext);
     var [url, setUrl] = useState('');
@@ -62,7 +62,7 @@ const Member = ({member}) => {
     const [isLeader, setIsLeader] = useState(false);
 
     useEffect(() => {        
-        setUrl(`${domain}/${member.photo}`);
+        setUrl(`${domain}/Profile/${member.photo}`);
         setIsLeader(member.id === userData.id);
     }, [])
 
@@ -76,7 +76,17 @@ const Member = ({member}) => {
             },
             {
                 text: "네",
-                onPress: () => console.log("확인")
+                onPress: () => {
+                    fetch(`${domain}/${groupType}/Leader/${group.id}/${member.id}`, {
+                        method: 'PUT'
+                    }).then(res => res.json()).then(res => {
+                        console.log(res)
+                        if (res.result) {
+                            alert('리더 변경 성공. 교회 페이지로 이동합니다');
+                            navigation.goBack();
+                        }
+                    })
+                }
             }
         ]);
     }
@@ -91,7 +101,16 @@ const Member = ({member}) => {
             },
             {
                 text: "네",
-                onPress: () => console.log("확인")
+                onPress: () => {
+                    fetch(`${domain}/${groupType}/Member/${group.id}/${member.id}`, {
+                        method: 'DELETE'
+                    }).then(res => res.json()).then(res => {
+                        console.log(res);
+                        if (res.result) {
+                            onMemberChanged(true);
+                        }
+                    })
+                }
             }
         ]);
     }
@@ -122,13 +141,20 @@ const Member = ({member}) => {
 
 const EditMembers = ({route, navigation}) => {
     const domain = useContext(DomainContext);    
-    const members = route.params.members;
+    const [members, setMembers] = useState(route.params.members);
+    const updateMember = route.params.updateMember;
+    const groupType = route.params.groupType;
+    const group = route.params.group;
 
     /* 진입시 페이지 제목 {그룹 이름 - 멤버} 로 수정 */
     useEffect(() => {
         navigation.setOptions({title: `${route.params.group.name} - 멤버`});
     })
-    
+
+    const onMemberChanged = () => {
+        updateMember(true);
+        fetch(`${domain}/${groupType}/Member/${group.id}`).then(res => res.json()).then(res => {console.log(res); setMembers(res)});
+    }
 
     return (
         <View>
@@ -136,7 +162,7 @@ const EditMembers = ({route, navigation}) => {
             <Text fontSize={25}>멤버 {route.params.group.numMember} 명</Text>
         </NumGroupMemCount>
 
-        {members.map((member, idx) => (<Member key={idx} member={member}></Member>))}
+        {members.map((member, idx) => (<Member key={idx} groupType={groupType} group={group} member={member} onMemberChanged={onMemberChanged} navigation={navigation}></Member>))}
         </View>
         
     )

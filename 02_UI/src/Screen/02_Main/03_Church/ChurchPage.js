@@ -48,31 +48,41 @@ const Footer = Styled.View`
 const ChurchPage = ({route, navigation}) => {
     const domain = useContext(DomainContext);
     const {userData, userChurch} = useContext(UserData);
-    const data = route.params.group;
+    // const data = route.params.group;
+    const [data, setData] = useState(route.params.group);
     const [tabIdx, setTabIdx] = useState(0);
     const [members, setMembers] = useState([]);
     const [isMember, setIsMember] = useState(false);
     const [isLeader, setIsLeader] = useState(false)
     const [reload, setReload] = useState(false);
     const tabs = ['홈', '게시글', '사진'];
+    const isFocused = useIsFocused();
+    const [updateMember, setUpdateMember] = useState(false);
 
     /* 멤버 정보 불러오기 */
     useEffect(() => {
-        fetch(`${domain}/Church/Member/${data.id}`).then(res => res.json()).then(res => {setMembers(res)});
+        console.log(data.id);
+        fetch(`${domain}/Church/${data.id}`).then(res => res.json()).then(res => {console.log(res); setData(res)});
+        fetch(`${domain}/Church/Member/${data.id}`).then(res => res.json()).then(res => {console.log(res); setMembers(res)});
         console.log("update member data");
-    }, [data, userChurch]);
+        console.log(isFocused);
+        setUpdateMember(false);
+    }, [isFocused, userChurch, updateMember]);
+
 
     /* 멤버 정보 불러왓으면 현재 유저가 그룹 멤버인지 확인. 리더 여부도 확인 */
     useEffect(() => {
-        setIsMember(false);        
+        // console.log(members);
+        setIsMember(false);    
+        setIsLeader(false);    
         members.map((member, index) => {
             if (member.id === userData.id) {
                 setIsMember(true);
                 if (member.role === 1)
-                    setIsLeader(true);
+                    {setIsLeader(true); console.log("updqte isLeader")}
             }
         })
-        console.log("update is member");
+        console.log("update isMember");
     }, [members])
 
     return (
@@ -103,7 +113,7 @@ const ChurchPage = ({route, navigation}) => {
                         />
                     ))}
                 </TabContainer>
-                {tabIdx == 0 && <ChurchPageHome data={data} members={members} isMember={isMember} isLeader={isLeader}/>}
+                {tabIdx == 0 && <ChurchPageHome data={data} members={members} isMember={isMember} isLeader={isLeader} updateMember={setUpdateMember} stackNavi={navigation}/>}
                 {tabIdx == 1 && <Feeds church={data} reload={reload} setReload={setReload} isMember={isMember} navigation={navigation}/>}
                 {tabIdx == 2 && <Photos groupType='Church' group={data}/>}
                 <Footer/>
@@ -136,7 +146,7 @@ const NumGroupMemCont = Styled.View`
 `;
 
 
-const ChurchPageHome = ({data, members, isMember, isLeader}) => {
+const ChurchPageHome = ({data, members, isMember, isLeader, updateMember, stackNavi}) => {
     const domain = useContext(DomainContext);    
     const {userData, setUserData, updateUserChurch} = useContext(UserData);
     const isFocused = useIsFocused();
@@ -149,7 +159,7 @@ const ChurchPageHome = ({data, members, isMember, isLeader}) => {
         } else {            
             setJoinText('활동 교회로 등록');
         }
-    }, [isMember])
+    }, [isFocused, isMember])
 
     const onPressJoinBtn = () => {
         if (isMember && !isLeader) {
@@ -187,7 +197,7 @@ const ChurchPageHome = ({data, members, isMember, isLeader}) => {
             
             <NumGroupMemCont>
                 <Text style={Styles.default}>멤버 {data.numMember} 명</Text>
-                {isLeader && <Icon1 name="settings-outline" size={18} color={'black'} onPress={() => alert('editMembers')} />}
+                {isLeader && <Icon1 name="settings-outline" size={18} color={'black'} onPress={() => stackNavi.navigate('EditMembers', {groupType: 'Church', group: data, members: members, updateMember: updateMember, navigation: stackNavi})} />}
             </NumGroupMemCont>
 
             {members.map((member, index) => (<GroupMemProfile key={index.toString()} member={member} isLeader={member.id == data.leader} />))}
