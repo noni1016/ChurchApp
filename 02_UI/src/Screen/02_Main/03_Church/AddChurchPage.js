@@ -444,8 +444,8 @@ const AddChurchPage = ({route, navigation})=>{
                             data: imgSrc.data
                         })
 
-        console.log(`${domain}/Church/${region}/${location.longitude}/${location.latitude}/${pastorName}`)          
-        fetch(`${domain}/Church/${region}/${location.longitude}/${location.latitude}/${pastorName}`, {
+        console.log(`${domain}/Church/New/${region}/${location.longitude}/${location.latitude}/${pastorName}`)          
+        fetch(`${domain}/Church/New/${region}/${location.longitude}/${location.latitude}/${pastorName}`, {
             method: `POST`,
             body: fd,
             headers: {

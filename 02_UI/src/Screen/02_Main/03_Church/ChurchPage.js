@@ -12,7 +12,7 @@ import AddBtn from '~/Components/AddBtn';
 import DaumMap from '~/Screen/03_Map/DaumMapController';
 import RectangleBtn from '~/Components/RectangleBtn';
 import GroupMemProfile from '~/Components/GroupMemProfile';
-import EditChurchPage from './EditChurchPage';
+import Feed from '~/Components/Feed';
 
 const Header = Styled.View`
     flex-direction: row;
@@ -52,6 +52,7 @@ const ChurchPage = ({route, navigation}) => {
     const [members, setMembers] = useState([]);
     const [isMember, setIsMember] = useState(false);
     const [isLeader, setIsLeader] = useState(false)
+    const [reload, setReload] = useState(false);
     const tabs = ['홈', '게시글', '사진'];
 
     /* 멤버 정보 불러오기 */
@@ -88,7 +89,7 @@ const ChurchPage = ({route, navigation}) => {
                 </Side>
             </Header>
             <ScrollView>
-                <Image style={{ backgroundColor: 'black', width: '100%', height: 300, resizeMode: 'cover'}} source={{uri: `${domain}/ChurchMainImg/${data.mainImg}`}} />
+                <Image style={{ backgroundColor: 'black', width: '100%', height: 300, resizeMode: 'cover'}} source={{uri: `${domain}/ChurchMainImg/${data.mainImg}`+ "?cache="+Math.random()}} />
                 <TabContainer>
                     {tabs.map((label, index) => (
                         <Tab
@@ -102,11 +103,11 @@ const ChurchPage = ({route, navigation}) => {
                     ))}
                 </TabContainer>
                 {tabIdx == 0 && <ChurchPageHome data={data} members={members} isMember={isMember} isLeader={isLeader}/>}
-                {tabIdx == 1 && <Feeds />}
+                {tabIdx == 1 && <Feeds church={data} reload={reload} setReload={setReload} isMember={isMember} navigation={navigation}/>}
                 {tabIdx == 2 && <Photos />}
                 <Footer/>
             </ScrollView>
-            {tabIdx == 1 && <AddBtn OnPressMethod={() => {alert('EditFeed')}}/>}
+            {tabIdx == 1 && isMember && <AddBtn OnPressMethod={() => {navigation.navigate('EditFeed', {edit: false, groupType: 'Church', group: data, reload: reload, setReload: setReload, navigation: navigation});}}/>}
         </>
     )
 }
@@ -193,8 +194,21 @@ const ChurchPageHome = ({data, members, isMember, isLeader}) => {
     )
 };
 
-const Feeds = () => {
-    return (<Text>Feeds</Text>)
+const Feeds = ({church, reload, setReload, isMember, navigation}) => {
+    const domain = useContext(DomainContext);
+    const [feeds, setFeeds] = useState([]);
+    const isFocused = useIsFocused();
+
+    /* Feed 불러오기 */
+    useEffect(() => {
+        fetch(`${domain}/Church/${church.id}/Feeds`).then(res => res.json()).then(res => {setFeeds(res);});
+    }, [church, reload])
+
+    return (
+        <>
+            {feeds.map((feed, index) => (<Feed groupType={'Church'} group={church} feed={feed} key={index} onFeedChange={() => {setReload(!reload)}} isMember={isMember} navigation={navigation}/>))}
+        </>
+    );
 }
 
 const Photos = () => {
