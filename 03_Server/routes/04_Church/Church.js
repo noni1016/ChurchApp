@@ -228,7 +228,13 @@ router.get('/Exit/:churchId/:userId', (req, res) => {
           
 // }).single('file')
 
-const formData = multer({dest: 'uploads/'});
+const storage = multer.diskStorage({
+    destination: 'public/ChurchMainImg',
+    filename(req, file, cb) { 
+        cb(null, `${req.params.id}${path.extname(file.originalname)}`);
+    }
+})
+const formData = multer({storage: storage});
 
 router.put('/:id', formData.single('file'), async (req, res) => {
     let imgSrc = '';
@@ -238,7 +244,7 @@ router.put('/:id', formData.single('file'), async (req, res) => {
     sql1 = `UPDATE Church SET name = '${req.body.name}', pastor = '${req.body.pastor}', location = '${req.body.location}', description = '${req.body.description}', location_ll = ST_GeomFromText('POINT(${req.body.location_ll_x} ${req.body.location_ll_y})', 4326) WHERE id = ${req.params.id}`;
     console.log(sql1);
 
-    
+    if (req.file) console.log(req.file.filename);
 
     try {
         await conn.beginTransaction();
