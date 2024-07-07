@@ -22,8 +22,8 @@ router.get('/:type/:id', (req, res) => {
     console.log(sql);
     conn.query(sql, function (err, rows, fields) {
         if (!err) {
-            console.log(rows);
-            res.send(rows);
+            console.log(rows[0]);
+            res.send(rows[0]);
         } else {
             console.log('query error : ' + err);
         }

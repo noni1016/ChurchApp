@@ -13,7 +13,7 @@ const path = require('path');
 router.get('/Find/:name', (req, res) => {
     let sql = `SELECT * FROM ChurchView WHERE name REGEXP '${req.params.name}'`;
     console.log(sql)
-    conn.query(sql, function (error, rows, fields) { // sql 쿼리 수행
+    conn.query(sql, function (error, rows, fields) { // sql 쿼리 ?��?��
         if (!error) {
             console.log(rows);
             res.send(rows);
@@ -147,9 +147,9 @@ router.post('New/:name/:long/:lat/:pastorName', async (req, res) => {
 ////////////////////////////////////////////////////////////Churmmunity
 // Get Church
 router.get('/:churchId', (req, res) => {
-    let sql = `SELECT name FROM ChurchView WHERE id = '${req.params.churchId}'`
+    let sql = `SELECT * FROM ChurchView WHERE id = '${req.params.churchId}'`
     console.log(sql)
-    conn.query(sql, function (error, rows, fields) { // sql 쿼리 수행
+    conn.query(sql, function (error, rows, fields) { // sql 쿼리 ?��?��
         if (!error) {
             console.log(rows[0]);
             res.send(rows[0]);
@@ -228,11 +228,13 @@ router.get('/Exit/:churchId/:userId', (req, res) => {
           
 // }).single('file')
 
-const formData = multer({dest: 'uploads/'});
-
-// router.put('/:id', (req, res) => {
-//     res.json({hello: 2});
-// })
+const storage = multer.diskStorage({
+    destination: 'public/ChurchMainImg',
+    filename(req, file, cb) { 
+        cb(null, `${req.params.id}${path.extname(file.originalname)}`);
+    }
+})
+const formData = multer({storage: storage});
 
 router.put('/:id', formData.single('file'), async (req, res) => {
     let imgSrc = '';
@@ -241,6 +243,9 @@ router.put('/:id', formData.single('file'), async (req, res) => {
     let sql3 = ``;
     sql1 = `UPDATE Church SET name = '${req.body.name}', pastor = '${req.body.pastor}', location = '${req.body.location}', description = '${req.body.description}', location_ll = ST_GeomFromText('POINT(${req.body.location_ll_x} ${req.body.location_ll_y})', 4326) WHERE id = ${req.params.id}`;
     console.log(sql1);
+
+    if (req.file) console.log(req.file.filename);
+
     try {
         await conn.beginTransaction();
         await conn.query(sql1, (error, rows) => {
@@ -365,5 +370,59 @@ router.post('/:churchId/Feed/:feedId/Comment', (req, res) => {
     });
 })
 
+// Get Feed Images
+router.get('/:churchId/Imgs', (req, res) => {
+    let sql = `SELECT contentImg FROM ChurchFeed WHERE churchId = ${req.params.churchId} AND contentImg != 'NULL' ORDER BY time DESC`
+    console.log(sql);
+    conn.query(sql, function (error, rows, fields) { // sql 쿼리 ?��?��
+        if (!error) {
+            // console.log(rows);
+            res.send(rows);
+        } else {
+            console.log('query error : ' + error);
+        }
+    });
+})
+
+
+// Member
+router.put('/Leader/:churchId/:memberId', async (req, res) => {
+    // 1. Change Group table's leader number
+    
+    // 2. Change Group-User table's role of past leader
+    let sql1 = `UPDATE ChurchUser SET role = 0 WHERE churchId = ${req.params.churchId} AND role = 1`;
+
+    // 3. Change Group-User table's role of current leader
+    let sql2 = `UPDATE ChurchUser SET role = 1 WHERE churchId = ${req.params.churchId} AND userId = ${req.params.memberId}`;
+
+    try {
+        await conn.beginTransaction();
+        console.log(sql1);
+        await conn.query(sql1);
+        console.log(sql2);
+        await conn.query(sql2);
+        await conn.commit();
+        res.send({ result: true });
+    } catch (err) {
+        console.log(err);
+        await conn.rollback();
+        res.send ({result: false});
+    }
+
+})
+
+router.delete('/Member/:churchId/:memberId', (req, res) => {
+    let sql = `DELETE FROM ChurchUser WHERE churchId = ${req.params.churchId} AND userId = ${req.params.memberId}`;
+    console.log(sql);
+
+    conn.query(sql, (err, rows) => {
+        if (!err) {
+            res.json({result: true});
+        } else {
+            console.log(err);
+            res.json({result: false});
+        }
+    })
+})
 
 module.exports = router;

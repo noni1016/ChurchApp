@@ -11,20 +11,20 @@ const PhotosBox = Styled.View`
     justify-content: flex-start;
 `;
 
-const Photos = ({club}) => {
+const Photos = ({groupType, group}) => {
     const domain = useContext(DomainContext);
-    const [clubImgs, setClubImgs] = useState([]);
+    const [groupImgs, setGroupImgs] = useState([]);
 
     /* 마운팅 시 Club 의 모든 사진을 받아옴 */
     useEffect(() => {
-        fetch(`${domain}/Club/${club.id}/Imgs`).then(res => res.json()).then(res => {setClubImgs(res);});   
-    }, [club])
+        fetch(`${domain}/${groupType}/${group.id}/Imgs`).then(res => res.json()).then(res => {setGroupImgs(res);});   
+    }, [group])
 
-    clubImgs.map((img, i) => console.log(img));
+    groupImgs.map((img, i) => console.log(img));
 
     return (
         <PhotosBox>
-            {clubImgs.map((img, i) => (<Photo img={domain+img.contentImg} key={i} />))}
+            {groupImgs.map((img, i) => (<Photo img={domain+img.contentImg} key={i} />))}
         </PhotosBox>
     )
 

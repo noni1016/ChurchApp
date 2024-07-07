@@ -103,7 +103,7 @@ const Feed = ({groupType, group, feed, onFeedChange, isMember, navigation}) => {
     useEffect(() => {
         fetch(`${domain}/User/${feed.authorId}`).then(res => res.json()).then(res => {setFeedAuthorData(res[0])});
         fetch(`${domain}/${groupType}/${group.id}/Feed/${feed.id}/Comments`).then(res => res.json()).then(res => {setFeedComments(res);});  
-    }, [])
+    }, [feed])
     
     useEffect(() => {
         if (feed.contentImg) {

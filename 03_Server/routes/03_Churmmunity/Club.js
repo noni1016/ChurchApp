@@ -315,4 +315,48 @@ router.get('/:clubId/Notices', (req, res) => {
     });
 })
 
+
+// Member
+router.put('/Leader/:clubId/:memberId', async (req, res) => {
+    // 1. Change Group table's leader number
+    let sql0 = `UPDATE Club Set leader = ${req.params.memberId} WHERE clubId = ${req.params.clubId}`;
+    
+    // 2. Change Group-User table's role of past leader
+    let sql1 = `UPDATE ClubUser SET role = 0 WHERE clubId = ${req.params.clubId} AND role = 1`;
+
+    // 3. Change Group-User table's role of current leader
+    let sql2 = `UPDATE ClubUser SET role = 1 WHERE clubId = ${req.params.clubId} AND userId = ${req.params.memberId}`;
+
+    try {
+        await conn.beginTransaction();
+        console.log(sql0);
+        await conn.query(sql0);
+        console.log(sql1);
+        await conn.query(sql1);
+        console.log(sql2);
+        await conn.query(sql2);
+        await conn.commit();
+        res.send({ result: true });
+    } catch (err) {
+        console.log(err);
+        await conn.rollback();
+        res.send ({result: false});
+    }
+
+})
+
+router.delete('/Member/:clubId/:memberId', (req, res) => {
+    let sql = `DELETE FROM ClubUser WHERE clubId = ${req.params.clubId} AND userId = ${req.params.memberId}`;
+    console.log(sql);
+
+    conn.query(sql, (err, rows) => {
+        if (!err) {
+            res.json({result: true});
+        } else {
+            console.log(err);
+            res.json({result: false});
+        }
+    })
+})
+
 module.exports = router;
