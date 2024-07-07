@@ -56,7 +56,7 @@ const NumGroupMemCont = Styled.View`
 `;
 
 
-const ClubPageHome = ({data, members, isMember, isLeader, setMember, stackNavi}) => {
+const ClubPageHome = ({data, members, isMember, isLeader, setMember, updateMember, stackNavi}) => {
     const domain = useContext(DomainContext);    
     const {userData, setUserData, updateUserClub} = useContext(UserData);
     var [numClubMem, setNumClubMem] = useState(0);
@@ -124,7 +124,7 @@ const ClubPageHome = ({data, members, isMember, isLeader, setMember, stackNavi})
             {button}
             <NumGroupMemCont>
                 <Text style={Styles.default}>멤버 {numClubMem} 명</Text>
-                {isLeader && <Icon name="settings-outline" size={18} color={'black'} onPress={() => stackNavi.navigate('EditMembers', {groupType: 'Club', group: data, members: members, navigation: stackNavi})} />}
+                {isLeader && <Icon name="settings-outline" size={18} color={'black'} onPress={() => stackNavi.navigate('EditMembers', {groupType: 'Club', groupType: 'Club', group: data, members: members, updateMember: updateMember, navigation: stackNavi})} />}
             </NumGroupMemCont>
             {members.map((member, index) => (<GroupMemProfile key={index.toString()} member={member} isLeader={member.id == data.leader} onPress={() => {
                 if (member.id == userData.id) tabNavi.navigate('Profile', {member: member});
