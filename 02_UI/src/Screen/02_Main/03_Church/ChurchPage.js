@@ -89,7 +89,7 @@ const ChurchPage = ({route, navigation}) => {
                 </Side>
             </Header>
             <ScrollView>
-                <Image style={{ backgroundColor: 'black', width: '100%', height: 300, resizeMode: 'cover'}} source={{uri: `${domain}/ChurchMainImg/${data.mainImg}`}} />
+                <Image style={{ backgroundColor: 'black', width: '100%', height: 300, resizeMode: 'cover'}} source={{uri: `${domain}/ChurchMainImg/${data.mainImg}`+ "?cache="+Math.random()}} />
                 <TabContainer>
                     {tabs.map((label, index) => (
                         <Tab

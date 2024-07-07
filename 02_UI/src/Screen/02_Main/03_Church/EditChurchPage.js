@@ -13,6 +13,7 @@ import DaumMap from '~/Screen/03_Map/DaumMapController';
 import RectangleBtn from '~/Components/RectangleBtn';
 import GroupMemProfile from '~/Components/GroupMemProfile';
 import {launchImageLibrary} from 'react-native-image-picker';
+import SearchLocate from '~/Screen/03_Map/SearchLocate';
 
 const Title = Styled.Text`
     height: 30px;
@@ -90,7 +91,6 @@ const EditChurchPage = ({route, navigation}) => {
     useEffect(()=>
     {
         setImgUrl(imgSrc.uri)
-
     }, [imgSrc])
 
     const showCameraRoll = () => {
@@ -130,12 +130,10 @@ const EditChurchPage = ({route, navigation}) => {
                 <Icon1 name="settings-outline" size={26} color={'black'} onPress={() => 
                     {
                         showCameraRoll();
-                        
-                        alert('사진 교체')
                     }
                 }
                     />
-                <ChurchPageHome data={churchData} members={members} isMember={isMember} isLeader={isLeader}/>
+                <ChurchPageHome data={churchData} members={members} isMember={isMember} isLeader={isLeader} navigator={navigation}/>
 
                 <SearchBtn onPress={()=>{alert('취소')}}>
                     <Text>취소</Text>
@@ -151,14 +149,19 @@ const fd = new FormData(); //사진도 추가할거임
  fd.append('location_ll_x', churchData.location_ll.x);
  fd.append('location_ll_y', churchData.location_ll.y);
  fd.append('name', "church!!!");
- fd.append('file', {
-    uri: imgSrc.uri,
-    type: imgSrc.type,
-    name: imgSrc.fileName,
-    data: imgSrc.data
-}
-)
-
+ if (imgSrc.fileSize)
+ {
+     fd.append('file', {
+        uri: imgSrc.uri,
+        type: imgSrc.type,
+        name: imgSrc.fileName,
+        data: imgSrc.data
+    }
+    )
+ }
+console.log("=========");
+console.log(imgSrc);
+console.log("=========");
 
                     fetch(`${domain}/Church/${churchData.id}`, {
                          method: `PUT`,
@@ -166,7 +169,10 @@ const fd = new FormData(); //사진도 추가할거임
                          headers: {
                              Accept: 'application/json', 'Content-Type': 'multipart/form-data',
                          }
-                     }).then(res=>res.json()).then(res=>console.log(res));
+                     }).then(res=>res.json()).then(res=>{
+                        console.log(res);
+                        navigation.replace('ChurchPage', {group: res});
+                     });
                     // fetch(`${domain}/Church/${churchData.id}`).then(res=>res.json()).then(res=>console.log(res));
                     //  .then(res => {
                     //     console.log("============");
@@ -217,7 +223,7 @@ const NumGroupMemCont = Styled.View`
 `;
 
 
-const ChurchPageHome = ({data, members, isMember, isLeader}) => {
+const ChurchPageHome = ({data, members, isMember, isLeader, navigator}) => {
     const domain = useContext(DomainContext);    
     const {userData, setUserData, updateUserChurch} = useContext(UserData);
     const isFocused = useIsFocused();
@@ -253,7 +259,12 @@ const ChurchPageHome = ({data, members, isMember, isLeader}) => {
                 }]}                
                 /> 
             }
-            <Icon1 name="settings-outline" size={26} color={'black'} onPress={() => alert('위치 교체')} />
+            <Icon1 name="settings-outline" size={26} color={'black'} onPress={() => 
+                {
+                    //navigator.replace('SearchLocate');
+                    navigator.replace('SearchLocate', {setLocateProcess : setLocate, setRegionProcess : setRegion, navigation: navigator})
+                    //alert('위치 교체')
+                }} />
         </Container>
     )
 };
