@@ -11,6 +11,7 @@ import AddBtn from '~/Components/AddBtn';
 import ImageSize from 'react-native-image-size';
 import Icon1 from 'react-native-vector-icons/Ionicons';
 import Icon2 from 'react-native-vector-icons/AntDesign';
+import { useIsFocused } from '@react-navigation/native';
 
 const Header = Styled.View`
     flex-direction: row;
@@ -45,7 +46,8 @@ const Footer = Styled.View`
 const ClubPage = ({route, navigation}) => {
     const domain = useContext(DomainContext);
     const {userData} = useContext(UserData);
-    const data = route.params.group;
+    // const data = route.params.group;
+    const [data, setData] = useState(route.params.group);
     const [tabIdx, setTabIdx] = useState(0); 
     const [reload, setReload] = useState(false);
     var [resizedWidth, setResizedWidth] = useState(100);
@@ -56,9 +58,12 @@ const ClubPage = ({route, navigation}) => {
     var [isMember, setIsMember] = useState(false);
     var [isLeader, setIsLeader] = useState(false);
     var tabs = ['홈', '게시글', '사진'];
+    const isFocused = useIsFocused();
+    const [updateMember, setUpdateMember] = useState(false);
     
     /* 첫 마운팅때 Group 상단 사진 url 설정 */
     useEffect(() => {
+        console.log(data);
         setUrl(`${domain}/ClubMainImg/${data.mainImg}`);
     }, []);    
 
@@ -91,11 +96,16 @@ const ClubPage = ({route, navigation}) => {
 
     /* 멤버 정보 불러오기 */
     useEffect(() => {
+        fetch(`${domain}/Group/Club/${data.id}`).then(res => res.json()).then(res => {setData(res)});
         fetch(`${domain}/Club/${data.id}/Member`).then(res => res.json()).then(res => {setMembers(res);});
-    }, [data])
+        setUpdateMember(false);
+        console.log('update club data')
+    }, [isFocused, updateMember])
 
     /* 멤버 정보 불러왓으면 현재 유저가 그룹 멤버인지 확인. 리더 여부도 확인 */
-    useEffect(() => {        
+    useEffect(() => { 
+        setIsMember(false);  
+        setIsLeader(false);     
         members.map((member, index) => {
             if (member.id === userData.id) {
                 setIsMember(true);

@@ -59,7 +59,7 @@ const ChurmmunityMain = ({route, navigation}) => {
     var [pastSpots, setPastSpots] = useState([initSpot]);
     const [isRefreshing, setIsRefreshing] = useState(false);
 
-    const {userData, userClub, userSpot} = useContext(UserData);
+    const {userData, userClub, userSpot, updateUserClub, updateUserSpot} = useContext(UserData);
 
     useEffect(() => {
         fetch(`${domain}/Group/Sort/Club/1/Rand()/7`).then(res => res.json()).then(res => {setRecClubs(res)});
@@ -85,6 +85,8 @@ const ChurmmunityMain = ({route, navigation}) => {
     const handleRefresh = async () => {
         console.log('handleRefreshStore');
         setIsRefreshing(true);
+        updateUserClub();
+        updateUserSpot();
         fetch(`${domain}/Group/Sort/Club/1/Rand()/7`).then(res => res.json()).then(res => {setRecClubs(res)});
         fetch(`${domain}/Group/Sort/Spot/past = 0/time/7`).then(res => res.json()).then(res => {setRecSpots(res)});
         fetch(`${domain}/Group/Sort/Spot/past = 1/time/7`).then(res => res.json()).then(res => {setPastSpots(res)});
