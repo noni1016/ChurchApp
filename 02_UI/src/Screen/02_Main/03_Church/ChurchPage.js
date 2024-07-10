@@ -59,15 +59,20 @@ const ChurchPage = ({route, navigation}) => {
     const isFocused = useIsFocused();
     const [updateMember, setUpdateMember] = useState(false);
 
-    /* 멤버 정보 불러오기 */
+    /* 메인페이지에서 데이터 다시 세팅 */
     useEffect(() => {
         console.log(data.id);
         fetch(`${domain}/Church/${data.id}`).then(res => res.json()).then(res => {console.log(res); setData(res)});
+    }, [isFocused])
+
+    /* 멤버 정보 불러오기 */
+    useEffect(() => {        
         fetch(`${domain}/Church/Member/${data.id}`).then(res => res.json()).then(res => {console.log(res); setMembers(res)});
         console.log("update member data");
         console.log(isFocused);
         setUpdateMember(false);
-    }, [isFocused, userChurch, updateMember]);
+        console.log(data)
+    }, [isFocused, data, userChurch, updateMember]);
 
 
     /* 멤버 정보 불러왓으면 현재 유저가 그룹 멤버인지 확인. 리더 여부도 확인 */
@@ -75,14 +80,15 @@ const ChurchPage = ({route, navigation}) => {
         // console.log(members);
         setIsMember(false);    
         setIsLeader(false);    
+        let data_= data;
         members.map((member, index) => {
-            if (member.id === userData.id) {
+            if (member.id == userData.id) {
                 setIsMember(true);
-                if (member.role === 1)
+                console.log("update isMember");
+                if (member.role == 1)
                     {setIsLeader(true); console.log("updqte isLeader")}
             }
         })
-        console.log("update isMember");
     }, [members])
 
     return (
@@ -152,6 +158,9 @@ const ChurchPageHome = ({data, members, isMember, isLeader, updateMember, stackN
     const isFocused = useIsFocused();
     const [joinText, setJoinText] = useState('활동 교회로 등록');
 
+    console.log("꺄아아");
+    console.log(data);
+
     useEffect(() => {
         console.log(`isMember: ${isMember}`)
         if (isMember) {
@@ -159,7 +168,7 @@ const ChurchPageHome = ({data, members, isMember, isLeader, updateMember, stackN
         } else {            
             setJoinText('활동 교회로 등록');
         }
-    }, [isFocused, isMember])
+    }, [isFocused, isMember, data])
 
     const onPressJoinBtn = () => {
         if (isMember && !isLeader) {

@@ -82,7 +82,7 @@ const Member = ({member, groupType, group, onMemberChanged, navigation}) => {
                     }).then(res => res.json()).then(res => {
                         console.log(res)
                         if (res.result) {
-                            alert('리더 변경 성공. 교회 페이지로 이동합니다');
+                            alert('리더 변경 성공. 메인 페이지로 이동합니다');
                             navigation.goBack();
                         }
                     })
