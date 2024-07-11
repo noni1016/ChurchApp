@@ -150,8 +150,11 @@ const SpotPage = ({route, navigation}) => {
 
     /* 현재 유저를 멤버로 설정해줌 */
     const setMember = (curUserIsMemOfThisGroup) => {
+        console.log("셋멤버!!!");
+        console.log(isMember)
+        console.log(curUserIsMemOfThisGroup)
         if ((isMember == false && curUserIsMemOfThisGroup == true) || (isMember == true && curUserIsMemOfThisGroup == false))
-            fetch(`${domain}/Group/Member/Spot/${data.id}`).then(res => res.json()).then(res => { setMembers(res); });
+            fetch(`${domain}/Spot/${data.id}/Member`).then(res => res.json()).then(res => { console.log(res); setMembers(res); });
         setIsMember(curUserIsMemOfThisGroup);
         if (curUserIsMemOfThisGroup) setJoinText('참가중!');
         else setJoinText('함께하기');

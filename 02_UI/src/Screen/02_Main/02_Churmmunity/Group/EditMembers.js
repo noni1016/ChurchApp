@@ -107,7 +107,7 @@ const Member = ({member, groupType, group, onMemberChanged, navigation}) => {
                     }).then(res => res.json()).then(res => {
                         console.log(res);
                         if (res.result) {
-                            onMemberChanged(true);
+                            onMemberChanged();
                         }
                     })
                 }
@@ -146,20 +146,23 @@ const EditMembers = ({route, navigation}) => {
     const groupType = route.params.groupType;
     const group = route.params.group;
 
+    console.log(members);
+
     /* 진입시 페이지 제목 {그룹 이름 - 멤버} 로 수정 */
     useEffect(() => {
         navigation.setOptions({title: `${route.params.group.name} - 멤버`});
     })
 
     const onMemberChanged = () => {
+        console.log("멤버챈지!!!")
+        fetch(`${domain}/${groupType}/${group.id}/Member`).then(res => res.json()).then(res => {console.log(res); setMembers(res)});
         updateMember(true);
-        fetch(`${domain}/${groupType}/Member/${group.id}`).then(res => res.json()).then(res => {console.log(res); setMembers(res)});
     }
 
     return (
         <View>
         <NumGroupMemCount>
-            <Text fontSize={25}>멤버 {route.params.group.numMember} 명</Text>
+            <Text fontSize={25}>멤버 {members.length} 명</Text>
         </NumGroupMemCount>
 
         {members.map((member, idx) => (<Member key={idx} groupType={groupType} group={group} member={member} onMemberChanged={onMemberChanged} navigation={navigation}></Member>))}
