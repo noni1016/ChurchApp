@@ -67,7 +67,7 @@ const ChurchPage = ({route, navigation}) => {
 
     /* 멤버 정보 불러오기 */
     useEffect(() => {        
-        fetch(`${domain}/Church/Member/${data.id}`).then(res => res.json()).then(res => {console.log(res); setMembers(res)});
+        fetch(`${domain}/Church/${data.id}/Member`).then(res => res.json()).then(res => {console.log(res); setMembers(res)});
         console.log("update member data");
         console.log(isFocused);
         setUpdateMember(false);
