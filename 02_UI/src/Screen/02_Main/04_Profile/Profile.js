@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useContext} from 'react';
-import { View, Text, ScrollView, Image, TouchableOpacity } from 'react-native';
+import { View, Text, ScrollView, Image, TouchableOpacity, RefreshControl } from 'react-native';
 import styled from 'styled-components/native';
 import {DomainContext} from '~/Context/Domain';
 import {KakaoAuthData, UserData, TryGetUserData} from '~/Context/User';
@@ -25,6 +25,7 @@ import EditChurmmunity from '~/Screen/02_Main/02_Churmmunity/Group/EditChurmmuni
 import SearchChurchPage from '~/Screen/02_Main/03_Church/SearchChurchPage';
 import ChurchView from '~/Screen/02_Main/04_Profile/ChurchView'
 import AddChurchPage from '~/Screen/02_Main/03_Church/AddChurchPage';
+import ChurchPage from '../03_Church/ChurchPage';
 
 const tempUser = {id: 4, name: "짱쎄", photo: 'Profile/짱쎄.jpg', role: 'user'};
 const Stack = createStackNavigator();
@@ -107,7 +108,7 @@ const ActivityRecordArea = styled.View`
 
 const ProfileMain = ({navigation, route}) => {
     const domain = useContext(DomainContext);
-    const {userData, userClub, userSpot} = useContext(UserData);
+    const {userData, userClub, userSpot, userChurch} = useContext(UserData);
     const [member, setMember] = useState(route ? route.params.member : userData);
     const [imgSrc, setImgSrc] = useState('');
     const [locate, setLocate] = useState([0,0]);
@@ -118,7 +119,9 @@ const ProfileMain = ({navigation, route}) => {
     const {tryGetUserData, setTryGetUserDataFlag} = useContext(TryGetUserData);
     const [memberClub, setMemberClub] = useState([]);
     const [memberSpot, setMemberSpot] = useState([]);
+    const [memberChurch, setMemberChurch] = useState([]);
     const [churchName, setChurchName] = useState('');
+    const [isRefreshing, setIsRefreshing] = useState(false);
 
     useEffect(() => {
         setMember(route != undefined ? route.params.member : userData);
@@ -143,11 +146,13 @@ const ProfileMain = ({navigation, route}) => {
             {
                 setMemberClub(userClub);
                 setMemberSpot(userSpot);
+                setMemberChurch(userChurch);
             }
             else
             {
                 fetch(`${domain}/User/${member.id}/Club`).then(res => res.json()).then(res => {setMemberClub(res)});
                 fetch(`${domain}/User/${member.id}/Spot`).then(res => res.json()).then(res => {setMemberSpot(res)});
+                fetch(`${domain}/User/${member.id}/Church`).then(res => res.json()).then(res => {setMemberChurch(res)});
             }
             
             // console.log(member.church);
@@ -180,12 +185,31 @@ const ProfileMain = ({navigation, route}) => {
           }
     }, [imgSrc])
 
+    const handleRefresh = async () => {
+        console.log('handleRefreshStore');
+        setIsRefreshing(true);
+        
+        if (member.id == userData.id)
+        {
+            setMemberClub(userClub);
+            setMemberSpot(userSpot);
+            setMemberChurch(userChurch);
+        }
+        else
+        {
+            fetch(`${domain}/User/${member.id}/Club`).then(res => res.json()).then(res => {setMemberClub(res)});
+            fetch(`${domain}/User/${member.id}/Spot`).then(res => res.json()).then(res => {setMemberSpot(res)});
+            fetch(`${domain}/User/${member.id}/Church`).then(res => res.json()).then(res => {setMemberChurch(res)});
+        }
+        setIsRefreshing(false);
+    }
+
 
     return (
         <>
             {
                 userData &&
-                <ScrollView style={{padding: 10}}>
+                <ScrollView style={{padding: 10}} refreshControl={<RefreshControl refreshing={isRefreshing} onRefresh={handleRefresh}/>}>
                 <HeaderBox>
                 <ChangePhoto onPress={() => {navigation.navigate('ShowProfileImg')}}>
                     <Image style={{ width: 70, height: 70, flex: 1, resizeMode: 'contain' }} source={{ uri: `${domain}/Profile/${member.photo}` + "?cache="+Math.random() }}/>
@@ -235,14 +259,18 @@ const ProfileMain = ({navigation, route}) => {
                     )}
                     <InfoTextBold>활동</InfoTextBold>
                     <ActivityRecordArea>
+                        <InfoTextBold>소속 교회</InfoTextBold>
+                        {member && memberChurch.map((data, index) => (
+                            <GroupTile key={index} group={data} type='Church' isCurrentUser={member.id == userData.id} stackNavi={navigation} />
+                        ))}
                         <InfoTextBold>소속 공동체</InfoTextBold>
                         {member && memberClub.map((data, index) => (
-                            <GroupTile key={index} group={data} type='Club' isCurrentUser={member.id == userData.id}stackNavi={navigation}/>
+                            <GroupTile key={index} group={data} type='Club' isCurrentUser={member.id == userData.id} stackNavi={navigation} />
                         ))}
                         {memberClub.length == 0 && <InfoText>없음</InfoText>}
                         <InfoTextBold>참여한 번개</InfoTextBold>
                         {member && memberSpot.map((data, index) => (
-                            <GroupTile key={index} group={data} type='Spot' isCurrentUser={member.id == userData.id} stackNavi={navigation}/>
+                            <GroupTile key={index} group={data} type='Spot' isCurrentUser={member.id == userData.id} stackNavi={navigation} />
                         ))}
                         {memberSpot.length == 0 && <InfoText>없음</InfoText>}
                     </ActivityRecordArea>
@@ -357,6 +385,15 @@ const ProfileStackNavi = ({tabNavi}) => {
                 headerShown: true,
                 headerBackTitleVisible: true,
                 title: '교회 추가',
+            }}
+        />
+        <Stack.Screen
+            name="ChurchPage"
+            component={ChurchPage}
+            options={{
+                headerShown: true,
+                headerBackTitleVisible: true,
+                title: '교회',
             }}
         />
       </Stack.Navigator>  
