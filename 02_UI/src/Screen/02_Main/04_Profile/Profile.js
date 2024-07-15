@@ -150,20 +150,20 @@ const ProfileMain = ({navigation, route}) => {
                 fetch(`${domain}/User/${member.id}/Spot`).then(res => res.json()).then(res => {setMemberSpot(res)});
             }
             
-            console.log(member.church);
+            // console.log(member.church);
             if (member.church)
             {
-                fetch(`${domain}/Church/${member.church}`).then(res => res.json()).then(res => {console.log(res);setChurchName(res.name);});
+                fetch(`${domain}/Church/${member.church}`).then(res => res.json()).then(res => {setChurchName(res.name);});
             }
         }
     }, [member])
 
     useEffect(() => {
-        console.log(imgSrc)
+        // console.log(imgSrc)
         if (imgSrc)
         {
-            console.log("=====photo change=====");
-            console.log(imgSrc.uri);
+            // console.log("=====photo change=====");
+            // console.log(imgSrc.uri);
             const imageData = new FormData();
             imageData.append('file', {
               uri: imgSrc.uri,

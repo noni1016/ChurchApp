@@ -17,6 +17,7 @@ import Comments from '~/Components/Comments';
 import EditChurchPage from './EditChurchPage';
 import EditMembers from '../02_Churmmunity/Group/EditMembers';
 import ChurchCardsColView from './ChurchCardsColView';
+import { ProfileMain } from '../04_Profile/Profile';
 
 const Stack = createStackNavigator();
 
@@ -165,6 +166,10 @@ const Church = ({navigation}) => {
             <Stack.Screen
                 name={'ShowMoreChurches'}
                 component={ChurchCardsColView}
+            />
+            <Stack.Screen
+                name={'Profile'}
+                component={ProfileMain}
             />
         </Stack.Navigator>
     );
