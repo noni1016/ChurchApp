@@ -264,5 +264,22 @@ router.delete('/:userId', (req, res) => {
     });
 })
 
+// User Neighbor
+router.get('/Neighbor/:id/:long/:lat', (req, res) => {    
+    let long = req.params.long ? Number(req.params.long) : 127;
+    let lat = req.params.lat ? Number(req.params.lat) : 37;
+    let sql = `SELECT * FROM User WHERE id != ${req.params.id} ORDER BY ST_Distance_Sphere(location_ll, point(${long}, ${lat}))`;
+    console.log(sql);
+
+    conn.query(sql, function (error, rows, fields) {
+        if (!error) {
+            console.log(rows);
+            res.send(rows);
+        } else {
+            console.log('query error : ' + error);
+        }
+    });
+})
+
 
 module.exports = router;

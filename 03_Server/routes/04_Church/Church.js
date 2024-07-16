@@ -175,7 +175,7 @@ router.get('', (req, res) => {
 
 //////////////////////////////////////////////////////////////////////////
 //Get Church Member
-router.get('/Member/:churchId', (req, res) => {
+router.get('/:churchId/Member', (req, res) => {
     let sql = `SELECT User.id, User.name, User.photo, ChurchUser.role
             FROM Church, ChurchUser, User
             WHERE ChurchUser.churchId = ${req.params.churchId}
@@ -388,6 +388,7 @@ router.get('/:churchId/Imgs', (req, res) => {
 // Member
 router.put('/Leader/:churchId/:memberId', async (req, res) => {
     // 1. Change Group table's leader number
+    let sql0 = `UPDATE Church Set leader = ${req.params.memberId} WHERE id = ${req.params.churchId}`;
     
     // 2. Change Group-User table's role of past leader
     let sql1 = `UPDATE ChurchUser SET role = 0 WHERE churchId = ${req.params.churchId} AND role = 1`;
@@ -397,6 +398,8 @@ router.put('/Leader/:churchId/:memberId', async (req, res) => {
 
     try {
         await conn.beginTransaction();
+        console.log(sql0);
+        await conn.query(sql0);
         console.log(sql1);
         await conn.query(sql1);
         console.log(sql2);

@@ -319,7 +319,7 @@ router.get('/:clubId/Notices', (req, res) => {
 // Member
 router.put('/Leader/:clubId/:memberId', async (req, res) => {
     // 1. Change Group table's leader number
-    let sql0 = `UPDATE Club Set leader = ${req.params.memberId} WHERE clubId = ${req.params.clubId}`;
+    let sql0 = `UPDATE Club Set leader = ${req.params.memberId} WHERE id = ${req.params.clubId}`;
     
     // 2. Change Group-User table's role of past leader
     let sql1 = `UPDATE ClubUser SET role = 0 WHERE clubId = ${req.params.clubId} AND role = 1`;
