@@ -12,6 +12,8 @@ import AddBtn from '~/Components/AddBtn';
 import DaumMap from '~/Screen/03_Map/DaumMapController';
 import RectangleBtn from '~/Components/RectangleBtn';
 import GroupMemProfile from '~/Components/GroupMemProfile';
+import {launchImageLibrary} from 'react-native-image-picker';
+import SearchLocate from '~/Screen/03_Map/SearchLocate';
 
 const Title = Styled.Text`
     height: 30px;
@@ -42,6 +44,18 @@ const Footer = Styled.View`
     height: 200px;
 `;
 
+const options = {
+    title: 'Load Photo',
+    customButton: [
+        { name: 'button_id_1', title: 'CustomButton 1'},
+        { name: 'button_id_2', title: 'CustomButton 2'},
+    ],
+    storageOptions: {
+        skipBackup: true,
+        path: 'images',
+    }
+}
+
 const EditChurchPage = ({route, navigation}) => {
     const domain = useContext(DomainContext);
     const {userData, userChurch} = useContext(UserData);
@@ -51,10 +65,14 @@ const EditChurchPage = ({route, navigation}) => {
     const [isLeader, setIsLeader] = useState(false);
     const [originData, setOriginData] = useState(churchData);
 
+    const [imgSrc, setImgSrc] = useState({uri: `${domain}/ChurchMainImg/${churchData.mainImg}`});
+    const [imgUrl, setImgUrl] = useState(`${domain}/ChurchMainImg/${churchData.mainImg}`);
+
     /* 멤버 정보 불러오기 */
     useEffect(() => {
         fetch(`${domain}/Church/Member/${churchData.id}`).then(res => res.json()).then(res => {setMembers(res)});
         console.log("update member data");
+        setImgUrl(`${domain}/ChurchMainImg/${churchData.mainImg}`);
     }, [churchData, userChurch]);
 
     /* 멤버 정보 불러왓으면 현재 유저가 그룹 멤버인지 확인. 리더 여부도 확인 */
@@ -70,6 +88,30 @@ const EditChurchPage = ({route, navigation}) => {
         console.log("update is member");
     }, [members])
 
+    useEffect(()=>
+    {
+        setImgUrl(imgSrc.uri)
+    }, [imgSrc])
+
+    const showCameraRoll = () => {
+        launchImageLibrary(options, (response) => {
+            if (response.didCancel) {
+                alert('사진 변경 취소');
+                return;
+            }
+            if (response.error) {
+                console.log('LaunchCamera Error: ', response.error);
+                return;
+            }
+            if (response.assets.length > 0) {
+                setImgSrc(response.assets[0]);
+                return;
+            }
+            alert('사진 변경 취소');
+        });
+    }
+
+
     return (
         <>
             <ScrollView>
@@ -84,9 +126,14 @@ const EditChurchPage = ({route, navigation}) => {
                         originData.pastor = value;
                     }}
                     />
-                <Image style={{ backgroundColor: 'black', width: '100%', height: 300, resizeMode: 'cover'}} source={{uri: `${domain}/ChurchMainImg/${churchData.mainImg}`}}/>
-                <Icon1 name="settings-outline" size={26} color={'black'} onPress={() => alert('사진 교체')} />
-                <ChurchPageHome data={churchData} members={members} isMember={isMember} isLeader={isLeader}/>
+                <Image style={{ backgroundColor: 'black', width: '100%', height: 300, resizeMode: 'cover'}} source={{uri: imgUrl}}/>
+                <Icon1 name="settings-outline" size={26} color={'black'} onPress={() => 
+                    {
+                        showCameraRoll();
+                    }
+                }
+                    />
+                <ChurchPageHome data={churchData} members={members} isMember={isMember} isLeader={isLeader} navigator={navigation}/>
 
                 <SearchBtn onPress={()=>{alert('취소')}}>
                     <Text>취소</Text>
@@ -102,19 +149,19 @@ const fd = new FormData(); //사진도 추가할거임
  fd.append('location_ll_x', churchData.location_ll.x);
  fd.append('location_ll_y', churchData.location_ll.y);
  fd.append('name', "church!!!");
-//   fd.append('file', {
-//      uri: churchData.mainImg.uri,
-//      type: churchData.imgSrc.type,
-//      name: churchData.imgSrc.fileName,
-//      data: churchData.imgSrc.data
-//  }
-//  )
-
-console.log(churchData);
-console.log("============");
-
-console.log(fd);
-console.log("============");
+ if (imgSrc.fileSize)
+ {
+     fd.append('file', {
+        uri: imgSrc.uri,
+        type: imgSrc.type,
+        name: imgSrc.fileName,
+        data: imgSrc.data
+    }
+    )
+ }
+console.log("=========");
+console.log(imgSrc);
+console.log("=========");
 
                     fetch(`${domain}/Church/${churchData.id}`, {
                          method: `PUT`,
@@ -122,7 +169,10 @@ console.log("============");
                          headers: {
                              Accept: 'application/json', 'Content-Type': 'multipart/form-data',
                          }
-                     }).then(res=>res.json()).then(res=>console.log(res));
+                     }).then(res=>res.json()).then(res=>{
+                        console.log(res);
+                        navigation.replace('ChurchPage', {group: res});
+                     });
                     // fetch(`${domain}/Church/${churchData.id}`).then(res=>res.json()).then(res=>console.log(res));
                     //  .then(res => {
                     //     console.log("============");
@@ -173,7 +223,7 @@ const NumGroupMemCont = Styled.View`
 `;
 
 
-const ChurchPageHome = ({data, members, isMember, isLeader}) => {
+const ChurchPageHome = ({data, members, isMember, isLeader, navigator}) => {
     const domain = useContext(DomainContext);    
     const {userData, setUserData, updateUserChurch} = useContext(UserData);
     const isFocused = useIsFocused();
@@ -209,9 +259,16 @@ const ChurchPageHome = ({data, members, isMember, isLeader}) => {
                 }]}                
                 /> 
             }
-            <Icon1 name="settings-outline" size={26} color={'black'} onPress={() => alert('위치 교체')} />
+            <Icon1 name="settings-outline" size={26} color={'black'} onPress={() => 
+                {
+                    //navigator.replace('SearchLocate');
+                    navigator.replace('SearchLocate', {setLocateProcess : setLocate, setRegionProcess : setRegion, navigation: navigator})
+                    //alert('위치 교체')
+                }} />
         </Container>
     )
 };
+
+
 
 export default EditChurchPage;

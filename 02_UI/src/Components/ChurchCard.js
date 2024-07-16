@@ -55,7 +55,7 @@ const ChurchCard = ({church, navigation}) => {
 
     return (
         <ContainerBox onPress={() => navigation.navigate('ChurchPage', {group: church})}>
-            <ImageBox source={{uri: `${domain}/ChurchMainImg/${church.mainImg}`}}/>
+            <ImageBox source={{uri: `${domain}/ChurchMainImg/${church.mainImg}`+ "?cache="+Math.random()}}/>
             <ChurchInfoBox>
                 <ChurchNameBox>
                     <Text style={{fontSize: 20, fontWeight: 'bold'}}>{church.name}</Text>

@@ -17,6 +17,9 @@ import Comments from '~/Components/Comments';
 import EditChurchPage from './EditChurchPage';
 import EditMembers from '../02_Churmmunity/Group/EditMembers';
 import ChurchCardsColView from './ChurchCardsColView';
+import { ProfileMain } from '../04_Profile/Profile';
+import ClubPage from '../02_Churmmunity/Group/ClubPage';
+import SpotPage from '../02_Churmmunity/Group/SpotPage';
 
 const Stack = createStackNavigator();
 
@@ -165,6 +168,28 @@ const Church = ({navigation}) => {
             <Stack.Screen
                 name={'ShowMoreChurches'}
                 component={ChurchCardsColView}
+            />
+            <Stack.Screen
+                name={'Profile'}
+                component={ProfileMain}
+            />
+                    <Stack.Screen
+            name="ClubPage"
+            component={ClubPage}
+            options={{
+                headerShown: false,
+                headerBackTitleVisible: false,
+                title: '소모임 상세보기'
+            }}
+            />
+            <Stack.Screen
+                name="SpotPage"
+                component={SpotPage}
+                options={{
+                    headerShown: false,
+                    headerBackTitleVisible: false,
+                    title: '번개 상세보기'
+                }}
             />
         </Stack.Navigator>
     );

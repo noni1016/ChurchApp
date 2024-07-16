@@ -9,6 +9,7 @@ import Icon1 from 'react-native-vector-icons/Ionicons';
 import Icon2 from 'react-native-vector-icons/AntDesign';
 import SpotPageHome from '~/Components/SpotPageHome';
 import SpotMembersView from '~/Components/SpotMembersView';
+import { useIsFocused } from '@react-navigation/native';
 
 const Header = Styled.View`
     flex-direction: row;
@@ -61,7 +62,8 @@ const tempSpot = {id: 1, name: '막무가내 리코더 합주', mainImg: 'GroupI
 const SpotPage = ({route, navigation}) => {
     const domain = useContext(DomainContext);
     const {userData, updateUserSpot} = useContext(UserData);   
-    const data = route.params.group;
+    // const data = route.params.group;
+    const [data, setData] = useState(route.params.group);
     var [url, setUrl] = useState('');
     var [resizedWidth, setResizedWidth] = useState(100);
     var [resizedHeight, setResizedHeight] = useState(100);
@@ -72,17 +74,22 @@ const SpotPage = ({route, navigation}) => {
     const [tabIdx, setTabIdx] = useState(-1); 
     var [joinText, setJoinText] = useState('함께하기');
     var [leader, setLeader] = useState();
+    const [updateMember, setUpdateMember] = useState(false);
+    const isFocused = useIsFocused();
 
-    // /* temp : 서버에서 데이터 가져오기 */
-    // useEffect(() => {
-    //     fetch(`${domain}/Group/Spot/1`).then(res => res.json()).then(res => {setData(res);});
-    // }, [])
+
+    /* 메인페이지에서 데이터 다시 세팅 */
+    useEffect(() => {
+        console.log(data.id);
+        fetch(`${domain}/Group/Spot/${data.id}`).then(res => res.json()).then(res => {console.log(res); setData(res)});
+    }, [isFocused])
 
 
     /* 첫 마운팅때 Group 상단 사진 url 설정 */
     useEffect(() => {
         if (data == null) return;
         setUrl(`${domain}/SpotMainImg/${data.mainImg}`);
+        setIsLeader(false);
         if (data.leader === userData.id) {
             setIsLeader(true);
         }
@@ -106,7 +113,8 @@ const SpotPage = ({route, navigation}) => {
     /* 멤버 정보 불러오기 */
     useEffect(() => {
         if (data) fetch(`${domain}/Group/Member/Spot/${data.id}`).then(res => res.json()).then(res => setMembers(res));
-    }, [data])
+        setUpdateMember(false);
+    }, [isFocused, data, updateMember])
 
     /* 멤버 정보 불러왓으면 현재 유저가 그룹 멤버인지 확인. 리더 여부도 확인 */
     useEffect(() => {
@@ -142,8 +150,11 @@ const SpotPage = ({route, navigation}) => {
 
     /* 현재 유저를 멤버로 설정해줌 */
     const setMember = (curUserIsMemOfThisGroup) => {
+        console.log("셋멤버!!!");
+        console.log(isMember)
+        console.log(curUserIsMemOfThisGroup)
         if ((isMember == false && curUserIsMemOfThisGroup == true) || (isMember == true && curUserIsMemOfThisGroup == false))
-            fetch(`${domain}/Group/Member/Spot/${data.id}`).then(res => res.json()).then(res => { setMembers(res); });
+            fetch(`${domain}/Spot/${data.id}/Member`).then(res => res.json()).then(res => { console.log(res); setMembers(res); });
         setIsMember(curUserIsMemOfThisGroup);
         if (curUserIsMemOfThisGroup) setJoinText('참가중!');
         else setJoinText('함께하기');
@@ -177,7 +188,7 @@ const SpotPage = ({route, navigation}) => {
                     <JoinBtn state={isMember} onPress={() => {onPressJoinBtn()}}><Text style={{fontSize: 20, fontFamily: 'DoHyeon-Regular', color: 'white'}}>{joinText}</Text></JoinBtn>
                 </TabContainer>
                 {tabIdx == 0 && <SpotPageHome data={data} members={members} isLeader={isLeader} leader={leader} stackNavi={navigation} />}
-                {tabIdx == 1 && <SpotMembersView data={data} members={members} isLeader={isLeader} leader={leader} stackNavi={navigation} />}
+                {tabIdx == 1 && <SpotMembersView data={data} members={members} isLeader={isLeader} leader={leader} updateMember={setUpdateMember} stackNavi={navigation} />}
             </ScrollView>
         </>
     ) : (<Text>Loading...</Text>)

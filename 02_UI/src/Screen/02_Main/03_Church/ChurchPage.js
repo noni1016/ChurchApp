@@ -14,6 +14,7 @@ import RectangleBtn from '~/Components/RectangleBtn';
 import GroupMemProfile from '~/Components/GroupMemProfile';
 import Feed from '~/Components/Feed';
 import Photos from '~/Components/Photos';
+import { TabNavi } from '~/Context/Navi';
 
 const Header = Styled.View`
     flex-direction: row;
@@ -59,15 +60,20 @@ const ChurchPage = ({route, navigation}) => {
     const isFocused = useIsFocused();
     const [updateMember, setUpdateMember] = useState(false);
 
-    /* 멤버 정보 불러오기 */
+    /* 메인페이지에서 데이터 다시 세팅 */
     useEffect(() => {
         console.log(data.id);
         fetch(`${domain}/Church/${data.id}`).then(res => res.json()).then(res => {console.log(res); setData(res)});
-        fetch(`${domain}/Church/Member/${data.id}`).then(res => res.json()).then(res => {console.log(res); setMembers(res)});
+    }, [isFocused])
+
+    /* 멤버 정보 불러오기 */
+    useEffect(() => {        
+        fetch(`${domain}/Church/${data.id}/Member`).then(res => res.json()).then(res => {console.log(res); setMembers(res)});
         console.log("update member data");
         console.log(isFocused);
         setUpdateMember(false);
-    }, [isFocused, userChurch, updateMember]);
+        console.log(data)
+    }, [isFocused, data, userChurch, updateMember]);
 
 
     /* 멤버 정보 불러왓으면 현재 유저가 그룹 멤버인지 확인. 리더 여부도 확인 */
@@ -75,14 +81,15 @@ const ChurchPage = ({route, navigation}) => {
         // console.log(members);
         setIsMember(false);    
         setIsLeader(false);    
+        let data_= data;
         members.map((member, index) => {
-            if (member.id === userData.id) {
+            if (member.id == userData.id) {
                 setIsMember(true);
-                if (member.role === 1)
+                console.log("update isMember");
+                if (member.role == 1)
                     {setIsLeader(true); console.log("updqte isLeader")}
             }
         })
-        console.log("update isMember");
     }, [members])
 
     return (
@@ -100,7 +107,7 @@ const ChurchPage = ({route, navigation}) => {
                 </Side>
             </Header>
             <ScrollView>
-                <Image style={{ backgroundColor: 'black', width: '100%', height: 300, resizeMode: 'cover'}} source={{uri: `${domain}/ChurchMainImg/${data.mainImg}`}} />
+                <Image style={{ backgroundColor: 'black', width: '100%', height: 300, resizeMode: 'cover'}} source={{uri: `${domain}/ChurchMainImg/${data.mainImg}`+ "?cache="+Math.random()}} />
                 <TabContainer>
                     {tabs.map((label, index) => (
                         <Tab
@@ -148,6 +155,7 @@ const NumGroupMemCont = Styled.View`
 
 const ChurchPageHome = ({data, members, isMember, isLeader, updateMember, stackNavi}) => {
     const domain = useContext(DomainContext);    
+    const {tabNavi} = useContext(TabNavi);
     const {userData, setUserData, updateUserChurch} = useContext(UserData);
     const isFocused = useIsFocused();
     const [joinText, setJoinText] = useState('활동 교회로 등록');
@@ -159,7 +167,7 @@ const ChurchPageHome = ({data, members, isMember, isLeader, updateMember, stackN
         } else {            
             setJoinText('활동 교회로 등록');
         }
-    }, [isFocused, isMember])
+    }, [isFocused, isMember, data])
 
     const onPressJoinBtn = () => {
         if (isMember && !isLeader) {
@@ -200,7 +208,11 @@ const ChurchPageHome = ({data, members, isMember, isLeader, updateMember, stackN
                 {isLeader && <Icon1 name="settings-outline" size={18} color={'black'} onPress={() => stackNavi.navigate('EditMembers', {groupType: 'Church', group: data, members: members, updateMember: updateMember, navigation: stackNavi})} />}
             </NumGroupMemCont>
 
-            {members.map((member, index) => (<GroupMemProfile key={index.toString()} member={member} isLeader={member.id == data.leader} />))}
+            {members.map((member, index) => (<GroupMemProfile key={index.toString()} member={member} isLeader={member.id == data.leader} onPress={() => {
+                console.log("멤버맵안!!!");
+                if (member.id == userData.id) tabNavi.navigate('Profile', {member: member});
+                else stackNavi.navigate('Profile', {member: member});
+            }} />))}
         </Container>
     )
 };

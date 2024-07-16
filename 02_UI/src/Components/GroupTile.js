@@ -35,7 +35,7 @@ const CtrlArea = styled.View`
 // type: (Club, Spot)
 const GroupTile = ({group, type, isCurrentUser, stackNavi}) => {
     const domain = useContext(DomainContext);
-    const {userData} = useContext(UserData);
+    const {userData, updateUserChurch} = useContext(UserData);
     const [imgUrl, setImgUrl] = useState(`${domain}/${type}MainImg/${group.mainImg}`);
     const [isLeader, setIsLeader] = useState(false);
 
@@ -53,7 +53,9 @@ const GroupTile = ({group, type, isCurrentUser, stackNavi}) => {
             },
             {
                 text: "네",
-                onPress: () => console.log("확인")
+                onPress: () => {
+                    fetch(`${domain}/${type}/Exit/${group.id}/${userData.id}`).then(updateUserChurch());
+                }
             }
         ]);
     }
@@ -65,6 +67,7 @@ const GroupTile = ({group, type, isCurrentUser, stackNavi}) => {
                 <Text>{group.name}</Text>
                 {type == 'Club' && <Text>{group.location}</Text>}
                 {type == 'Spot' && <Text>{group.time}</Text>}
+                {type == 'Church' && <Text>{group.pastor}</Text>}
             </TextArea>
             <CtrlArea>
                 {isLeader && <FontAwesome5 name="crown" color={'blue'} size={20} />}

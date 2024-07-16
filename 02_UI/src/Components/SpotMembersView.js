@@ -45,7 +45,7 @@ const Padding = Styled.View`
     height: 10px;
 `;
 
-const SpotMembersView = ({data, members, isLeader, stackNavi}) => {
+const SpotMembersView = ({data, members, isLeader, updateMember, stackNavi}) => {
     const {userData} = useContext(UserData);
     const {tabNavi} = useContext(TabNavi);
     const [ShowingComponent, setShowingComponent] = useState(<View/>);
@@ -56,7 +56,7 @@ const SpotMembersView = ({data, members, isLeader, stackNavi}) => {
                 <>
                     <NumGroupMemCont>
                         <Text style={{color: "black"}} fontSize={30}>멤버 {members.length} 명</Text>
-                        {isLeader && <Icon name="settings-outline" size={18} onPress={() => stackNavi.navigate('EditMembers', {groupType: 'Spot', group: data, members: members, navigation: stackNavi })} />}
+                        {isLeader && <Icon name="settings-outline" size={18} onPress={() => stackNavi.navigate('EditMembers', {groupType: 'Spot', group: data, members: members, updateMember: updateMember, navigation: stackNavi })} />}
                     </NumGroupMemCont>
                     {/* <Divider/> */}
                     <Padding/>
