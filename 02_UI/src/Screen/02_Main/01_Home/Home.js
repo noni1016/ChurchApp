@@ -1,6 +1,6 @@
 import React, {useContext, useEffect, useState} from 'react';
 import { View, FlatList, Text, Dimensions, ScrollView, Image, NativeSyntheticEvent, NativeScrollEvent, Alert } from 'react-native';
-import Styled from 'styled-components/native';
+import styled from 'styled-components/native';
 import AddBtn from '~/Components/AddBtn'
 import { UserData } from '~/Context/User';
 import {NativeModules, Button} from 'react-native';
@@ -9,31 +9,56 @@ import PlusBtn from '~/Components/PlusBtn';
 import SearchChurchPage from '~/Screen/02_Main/03_Church/SearchChurchPage';
 import ChurchView from '~/Screen/02_Main/04_Profile/ChurchView'
 import {createStackNavigator} from '@react-navigation/stack';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import { DomainContext } from '~/Context/Domain';
 const Stack = createStackNavigator();
 
-const data = {id: 5};
+const InfoTextBold = styled.Text`
+    font-size: 20px;
+    font-family: 'DoHyeon-Regular';   
+    margin-top: 5px;
+    margin-bottom: 5px;
+    height: 30px;
+`;
+
+const UserCardSquare = ({member}) => {
+    const domain = useContext(DomainContext);
+
+    useEffect(() => {
+        console.log("UserCardSquare")
+        console.log(member);
+    })
+
+    return (
+        <TouchableOpacity style={{alignItems: 'center', margin: 2}} onPress={() => {alert("사람")}}>
+            <Image style={{backgroundColor: 'transparent', width: 70, height: 70, margin: 2, borderRadius: 20, borderColor: 'black',  borderWidth: 2}} source={{uri: `${domain}/Profile/${member.photo}` + "?cache="+Math.random()}}/>
+            <Text>{member.name}</Text>
+        </TouchableOpacity>
+    )
+}
 
 const HomeMain = ({navigation}) => {
     const { CalendarModule, KakaoMapModule, DaumMapModule } = NativeModules;
-    const { userData, setUserData } = useContext(UserData);
+    const { userData, setUserData, userChurch } = useContext(UserData);
+    const domain = useContext(DomainContext);
+    const [neighbors, setNeighbors] = useState([]);
 
+    /* 반경 10 km 이내의 이웃 크리스천 불러오기. 가까운 순서로 정렬 */
     useEffect(() => {
-        console.log('[[Home]]: userData changed')
+        fetch(`${domain}/User/Neighbor/${userData.id}/${userData.location_ll.x}/${userData.location_ll.y}`).then(res => res.json()).then(res => {console.log(res); setNeighbors(res)});
     }, [userData])
 
     return (
-        <>
-        <Button title="안녕" onPress={() => navigation.navigate('Profile')}/>
-        <Button title="Click" color="#841584" onPress={() => {console.log("click test"); alert("oo")}} />
-        <PlusBtn text='교회 추가' onPress={() => {navigation.navigate('SearchChurchPage', {navigation: navigation})}}/>
-        {userData != null && <View>
-            <Image style={{ width: '100%', height: '100%', resizeMode: 'contain' }} source={{ uri: userData.photoUrl}} />
-          </View>}
-          
-        {userData == null && <View>
-            <Image source={require(`~/Assets/Images/bakery.jpg`)}/>
-            </View>}
-        </>
+        <ScrollView>
+            <InfoTextBold>
+                이웃 크리스천
+            </InfoTextBold>
+            <FlatList
+                horizontal={true}
+                data={neighbors}
+                renderItem={({item}) => (<UserCardSquare member={item} />)}
+            />
+        </ScrollView>
     )
 }
 
@@ -43,7 +68,7 @@ const HomeStackNavi = () => {
             <Stack.Screen 
                 name={'HomeMain'}
                 component={HomeMain}
-                options={{headerShown: false}}
+                options={{title: "우리동네 크리스천"}}
             />
             <Stack.Screen
                 name="SearchChurchPage"
