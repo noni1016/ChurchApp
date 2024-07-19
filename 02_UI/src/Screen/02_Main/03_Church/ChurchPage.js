@@ -229,7 +229,7 @@ const Feeds = ({church, reload, setReload, isMember, navigation}) => {
 
     return (
         <>
-            {feeds.map((feed, index) => (<Feed groupType={'Church'} group={church} feed={feed} key={index} onFeedChange={() => {setReload(!reload)}} isMember={isMember} navigation={navigation}/>))}
+            {feeds.map((feed, index) => (<Feed groupType={'Church'} group={church} feed={feed} key={index} reload={reload} setReload={setReload} isMember={isMember} navigation={navigation}/>))}
         </>
     );
 }

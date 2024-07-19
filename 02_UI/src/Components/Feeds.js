@@ -25,7 +25,7 @@ const Feeds = ({club, feedAdded, reload, setReload, isMember, navigation}) => {
     return (
         <>
             {clubFeeds.map((feed, index) => (
-                <Feed groupType={'Club'} group={club} feed={feed} key={index} onFeedChange={() => setReload(!reload)} isMember={isMember} navigation={navigation}/>
+                <Feed groupType={'Club'} group={club} feed={feed} key={index} reload={reload} setReload={setReload} isMember={isMember} navigation={navigation}/>
             ))}
             {/* <Temp />             */}
         </>
