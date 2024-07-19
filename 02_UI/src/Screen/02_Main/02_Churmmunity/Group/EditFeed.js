@@ -235,7 +235,7 @@ const EditFeed = ({route, navigation}) => {
             method: fetchMethod,
             body : JSON.stringify({groupId: group.id, authorId: userData.id, location: location, time: sendDate, contentText: textInput, notice : isNotice}),
             headers: {'Content-Type': 'application/json'}
-        }).then(res => res.json()).then(res => {setReload(!reload); navigation.goBack();})
+        }).then(res => res.json()).then(res => {console.log(setReload); setReload(!reload); navigation.goBack();})
         // }).then(res => res.json()).then(res => {navigation.navigate('ClubPage', {tabIdx: 1, edit: true, navigation: navigation});})
     }
 

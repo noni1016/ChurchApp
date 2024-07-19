@@ -84,7 +84,7 @@ const CommentInputContainer = Styled.View`
 
 
 
-const Feed = ({groupType, group, feed, onFeedChange, isMember, navigation}) => {
+const Feed = ({groupType, group, feed, isMember, reload, setReload, navigation}) => {
     const domain = useContext(DomainContext);
     const {userData} = useContext(UserData);
     let [feedAuthorData, setFeedAuthorData] = useState();
@@ -107,7 +107,7 @@ const Feed = ({groupType, group, feed, onFeedChange, isMember, navigation}) => {
     
     useEffect(() => {
         if (feed.contentImg) {
-            setFeedImgUrl(`${domain}/${feed.contentImg}`);
+            setFeedImgUrl(`${domain}/${feed.contentImg}`+ "?cache="+Math.random());
         }
     }, [feed])
 
@@ -167,7 +167,7 @@ const Feed = ({groupType, group, feed, onFeedChange, isMember, navigation}) => {
                     if (feedAuthorData.id == userData.id) tabNavi.navigate('Profile', {member: feedAuthorData});
                     else navigation.navigate('Profile', {member: feedAuthorData});
                 }}>
-                    <Image style={{ backgroundColor: 'transparent', width: 50, height: 50}} source={feedAuthorData ? {uri: `${domain}/Profile/${feedAuthorData.photo}`} : null } />
+                    <Image style={{ backgroundColor: 'transparent', width: 50, height: 50}} source={feedAuthorData ? {uri: `${domain}/Profile/${feedAuthorData.photo}` + "?cache="+Math.random()} : null } />
                 </TouchableOpacity>
                 <HeaderInfo>
                     {feedAuthorData && 
@@ -226,14 +226,14 @@ const Feed = ({groupType, group, feed, onFeedChange, isMember, navigation}) => {
 
             <ActionSheet ref={actionSheetRef}>
                 <View>
-                    <ActionSheetBtn OnPressMethod={() => {navigation.navigate('EditFeed', {edit: true, groupType: groupType, group: group, feed: feed, navigation: navigation});}}>Edit</ActionSheetBtn>
+                    <ActionSheetBtn OnPressMethod={() => {navigation.navigate('EditFeed', {edit: true, groupType: groupType, group: group, feed: feed, reload: reload, setReload: setReload, navigation: navigation});}}>Edit</ActionSheetBtn>
                     <ActionSheetBtn OnPressMethod={() => {
                         fetch(`${domain}/${groupType}/${group.id}/Feed/${feed.id}`, {
                             method: 'DELETE',
                             headers: {
                                 'Content-Type': 'application/json'
                             },
-                        }).then((res) => res.json()).then((res) => {alert(`Delete Feed ${feed.id} ${res}`); actionSheetRef.current?.setModalVisible(false); onFeedChange();})}}>Delete</ActionSheetBtn>
+                        }).then((res) => res.json()).then((res) => {alert(`Delete Feed ${feed.id} ${res}`); actionSheetRef.current?.setModalVisible(false); setReload(!reload);})}}>Delete</ActionSheetBtn>
                     <ActionSheetBtn OnPressMethod={() => actionSheetRef.current?.setModalVisible(false)}>Cancel</ActionSheetBtn>
                 </View>
             </ActionSheet>

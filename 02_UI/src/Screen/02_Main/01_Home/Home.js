@@ -119,7 +119,7 @@ const Feeds = ({reload, setReload, navigation}) => {
     return (
         <>
             {feeds.map((item, index) => (
-                <Feed groupType={'Home'} group={fakeGroup} feed={item} key={index} onFeedChange={() => {setReload(!reload)}} isMember={true} navigation={navigation}/>
+                <Feed groupType={'Home'} group={fakeGroup} feed={item} key={index} reload={reload} setReload={setReload} isMember={true} navigation={navigation}/>
             ))}
         </>
         // <FlatList
