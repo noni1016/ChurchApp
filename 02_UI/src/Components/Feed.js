@@ -142,6 +142,7 @@ const Feed = ({groupType, group, feed, onFeedChange, isMember, navigation}) => {
         let groupId = 0;
         if (groupType == 'Club') groupId = feed.clubId;
         else if (groupType == 'Church') groupId = feed.churchId;
+        else groupId = 0;
         fetch(`${domain}/${groupType}/${groupId}/Feed/${feed.id}/Comment`, {
             method: 'POST',
             body: JSON.stringify(sendCommentData),            
