@@ -42,7 +42,7 @@ app.use('/User', require('./routes/01_User/User'));
 app.use('/Club', require('./routes/03_Churmmunity/Club')); // /churmmunity/ 로 접근하는 url 요청 처리
 app.use('/Group', require('./routes/03_Churmmunity/Group')); // Club, Spot 공통 기능
 app.use('/Church', require('./routes/04_Church/Church'));  //교회찾기 추가 등등
-// app.use('/Spot', require('./routes/03_Churmmunity/Spot')); // /churmmunity/ 로 접근하는 url 요청 처리
+app.use('/Spot', require('./routes/03_Churmmunity/Spot')); // /churmmunity/ 로 접근하는 url 요청 처리
 // app.use('/Auth', require('./routes/01_Auth/Auth'));
 
 //catch unCaughtException 
