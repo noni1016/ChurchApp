@@ -110,9 +110,9 @@ router.get('/:clubId/Exit/:userId', async (req, res) => {
     });
 })
 
-// Get Feeds
+// Get ClubFeeds
 router.get('/:clubId/Feeds', (req, res) => {
-    let sql = `SELECT * FROM Feed WHERE clubId = ${req.params.clubId} ORDER BY time DESC`
+    let sql = `SELECT * FROM ClubFeed WHERE clubId = ${req.params.clubId} ORDER BY time DESC`
     console.log(sql);
     conn.query(sql, function (error, rows, fields) { // sql 쿼리 수행
         if (!error) {
@@ -124,9 +124,9 @@ router.get('/:clubId/Feeds', (req, res) => {
     });
 })
 
-// Get Feed Comments
+// Get ClubFeed Comments
 router.get('/:clubId/Feed/:feedId/Comments', (req, res) => {
-    let sql = `SELECT * FROM Comment WHERE feedId = ${req.params.feedId} ORDER BY time DESC`
+    let sql = `SELECT * FROM ClubComment WHERE feedId = ${req.params.feedId} ORDER BY time DESC`
     console.log(sql);
     conn.query(sql, function (error, rows, fields) { // sql 쿼리 수행
         if (!error) {
@@ -137,9 +137,9 @@ router.get('/:clubId/Feed/:feedId/Comments', (req, res) => {
     });
 })
 
-// Get Feed Images
+// Get ClubFeed Images
 router.get('/:clubId/Imgs', (req, res) => {
-    let sql = `SELECT contentImg FROM Feed WHERE clubId = ${req.params.clubId} AND contentImg != 'NULL' ORDER BY time DESC`
+    let sql = `SELECT contentImg FROM ClubFeed WHERE clubId = ${req.params.clubId} AND contentImg != 'NULL' ORDER BY time DESC`
     console.log(sql);
     conn.query(sql, function (error, rows, fields) { // sql 쿼리 수행
         if (!error) {
@@ -155,12 +155,12 @@ router.get('/:clubId/Imgs', (req, res) => {
 const uploadFeedImg = multer({
     storage: multer.diskStorage({
         destination: function (req, file, cb) {
-            cb(null, 'public/FeedImg');
+            cb(null, 'public/ClubFeedImg');
         },
         filename(req, file, cb) {
             console.log(file.originalname);
             let maxId = -1;
-            let sql = 'SELECT MAX(id) FROM Feed';
+            let sql = 'SELECT MAX(id) FROM ClubFeed';
             conn.query(sql, function (error, rows, fields) {
                 if (!error) {
                     var result = rows[0];
@@ -190,7 +190,7 @@ router.post('/Feed/Img', uploadFeedImg.single('file'), async (req, res, next) =>
 const putFeedImg = multer({
     storage: multer.diskStorage({
         destination: function (req, file, cb) {
-            cb(null, 'public/FeedImg');
+            cb(null, 'public/ClubFeedImg');
         },
         filename(req, file, cb) {
             console.log(file.originalname);
@@ -214,12 +214,12 @@ router.post('/Feed', (req, res) => {
     let sql = ``;
     if (imgUpload)
     {
-        sql = `INSERT INTO Feed (clubId, authorId, location, time, contentImg, contentText, notice) VALUES ('${req.body.groupId}', '${req.body.authorId}', "${req.body.location}", '${req.body.time}', '/FeedImg/${fileName}', "${req.body.contentText}", "${req.body.notice}")`;
+        sql = `INSERT INTO ClubFeed (clubId, authorId, location, time, contentImg, contentText, notice) VALUES ('${req.body.groupId}', '${req.body.authorId}', "${req.body.location}", '${req.body.time}', '/ClubFeedImg/${fileName}', "${req.body.contentText}", "${req.body.notice}")`;
         imgUpload = false;
     }
     else
     {
-        sql = `INSERT INTO Feed (clubId, authorId, location, time, contentText, notice) VALUES ('${req.body.groupId}', '${req.body.authorId}', "${req.body.location}", '${req.body.time}', "${req.body.contentText}", "${req.body.notice}")`;
+        sql = `INSERT INTO ClubFeed (clubId, authorId, location, time, contentText, notice) VALUES ('${req.body.groupId}', '${req.body.authorId}', "${req.body.location}", '${req.body.time}', "${req.body.contentText}", "${req.body.notice}")`;
     }
     console.log(sql);
     conn.query(sql, function (error, rows, fields) { // sql ���� ����
@@ -234,17 +234,17 @@ router.post('/Feed', (req, res) => {
 })    
 
 // Update(Put) Feed Text 
-router.put('/Feed/:id', (req, res) => {
+router.put('/ClubFeed/:id', (req, res) => {
     console.log(req.body);
     let sql = ``;
     if (imgUpload)
     {
-        sql = `UPDATE Feed SET clubId = '${req.body.groupId}', location = "${req.body.location}", contentImg = "/FeedImg/${fileName}", contentText = "${req.body.contentText}" WHERE id = ${req.params.id}`;
+        sql = `UPDATE ClubFeed SET clubId = '${req.body.groupId}', location = "${req.body.location}", contentImg = "/ClubFeedImg/${fileName}", contentText = "${req.body.contentText}" WHERE id = ${req.params.id}`;
         imgUpload = false;
     }
     else
     {
-        sql = `UPDATE Feed SET clubId = '${req.body.groupId}', location = "${req.body.location}", contentText = "${req.body.contentText}" WHERE id = ${req.params.id}`;
+        sql = `UPDATE ClubFeed SET clubId = '${req.body.groupId}', location = "${req.body.location}", contentText = "${req.body.contentText}" WHERE id = ${req.params.id}`;
     }
     console.log(sql);
     conn.query(sql, function (error, rows, fields) { // sql ���� ����
@@ -260,7 +260,7 @@ router.put('/Feed/:id', (req, res) => {
 
 // Upload(Post) Feed Comment
 router.post('/:clubId/Feed/:feedId/Comment', (req, res) => {
-    let sql = `INSERT INTO Comment (clubId, feedId, authorId, text) VALUES (${req.params.clubId}, ${req.params.feedId}, ${req.body.authorId}, '${req.body.text}')`;
+    let sql = `INSERT INTO ClubComment (clubId, feedId, authorId, text) VALUES (${req.params.clubId}, ${req.params.feedId}, ${req.body.authorId}, '${req.body.text}')`;
     console.log(sql);
     conn.query(sql, function (error, rows, fields) { // sql ���� ����
         if (!error) {
@@ -303,7 +303,7 @@ router.delete('/:clubId/Feed/:feedId', async (req, res) => {
 
 // Get Notices
 router.get('/:clubId/Notices', (req, res) => {
-    let sql = `SELECT * FROM Feed WHERE clubId = ${req.params.clubId} AND notice = true ORDER BY time DESC`
+    let sql = `SELECT * FROM ClubFeed WHERE clubId = ${req.params.clubId} AND notice = true ORDER BY time DESC`
     console.log(sql);
     conn.query(sql, function (error, rows, fields) { // sql ���� ����
         if (!error) {
