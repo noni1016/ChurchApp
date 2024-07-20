@@ -384,6 +384,69 @@ router.get('/:churchId/Imgs', (req, res) => {
     });
 })
 
+// Update Feed Image
+const putFeedImg = multer({
+    storage: multer.diskStorage({
+        destination: function (req, file, cb) {
+            cb(null, 'public/ChurchFeedImg');
+        },
+        filename(req, file, cb) {
+            console.log(file.originalname);
+                var temp = file.originalname.split('.');
+                var fileExt = temp[temp.length - 1];
+                fileName = 'FeedId' + req.params.id + '.' + fileExt;         
+                cb(null, fileName);
+        },
+    }),
+})
+
+router.put('/Feed/Img/:id', putFeedImg.single('file'), async (req, res, next) => {
+    console.log(req.file.filename);
+    imgUpload = true;
+    res.send(true);
+})
+
+// Update(Put) Feed Text
+router.put('/Feed/:id', (req, res) => {
+    console.log(req.body);
+    let sql = `UPDATE ChurchFeed SET location = "${req.body.location}", contentText = "${req.body.contentText}" WHERE id = ${req.params.id}`;
+    console.log(sql);
+    conn.query(sql, function (error, rows, fields) {
+        if (!error) {
+            res.send(rows);
+        } else {
+            console.log('query error : ' + error);
+        }
+    })
+})
+
+router.delete('/:churchId/Feed/:feedId', async (req, res) => {
+    let imgSrc = '';
+    let sql1 = `SELECT contentImg from ChurchFeed WHERE id=${req.params.feedId}`;
+    let sql2 = `DELETE FROM ChurchFeed WHERE id=${req.params.feedId}`;
+    console.log(sql1);
+    console.log(sql2);
+    try {
+        await conn.beginTransaction();
+        await conn.query(sql1, (error, rows) => {
+            imgSrc = rows[0];
+        });
+        await conn.query(sql2, (error, rows) => {
+            if (req.params.imgSrc == '-1')
+            {
+                fs.unlink(`./public/${imgSrc}`, (err) => {
+                    err ? console.log(imgSrc) : console.log(`${imgSrc}를 정상적으로 삭제했습니다`);
+                  })
+            }
+        });
+        await conn.commit();
+        res.send({ result: true });
+    } catch (err) {
+        console.log(err)
+        await conn.rollback()
+        res.send({ result: false });
+    }    
+})
 
 // Member
 router.put('/Leader/:churchId/:memberId', async (req, res) => {

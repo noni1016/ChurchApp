@@ -13,7 +13,8 @@ import DaumMap from '~/Screen/03_Map/DaumMapController';
 import RectangleBtn from '~/Components/RectangleBtn';
 import GroupMemProfile from '~/Components/GroupMemProfile';
 import {launchImageLibrary} from 'react-native-image-picker';
-import SearchLocate from '~/Screen/03_Map/SearchLocate';
+//import SearchLocate from '~/Screen/03_Map/SearchLocate';
+
 
 const Title = Styled.Text`
     height: 30px;
@@ -65,8 +66,8 @@ const EditChurchPage = ({route, navigation}) => {
     const [isLeader, setIsLeader] = useState(false);
     const [originData, setOriginData] = useState(churchData);
 
-    const [imgSrc, setImgSrc] = useState({uri: `${domain}/ChurchMainImg/${churchData.mainImg}`});
-    const [imgUrl, setImgUrl] = useState(`${domain}/ChurchMainImg/${churchData.mainImg}`);
+    const [imgSrc, setImgSrc] = useState({uri: `${domain}/ChurchMainImg/${churchData.mainImg}`+ "?cache="+Math.random()});
+    const [imgUrl, setImgUrl] = useState(`${domain}/ChurchMainImg/${churchData.mainImg}`+ "?cache="+Math.random());
 
     /* 멤버 정보 불러오기 */
     useEffect(() => {
@@ -228,7 +229,9 @@ const ChurchPageHome = ({data, members, isMember, isLeader, navigator}) => {
     const {userData, setUserData, updateUserChurch} = useContext(UserData);
     const isFocused = useIsFocused();
     const [joinText, setJoinText] = useState('활동 교회로 등록');
-
+    const [locate, setLocate] = useState([0,0]);
+    const [region, setRegion] = useState('');
+    
     return (
         <Container>
             <Input
@@ -259,12 +262,7 @@ const ChurchPageHome = ({data, members, isMember, isLeader, navigator}) => {
                 }]}                
                 /> 
             }
-            <Icon1 name="settings-outline" size={26} color={'black'} onPress={() => 
-                {
-                    //navigator.replace('SearchLocate');
-                    navigator.replace('SearchLocate', {setLocateProcess : setLocate, setRegionProcess : setRegion, navigation: navigator})
-                    //alert('위치 교체')
-                }} />
+            <Icon1 name="settings-outline" size={26} color={'black'} onPress={() => {{navigator.navigate('SearchLocate', {setLocateProcess : setLocate, setRegionProcess : setRegion, navigation: navigator})}}} />
         </Container>
     )
 };

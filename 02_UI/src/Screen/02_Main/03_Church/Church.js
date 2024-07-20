@@ -20,6 +20,7 @@ import ChurchCardsColView from './ChurchCardsColView';
 import { ProfileMain } from '../04_Profile/Profile';
 import ClubPage from '../02_Churmmunity/Group/ClubPage';
 import SpotPage from '../02_Churmmunity/Group/SpotPage';
+import SearchLocate from '~/Screen/03_Map/SearchLocate'
 
 const Stack = createStackNavigator();
 
@@ -190,6 +191,10 @@ const Church = ({navigation}) => {
                     headerBackTitleVisible: false,
                     title: '번개 상세보기'
                 }}
+            />
+            <Stack.Screen
+                name={'SearchLocate'}
+                component={SearchLocate}
             />
         </Stack.Navigator>
     );

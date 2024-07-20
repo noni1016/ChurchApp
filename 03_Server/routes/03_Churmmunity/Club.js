@@ -234,7 +234,7 @@ router.post('/Feed', (req, res) => {
 })    
 
 // Update(Put) Feed Text 
-router.put('/ClubFeed/:id', (req, res) => {
+router.put('/Feed/:id', (req, res) => {
     console.log(req.body);
     let sql = ``;
     if (imgUpload)
@@ -273,8 +273,8 @@ router.post('/:clubId/Feed/:feedId/Comment', (req, res) => {
 
 router.delete('/:clubId/Feed/:feedId', async (req, res) => {
     let imgSrc = '';
-    let sql1 = `SELECT contentImg from Feed WHERE id=${req.params.feedId}`;
-    let sql2 = `DELETE FROM Feed WHERE id=${req.params.feedId}`;
+    let sql1 = `SELECT contentImg from ClubFeed WHERE id=${req.params.feedId}`;
+    let sql2 = `DELETE FROM ClubFeed WHERE id=${req.params.feedId}`;
     console.log(sql1);
     console.log(sql2);
     try {
