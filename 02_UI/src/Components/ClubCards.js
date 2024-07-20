@@ -41,6 +41,7 @@ const ShowMore = Styled.Text`
 
 const Title = Styled.Text`
     flex: 9;
+    height: 90%;
     color: black;
     font-size: 25px;
     font-family: 'DoHyeon-Regular';

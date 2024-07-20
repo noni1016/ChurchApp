@@ -16,6 +16,12 @@ import DaumMap from '~/Screen/03_Map/DaumMapController';
 import EditFeed from '../02_Churmmunity/Group/EditFeed';
 import Comments from '~/Components/Comments';
 import Feed from '~/Components/Feed';
+import SpotCards from '~/Components/SpotCards';
+import ClubCards from '~/Components/ClubCards';
+import ClubPage from '~/Screen/02_Main/02_Churmmunity/Group/ClubPage'
+import SpotPage from '~/Screen/02_Main/02_Churmmunity/Group/SpotPage'
+import {TabNavi} from '~/Context/Navi';
+import {ProfileMain} from '~/Screen/02_Main/04_Profile/Profile';
 
 const Stack = createStackNavigator();
 
@@ -58,6 +64,13 @@ const HomeMain = ({navigation}) => {
     const [neighbors, setNeighbors] = useState([]);
     const isFocused = useIsFocused();
     const [reload, setReload] = useState(false);
+    const [newSpot, setNewSpot] = useState([]);
+    const [newClub, setNewClub] = useState([]);
+
+    useEffect(() => {
+        fetch(`${domain}/Group/Sort/Spot/past = 0/id DESC/7`).then(res => res.json()).then(res => {setNewSpot(res)});
+        fetch(`${domain}/Group/Sort/Club/1/id DESC/7`).then(res => res.json()).then(res => {setNewClub(res)});
+    }, [])
 
     /* 반경 10 km 이내의 이웃 크리스천 불러오기. 가까운 순서로 정렬 */
     useEffect(() => {
@@ -96,8 +109,8 @@ const HomeMain = ({navigation}) => {
             }
             <InfoTextBold18>이야기</InfoTextBold18>   
             <Feeds reload={reload} setReload={setReload} navigation={navigation}/>
-            <InfoTextBold18>새로운 번개 예고</InfoTextBold18>   
-            <InfoTextBold18>새로운 공동체</InfoTextBold18>   
+            <SpotCards title={'새로운 번개 예고'} datas={newSpot} stackNavi={navigation}/>
+            <ClubCards title={'새 공동체'} orgDatas={newClub} stackNavi={navigation}/>
         </ScrollView>
 
         <AddBtn OnPressMethod={() => {navigation.navigate('EditFeed', {edit: false, groupType: 'Home', group: {id: 0, name: 'Main Page'}, reload: reload, setReload: setReload, navigation: navigation})}}/>
@@ -164,11 +177,39 @@ const HomeStackNavi = () => {
                 name={'Comments'}
                 component={Comments}
             />
+            <Stack.Screen
+                name="SpotPage"
+                component={SpotPage}
+                options={{
+                    headerShown: false,
+                    headerBackTitleVisible: false,
+                    title: '번개 상세보기'
+                }}
+            />
+            <Stack.Screen
+                name="ClubPage"
+                component={ClubPage}
+                options={{
+                    headerShown: false,
+                    headerBackTitleVisible: false,
+                    title: '소모임 상세보기'
+                }}
+            />
+            <Stack.Screen
+                name="Profile"
+                component={ProfileMain}
+            />
         </Stack.Navigator>
     )
 }
 
-const Home = () => {
+const Home = ({navigation}) => {
+    const {setTabNavi} = useContext(TabNavi);
+
+    useEffect(() => {
+        setTabNavi(navigation);
+    }, [navigation])
+
     return (
         <HomeStackNavi />
     )
