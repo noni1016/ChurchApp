@@ -21,6 +21,7 @@ import { ProfileMain } from '../04_Profile/Profile';
 import ClubPage from '../02_Churmmunity/Group/ClubPage';
 import SpotPage from '../02_Churmmunity/Group/SpotPage';
 import SearchLocate from '~/Screen/03_Map/SearchLocate'
+import SearchChurchLocate from '~/Screen/03_Map/SearchChurchLocate';
 
 const Stack = createStackNavigator();
 
@@ -195,6 +196,10 @@ const Church = ({navigation}) => {
             <Stack.Screen
                 name={'SearchLocate'}
                 component={SearchLocate}
+            />
+            <Stack.Screen
+                name={'SearchChurchLocate'}
+                component={SearchChurchLocate}
             />
         </Stack.Navigator>
     );

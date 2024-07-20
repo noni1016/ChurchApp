@@ -231,6 +231,7 @@ const ChurchPageHome = ({data, members, isMember, isLeader, navigator}) => {
     const [joinText, setJoinText] = useState('활동 교회로 등록');
     const [locate, setLocate] = useState([0,0]);
     const [region, setRegion] = useState('');
+    const [originData, setOriginData] = useState(data);
     
     return (
         <Container>
@@ -262,7 +263,7 @@ const ChurchPageHome = ({data, members, isMember, isLeader, navigator}) => {
                 }]}                
                 /> 
             }
-            <Icon1 name="settings-outline" size={26} color={'black'} onPress={() => {{navigator.navigate('SearchLocate', {setLocateProcess : setLocate, setRegionProcess : setRegion, navigation: navigator})}}} />
+            <Icon1 name="settings-outline" size={26} color={'black'} onPress={() => {{navigator.navigate('SearchChurchLocate', {data: data, setLocateProcess : setLocate, setRegionProcess : setRegion, navigation: navigator})}}} />
         </Container>
     )
 };
