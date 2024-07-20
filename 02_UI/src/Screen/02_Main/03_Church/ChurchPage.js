@@ -14,6 +14,7 @@ import RectangleBtn from '~/Components/RectangleBtn';
 import GroupMemProfile from '~/Components/GroupMemProfile';
 import Feed from '~/Components/Feed';
 import Photos from '~/Components/Photos';
+import { TabNavi } from '~/Context/Navi';
 
 const Header = Styled.View`
     flex-direction: row;
@@ -154,12 +155,10 @@ const NumGroupMemCont = Styled.View`
 
 const ChurchPageHome = ({data, members, isMember, isLeader, updateMember, stackNavi}) => {
     const domain = useContext(DomainContext);    
+    const {tabNavi} = useContext(TabNavi);
     const {userData, setUserData, updateUserChurch} = useContext(UserData);
     const isFocused = useIsFocused();
     const [joinText, setJoinText] = useState('활동 교회로 등록');
-
-    console.log("꺄아아");
-    console.log(data);
 
     useEffect(() => {
         console.log(`isMember: ${isMember}`)
@@ -209,7 +208,11 @@ const ChurchPageHome = ({data, members, isMember, isLeader, updateMember, stackN
                 {isLeader && <Icon1 name="settings-outline" size={18} color={'black'} onPress={() => stackNavi.navigate('EditMembers', {groupType: 'Church', group: data, members: members, updateMember: updateMember, navigation: stackNavi})} />}
             </NumGroupMemCont>
 
-            {members.map((member, index) => (<GroupMemProfile key={index.toString()} member={member} isLeader={member.id == data.leader} />))}
+            {members.map((member, index) => (<GroupMemProfile key={index.toString()} member={member} isLeader={member.id == data.leader} onPress={() => {
+                console.log("멤버맵안!!!");
+                if (member.id == userData.id) tabNavi.navigate('Profile', {member: member});
+                else stackNavi.navigate('Profile', {member: member});
+            }} />))}
         </Container>
     )
 };
@@ -226,7 +229,7 @@ const Feeds = ({church, reload, setReload, isMember, navigation}) => {
 
     return (
         <>
-            {feeds.map((feed, index) => (<Feed groupType={'Church'} group={church} feed={feed} key={index} onFeedChange={() => {setReload(!reload)}} isMember={isMember} navigation={navigation}/>))}
+            {feeds.map((feed, index) => (<Feed groupType={'Church'} group={church} feed={feed} key={index} reload={reload} setReload={setReload} isMember={isMember} navigation={navigation}/>))}
         </>
     );
 }

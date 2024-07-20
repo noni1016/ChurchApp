@@ -5,6 +5,7 @@ import DaumMap from '~/Screen/03_Map/DaumMapController';
 import { useIsFocused } from '@react-navigation/native';
 import {UserData} from '~/Context/User';
 import GroupMemProfile from './GroupMemProfile';
+import { TabNavi } from '~/Context/Navi';
 
 const Container = Styled.View`
     padding: 10px 10px 0px 10px; //상 우 하 좌
@@ -31,6 +32,7 @@ const Divider = Styled.View`
 const SpotPageHome = ({data, members, isLeader, leader, stackNavi}) => {
     const isFocused = useIsFocused();
     const {userData} = useContext(UserData);
+    const {tabNavi} = useContext(TabNavi);
 
     return (
         <Container>
@@ -61,7 +63,10 @@ const SpotPageHome = ({data, members, isLeader, leader, stackNavi}) => {
             /> }
             <Divider />
             <Title>리더</Title>
-            <GroupMemProfile member={leader} isLeader={true} />
+            <GroupMemProfile member={leader} isLeader={true} onPress={() => {
+                if (leader.id == userData.id) tabNavi.navigate('Profile', {member: leader});
+                else stackNavi.navigate('Profile', {member: leader});
+            }}/>
         </Container>
     )
 };

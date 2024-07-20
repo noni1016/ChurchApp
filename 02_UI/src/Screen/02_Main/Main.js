@@ -45,7 +45,8 @@ const BottomTabNavi = () => {
             />
             <BottomTab.Screen
                 name="Church"
-                children={(navigation) => <Church navigation={navigation}/>}
+                // children={(navigation) => <Church navigation={navigation}/>}
+                component={Church}
                 options={{
                     headerShown: false,
                     tabBarIcon: ({ color }) => <Icon2 name="church" color={color} size={26}/>
@@ -54,6 +55,7 @@ const BottomTabNavi = () => {
             <BottomTab.Screen
                 name="Profile"
                 children={(navigation) => <Profile navigation={navigation}/>}
+                // component={Profile}
                 options={{
                     headerShown: false,
                     tabBarIcon: ({ color }) => <Icon name="account-box" color={color} size={26} />
