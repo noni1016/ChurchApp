@@ -9,7 +9,7 @@ import styled from 'styled-components/native';
 const Notification = ({route, navigation}) => {
 
     return (
-        
+        <Text>Notification</Text>
     )
 
 };
