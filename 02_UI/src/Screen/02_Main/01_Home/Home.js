@@ -22,6 +22,8 @@ import ClubPage from '~/Screen/02_Main/02_Churmmunity/Group/ClubPage'
 import SpotPage from '~/Screen/02_Main/02_Churmmunity/Group/SpotPage'
 import {TabNavi} from '~/Context/Navi';
 import {ProfileMain} from '~/Screen/02_Main/04_Profile/Profile';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import Notification from './Notification';
 
 const Stack = createStackNavigator();
 
@@ -149,7 +151,13 @@ const HomeStackNavi = () => {
             <Stack.Screen 
                 name={'HomeMain'}
                 component={HomeMain}
-                options={{title: "우리동네 크리스천"}}
+                options={({navigation}) => ({
+                    title: "우리동네 크리스천",
+                    headerRight: () => {
+                        if (0) return <Icon name="bell-outline" color="black" size={26} onPress={() => navigation.navigate('Notification', {navigation: navigation})} />
+                        else return <Icon name="bell-badge-outline" color="red" size={26} onPress={() => navigation.navigate('Notification', {navigation: navigation})} />
+                    }
+                })}
             />
             <Stack.Screen
                 name="SearchChurchPage"
@@ -198,6 +206,10 @@ const HomeStackNavi = () => {
             <Stack.Screen
                 name="Profile"
                 component={ProfileMain}
+            />
+            <Stack.Screen
+                name="Notification"
+                component={Notification}
             />
         </Stack.Navigator>
     )
