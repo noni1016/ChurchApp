@@ -22,6 +22,7 @@ import ClubPage from '../02_Churmmunity/Group/ClubPage';
 import SpotPage from '../02_Churmmunity/Group/SpotPage';
 import SearchLocate from '~/Screen/03_Map/SearchLocate'
 import SearchChurchLocate from '~/Screen/03_Map/SearchChurchLocate';
+import GroupNotification from '../02_Churmmunity/Group/GroupNotification';
 
 const Stack = createStackNavigator();
 
@@ -200,6 +201,14 @@ const Church = ({navigation}) => {
             <Stack.Screen
                 name={'SearchChurchLocate'}
                 component={SearchChurchLocate}
+            />
+            <Stack.Screen
+                name="GroupNotification"
+                component={GroupNotification}
+            />
+            <Stack.Screen
+                name="GroupNotification"
+                component={GroupNotification}
             />
         </Stack.Navigator>
     );

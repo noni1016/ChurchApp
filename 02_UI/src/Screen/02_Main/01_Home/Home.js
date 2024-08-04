@@ -24,6 +24,10 @@ import {TabNavi} from '~/Context/Navi';
 import {ProfileMain} from '~/Screen/02_Main/04_Profile/Profile';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Notification from './Notification';
+import ChurchPage from '../03_Church/ChurchPage';
+import EditChurchPage from '../03_Church/EditChurchPage';
+import EditMembers from '../02_Churmmunity/Group/EditMembers';
+import GroupNotification from '../02_Churmmunity/Group/GroupNotification';
 
 const Stack = createStackNavigator();
 
@@ -43,7 +47,7 @@ const InfoTextBold18 = styled.Text`
     height: 30px;
 `;
 
-const UserCardSquare = ({member}) => {
+const UserCardSquare = ({member, navigation}) => {
     const domain = useContext(DomainContext);
 
     useEffect(() => {
@@ -52,7 +56,7 @@ const UserCardSquare = ({member}) => {
     })
 
     return (
-        <TouchableOpacity style={{alignItems: 'center', margin: 2}} onPress={() => {alert("사람")}}>
+        <TouchableOpacity style={{alignItems: 'center', margin: 2}} onPress={() => navigation.navigate("Profile", {member: member})}>
             <Image style={{backgroundColor: 'transparent', width: 70, height: 70, margin: 2, borderRadius: 20, borderColor: 'black',  borderWidth: 2}} source={{uri: `${domain}/Profile/${member.photo}` + "?cache="+Math.random()}}/>
             <Text>{member.name}</Text>
         </TouchableOpacity>
@@ -205,7 +209,7 @@ const HomeMain = ({navigation}) => {
             <FlatList
                 horizontal={true}
                 data={neighbors}
-                renderItem={({item}) => (<UserCardSquare member={item} />)}
+                renderItem={({item}) => (<UserCardSquare member={item} navigation={navigation}/>)}
             />
             <InfoTextBold>크리스천 맵</InfoTextBold>
             {isFocused && userData.location_ll && markerList != null &&
@@ -264,10 +268,10 @@ const HomeStackNavi = () => {
                 component={HomeMain}
                 options={({navigation}) => ({
                     title: "우리동네 크리스천",
-                    headerRight: () => {
-                        if (0) return <Icon name="bell-outline" color="black" size={26} onPress={() => navigation.navigate('Notification', {navigation: navigation})} />
-                        else return <Icon name="bell-badge-outline" color="red" size={26} onPress={() => navigation.navigate('Notification', {navigation: navigation})} />
-                    }
+                    // headerRight: () => {
+                    //     if (0) return <Icon name="bell-outline" color="black" size={26} onPress={() => navigation.navigate('Notification', {navigation: navigation})} />
+                    //     else return <Icon name="bell-badge-outline" color="red" size={26} onPress={() => navigation.navigate('Notification', {navigation: navigation})} />
+                    // }
                 })}
             />
             <Stack.Screen
@@ -321,6 +325,22 @@ const HomeStackNavi = () => {
             <Stack.Screen
                 name="Notification"
                 component={Notification}
+            />
+            <Stack.Screen
+                name={'ChurchPage'}
+                component={ChurchPage}
+            />
+            <Stack.Screen
+                name={'EditChurchPage'}
+                component={EditChurchPage}
+            />
+            <Stack.Screen
+                name={'EditMembers'}
+                component={EditMembers}
+            />
+            <Stack.Screen
+                name="GroupNotification"
+                component={GroupNotification}
             />
         </Stack.Navigator>
     )
