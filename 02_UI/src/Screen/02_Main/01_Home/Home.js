@@ -47,6 +47,25 @@ const InfoTextBold18 = styled.Text`
     height: 30px;
 `;
 
+const TypeSelectBtnsBox = styled.View`
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
+`;
+const TypeSelectBtn = styled.Text`
+    text-align: center;
+    text-align-vertical: center;
+    width: 70px;
+    height: 40px;
+    background-color: ${props => props.isSelected ? 'blue' : 'transparent'};
+    color: ${props => props.isSelected ? 'white' : 'blue'};
+    border: 1px;
+    border-radius: 10px;
+    border-color: blue;
+    font-size: 18px;
+    font-family: 'DoHyeon-Regular';
+`;
+
 const UserCardSquare = ({member, navigation}) => {
     const domain = useContext(DomainContext);
 
@@ -167,41 +186,70 @@ const HomeMain = ({navigation}) => {
 
     useEffect(() => {
         var temp = [];
-        if(markerCategory == "All")
-        {
-            neighborMarker.forEach(element => {
-                temp.push(element)
-            })
-            clubMarker.forEach(element => {
-                temp.push(element)
-            })
-            spotMarker.forEach(element => {
-                temp.push(element)
-            })
+        temp.push({
+            allClear: true,
+        })
+        neighborMarker.forEach(element => {
+            temp.push(element)
+        })
+        clubMarker.forEach(element => {
+            temp.push(element)
+        })
+        spotMarker.forEach(element => {
+            temp.push(element)
+        })
+        setMarkers(temp);
+    }, [spotMarker, neighborMarker, clubMarker])
+
+    useEffect(() => {
+        var temp = [];
+        temp.push({
+            allClear: true,
+        })
+        if (markerCategory == "All") {
+            if (neighborMarker != null) {
+                neighborMarker.forEach(element => {
+                    temp.push(element)
+                })
+            }
+            if (clubMarker != null) {
+                clubMarker.forEach(element => {
+                    temp.push(element)
+                })
+            }
+            if (spotMarker != null) {
+                spotMarker.forEach(element => {
+                    temp.push(element)
+                })
+            }
         }
-        else if(markerCategory == "Neighbor")
+        else if(markerCategory == "User")
         {
-            neighborMarker.forEach(element => {
-                temp.push(element)
-            })
+            if (neighborMarker != null) {
+                neighborMarker.forEach(element => {
+                    temp.push(element)
+                })
+            }
         }
         else if(markerCategory == "Club")
         {
-            clubMarker.forEach(element => {
-                temp.push(element)
-            })
+            if (clubMarker != null) {
+                clubMarker.forEach(element => {
+                    temp.push(element)
+                })
+            }
         }
         else if(markerCategory == "Spot")
         {
-            spotMarker.forEach(element => {
-                temp.push(element)
-            })
+            if (spotMarker != null) {
+                spotMarker.forEach(element => {
+                    temp.push(element)
+                })
+            }
         }
         setMarkers(temp);
-        console.log(temp);
-        console.log("markerrrrrrrrr");
-        console.log(markerList);
-    }, [spotMarker, neighborMarker, clubMarker])
+    }, [spotMarker, neighborMarker, clubMarker, markerCategory])
+
     return (
         <>
         <ScrollView style={{margin: 10}}>
@@ -212,6 +260,12 @@ const HomeMain = ({navigation}) => {
                 renderItem={({item}) => (<UserCardSquare member={item} navigation={navigation}/>)}
             />
             <InfoTextBold>크리스천 맵</InfoTextBold>
+            {/* (<TypeSelectBtnsBox> */}
+                <TouchableOpacity onPress={() => setMakerCategory("All")}><TypeSelectBtn isSelected={markerCategory == "All"}>통합</TypeSelectBtn></TouchableOpacity>
+                <TouchableOpacity onPress={() => setMakerCategory("User")}><TypeSelectBtn isSelected={markerCategory == "User"}>크리스천</TypeSelectBtn></TouchableOpacity>
+                <TouchableOpacity onPress={() => setMakerCategory("Club")}><TypeSelectBtn isSelected={markerCategory == "Club"}>공동체</TypeSelectBtn></TouchableOpacity>
+                <TouchableOpacity onPress={() => setMakerCategory("Spot")}><TypeSelectBtn isSelected={markerCategory == "Spot"}>번개</TypeSelectBtn></TouchableOpacity>
+            {/* </TypeSelectBtnsBox>) */}
             {isFocused && userData.location_ll && markerList != null &&
             <DaumMap 
                 currentRegion={{
