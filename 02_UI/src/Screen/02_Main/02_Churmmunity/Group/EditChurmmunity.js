@@ -165,6 +165,9 @@ const EditChurmmunity = ({route, navigation}) => {
             setContent((current) => 
             {
                 let newContent = {...current}; 
+                if (newContent.location_ll == null) {
+                    newContent.location_ll = {x: 0, y: 0}
+                }
                 newContent.location_ll.x = locate[0]; 
                 newContent.location_ll.y = locate[1];
                 return newContent
