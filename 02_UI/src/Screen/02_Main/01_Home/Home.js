@@ -153,10 +153,10 @@ const HomeStackNavi = () => {
                 component={HomeMain}
                 options={({navigation}) => ({
                     title: "우리동네 크리스천",
-                    headerRight: () => {
-                        if (0) return <Icon name="bell-outline" color="black" size={26} onPress={() => navigation.navigate('Notification', {navigation: navigation})} />
-                        else return <Icon name="bell-badge-outline" color="red" size={26} onPress={() => navigation.navigate('Notification', {navigation: navigation})} />
-                    }
+                    // headerRight: () => {
+                    //     if (0) return <Icon name="bell-outline" color="black" size={26} onPress={() => navigation.navigate('Notification', {navigation: navigation})} />
+                    //     else return <Icon name="bell-badge-outline" color="red" size={26} onPress={() => navigation.navigate('Notification', {navigation: navigation})} />
+                    // }
                 })}
             />
             <Stack.Screen
