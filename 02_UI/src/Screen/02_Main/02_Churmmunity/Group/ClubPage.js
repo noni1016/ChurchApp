@@ -134,7 +134,7 @@ const ClubPage = ({route, navigation}) => {
                     {data.name}
                 </Title>
                 <Side>
-                <Icon2 name="notification" size={26} color={'black'} onPress={() => navigation.navigate('GroupNotification', {club: data, isLeader: isLeader})} />
+                <Icon2 name="notification" size={26} color={'black'} onPress={() => navigation.navigate('GroupNotification', {group: data, groupType: 'Club', isMember: isMember, isLeader: isLeader})} />
                 {isLeader && <Icon1 name="settings-outline" size={26} color={'black'} onPress={() => navigation.navigate('EditChurmmunity', {edit: 1, editData: data, createType: '1', navigation: navigation})} />}
                 </Side>          
             </Header>
