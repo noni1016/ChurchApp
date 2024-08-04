@@ -63,7 +63,17 @@ const HomeMain = ({navigation}) => {
     const { CalendarModule, KakaoMapModule, DaumMapModule } = NativeModules;
     const { userData, setUserData, userChurch } = useContext(UserData);
     const domain = useContext(DomainContext);
-    const [neighbors, setNeighbors] = useState([]);
+    const [neighbors, setNeighbors] = useState([]); //주변 크리스천
+    const [neighborMarker, setNeighborMarker] = useState([]);
+    
+    const [clubs, setClubs] = useState([]); // 주변 클럽
+    const [clubMarker, setClubMarker] = useState([]);
+
+    const [spots, setSpots] = useState([]); // 주변 번개
+    const [spotMarker, setSpotMarker] = useState([]);
+
+    const [markerList, setMarkers] = useState([]);
+    const [markerCategory, setMakerCategory] = useState("All");
     const isFocused = useIsFocused();
     const [reload, setReload] = useState(false);
     const [newSpot, setNewSpot] = useState([]);
@@ -79,7 +89,115 @@ const HomeMain = ({navigation}) => {
         fetch(`${domain}/User/Neighbor/${userData.id}/${userData.location_ll.x}/${userData.location_ll.y}`).then(res => res.json()).then(res => {console.log(res); setNeighbors(res)});
     }, [userData])
 
+    useEffect(() => {
+        fetch(`${domain}/Home/Club/${userData.location_ll.x}/${userData.location_ll.y}`).then(res => res.json()).then(res => {console.log(res); setClubs(res)});
+    }, [userData])
 
+    useEffect(() => {
+        fetch(`${domain}/Home/Spot/${userData.location_ll.x}/${userData.location_ll.y}`).then(res => res.json()).then(res => {console.log(res); setSpots(res)});
+    }, [userData])
+
+    useEffect(() => {
+        var temp = [];
+        temp.push({
+            latitude: parseFloat(userData.location_ll.y),
+            longitude: parseFloat(userData.location_ll.x),
+            pinColor: "red",
+            pinColorSelect: "red",
+            title: "내 위치",
+            //markerImage: userData.photo,
+            draggable: false,
+        })
+
+        neighbors.forEach(element => {
+            temp.push({
+                latitude: parseFloat(element.location_ll.y),
+                longitude: parseFloat(element.location_ll.x),
+                pinColor: "blue",
+                pinColorSelect: "yellow",
+                title: element.name,
+                draggable: false,
+            })
+        });
+
+        setNeighborMarker(temp);
+        //markerList.push(temp);
+        setMakerCategory("All");
+    }, [neighbors])
+
+    useEffect(() => {
+        var temp = [];
+        clubs.forEach(element => {
+            temp.push({
+                latitude: parseFloat(element.location_ll.y),
+                longitude: parseFloat(element.location_ll.x),
+                pinColor: "blue",
+                pinColorSelect: "yellow",
+                title: element.name,
+                draggable: false,
+            })
+        });
+
+        setClubMarker(temp);
+        //markerList.push(temp);
+        setMakerCategory("All");
+    }, [clubs])
+
+    useEffect(() => {
+        var temp = [];
+        spots.forEach(element => {
+            temp.push({
+                latitude: parseFloat(element.location_ll.y),
+                longitude: parseFloat(element.location_ll.x),
+                pinColor: "yellow",
+                pinColorSelect: "blue",
+                title: element.name,
+                draggable: false,
+            })
+        });
+
+        setSpotMarker(temp);
+        //markerList.push(temp);
+        setMakerCategory("All");
+    }, [spots])
+
+    useEffect(() => {
+        var temp = [];
+        if(markerCategory == "All")
+        {
+            neighborMarker.forEach(element => {
+                temp.push(element)
+            })
+            clubMarker.forEach(element => {
+                temp.push(element)
+            })
+            spotMarker.forEach(element => {
+                temp.push(element)
+            })
+        }
+        else if(markerCategory == "Neighbor")
+        {
+            neighborMarker.forEach(element => {
+                temp.push(element)
+            })
+        }
+        else if(markerCategory == "Club")
+        {
+            clubMarker.forEach(element => {
+                temp.push(element)
+            })
+        }
+        else if(markerCategory == "Spot")
+        {
+            spotMarker.forEach(element => {
+                temp.push(element)
+            })
+        }
+        setMarkers(temp);
+        console.log(temp);
+        console.log("markerrrrrrrrr");
+        console.log(markerList);
+    }, [spotMarker, neighborMarker, clubMarker])
     return (
         <>
         <ScrollView style={{margin: 10}}>
@@ -90,7 +208,7 @@ const HomeMain = ({navigation}) => {
                 renderItem={({item}) => (<UserCardSquare member={item} />)}
             />
             <InfoTextBold>크리스천 맵</InfoTextBold>
-            {isFocused && userData.location_ll && 
+            {isFocused && userData.location_ll && markerList != null &&
             <DaumMap 
                 currentRegion={{
                     latitude: parseFloat(userData.location_ll.y),
@@ -99,14 +217,7 @@ const HomeMain = ({navigation}) => {
                 }}
                 mapType={"Standard"}
                 style={{ width: 400, height: 400, backgroundColor: 'transparent' }}
-                markers={[{
-                    latitude: parseFloat(userData.location_ll.y),
-                    longitude: parseFloat(userData.location_ll.x),
-                    pinColor: "red",
-                    pinColorSelect: "yellow",
-                    title: "marker test",
-                    draggable: false,
-                }]}     
+                markers={markerList}     
             />
             }
             <InfoTextBold18>이야기</InfoTextBold18>   
