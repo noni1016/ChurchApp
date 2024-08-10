@@ -52,6 +52,7 @@ const TypeSelectBtnsBox = styled.View`
     justify-content: space-evenly;
     align-items: center;
 `;
+
 const TypeSelectBtn = styled.Text`
     text-align: center;
     text-align-vertical: center;
@@ -260,12 +261,12 @@ const HomeMain = ({navigation}) => {
                 renderItem={({item}) => (<UserCardSquare member={item} navigation={navigation}/>)}
             />
             <InfoTextBold>크리스천 맵</InfoTextBold>
-            {/* (<TypeSelectBtnsBox> */}
+            <TypeSelectBtnsBox>
                 <TouchableOpacity onPress={() => setMakerCategory("All")}><TypeSelectBtn isSelected={markerCategory == "All"}>통합</TypeSelectBtn></TouchableOpacity>
                 <TouchableOpacity onPress={() => setMakerCategory("User")}><TypeSelectBtn isSelected={markerCategory == "User"}>크리스천</TypeSelectBtn></TouchableOpacity>
                 <TouchableOpacity onPress={() => setMakerCategory("Club")}><TypeSelectBtn isSelected={markerCategory == "Club"}>공동체</TypeSelectBtn></TouchableOpacity>
                 <TouchableOpacity onPress={() => setMakerCategory("Spot")}><TypeSelectBtn isSelected={markerCategory == "Spot"}>번개</TypeSelectBtn></TouchableOpacity>
-            {/* </TypeSelectBtnsBox>) */}
+            </TypeSelectBtnsBox>
             {isFocused && userData.location_ll && markerList != null &&
             <DaumMap 
                 currentRegion={{
