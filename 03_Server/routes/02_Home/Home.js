@@ -177,5 +177,40 @@ router.delete('/0/Feed/:feedId', async (req, res) => {
     
 })
 
+// Club around a location
+router.get('/Club/:long/:lat', (req, res) => {    
+    let long = req.params.long ? Number(req.params.long) : 127;
+    let lat = req.params.lat ? Number(req.params.lat) : 37;
+    let sql = `SELECT * FROM ClubView ORDER BY ST_Distance_Sphere(location_ll, point(${long}, ${lat}))`;
+    console.log(sql);
+
+    conn.query(sql, function (error, rows, fields) {
+        if (!error) {
+            console.log(rows);
+            res.send(rows);
+        } else {
+            console.log('query error : ' + error);
+        }
+    });
+})
+
+// Spot around a location
+router.get('/Spot/:long/:lat', (req, res) => {    
+    let long = req.params.long ? Number(req.params.long) : 127;
+    let lat = req.params.lat ? Number(req.params.lat) : 37;
+    let sql = `SELECT * FROM SpotView ORDER BY ST_Distance_Sphere(location_ll, point(${long}, ${lat}))`;
+    console.log(sql);
+
+    conn.query(sql, function (error, rows, fields) {
+        if (!error) {
+            console.log(rows);
+            res.send(rows);
+        } else {
+            console.log('query error : ' + error);
+        }
+    });
+})
+
+
 
 module.exports = router;
