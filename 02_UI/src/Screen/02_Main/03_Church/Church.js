@@ -206,10 +206,6 @@ const Church = ({navigation}) => {
                 name="GroupNotification"
                 component={GroupNotification}
             />
-            <Stack.Screen
-                name="GroupNotification"
-                component={GroupNotification}
-            />
         </Stack.Navigator>
     );
 };

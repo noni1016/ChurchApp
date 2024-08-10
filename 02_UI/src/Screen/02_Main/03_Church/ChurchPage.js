@@ -102,7 +102,7 @@ const ChurchPage = ({route, navigation}) => {
                     <Title>
                     {data.pastor}
                     </Title>
-                    <Icon2 name="notification" size={26} color={'black'} onPress={() => alert('공지사항이 없습니다.')}/>
+                    <Icon2 name="notification" size={26} color={'black'} onPress={() => navigation.navigate('GroupNotification', {group: data, groupType: 'Church', isMember: isMember, isLeader: isLeader})}/>
                     {isLeader && <Icon1 name="settings-outline" size={26} color={'black'} onPress={() => {{navigation.navigate('EditChurchPage', {churchData : data, navigation: navigation})}}} />}
                 </Side>
             </Header>
