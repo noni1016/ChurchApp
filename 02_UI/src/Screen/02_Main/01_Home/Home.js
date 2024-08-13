@@ -294,7 +294,7 @@ const HomeMain = ({navigation}) => {
 const Feeds = ({reload, setReload, navigation}) => {
     const domain = useContext(DomainContext);
     const [feeds, setFeeds] = useState([]);
-    const fakeGroup = {id: 0}
+    const fakeGroup = {id: 0, name: 'Main Page'}
 
 
     /* 피드 100개 날짜 순서로 받아오기 */
