@@ -6,7 +6,7 @@ import SpotCard from './SpotCard';
 
 const SpotCardBox = Styled.View`
   flex-direction: column;
-  height: 320px;
+  height: 350px;
   background-color: #FFFFFF;
   margin: 20px 0px 0px 0px; //상 우 하 좌
 `;
@@ -48,7 +48,7 @@ const ShowMore = Styled.Text`
 
 const Title = Styled.Text`
     flex: 9;
-    height: 90%
+    height: 90%;
     color: black;
     font-size: 25px;
     font-family: 'DoHyeon-Regular';

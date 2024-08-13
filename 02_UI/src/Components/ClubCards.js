@@ -23,7 +23,7 @@ const Header = Styled.View`
 const Body = Styled.TouchableOpacity`
     height: 100%;
     flex: 1;
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
     justify-content: center;
     width: ${Dimensions.get('window').width}px;

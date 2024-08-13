@@ -101,7 +101,7 @@ const ClubCard = ({club}) => {
         <ClubCardBox>
             <MainImageBox>
                 {/* <Image style={{backgroundColor: '#FFFFFF', width: resizedWidth, height: resizedHeight, resizeMode: 'contain'}} source={url ? {uri: url } : null} /> */}
-                <Image style={{backgroundColor: '#FFFFFF', width: '100%', height: '100%', resizeMode: 'cover'}} source={url ? {uri: url } : null} />
+                <Image style={{backgroundColor: '#000000', width: '100%', height: '100%', resizeMode: 'cover'}} source={url ? {uri: url } : null} />
             </MainImageBox>
             <ClubTitleAndNumMem>
                 <ClubTitle>{club.name}</ClubTitle>

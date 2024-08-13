@@ -32,7 +32,7 @@ const VerticalMargin = Styled.View`
 
 const DefaultText = Styled.Text`
     font-size: 20px;
-    font-family: 'DoHyeon-Regular';
+    /* font-family: 'DoHyeon-Regular'; */
     color: 'black';
 `;
 

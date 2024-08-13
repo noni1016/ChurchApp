@@ -36,6 +36,7 @@ const InfoTextBold = styled.Text`
     font-family: 'DoHyeon-Regular';   
     margin-top: 5px;
     margin-bottom: 5px;
+    margin-left: 5px;
     height: 30px;
 `;
 
@@ -253,7 +254,7 @@ const HomeMain = ({navigation}) => {
 
     return (
         <>
-        <ScrollView style={{margin: 10}}>
+        <ScrollView>
             <InfoTextBold>이웃 크리스천</InfoTextBold>
             <FlatList
                 horizontal={true}
