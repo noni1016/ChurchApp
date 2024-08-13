@@ -171,7 +171,7 @@ const SearchGroups = ({route, navigation}) => {
 
                     {showingClubs.map((v, i) => (
                         <TouchableOpacity onPress = {() => {
-                            navigation.navigate('ClubPage', {club : v, navigation: navigation});
+                            navigation.navigate('ClubPage', {group : v, navigation: navigation});
                         }}>
                             <ClubCard club={v} style={{ marginBottom: '10px' }} />
                             <View style={{ height: 20, width: '100%', backgroundColor: 'transparent' }} />
@@ -188,7 +188,7 @@ const SearchGroups = ({route, navigation}) => {
 
                 {showingSpots.map((v, i) => (
                         <TouchableOpacity onPress = {() => {
-                            navigation.navigate('SpotPage', {spot : v, navigation: navigation});
+                            navigation.navigate('SpotPage', {group : v, navigation: navigation});
                         }}>
                             <SpotCard spot={v} style={{ marginBottom: '10px' }} />
                             <View style={{ height: 20, width: '100%', backgroundColor: 'transparent' }} />
