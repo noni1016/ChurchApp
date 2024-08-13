@@ -1,16 +1,26 @@
 import React, {useState, useEffect, createContext} from 'react';
 import { useContext } from 'react/cjs/react.development';
-import { ScrollView, View, Text, Image } from 'react-native';
+import { ScrollView, View, Text, Image, Keyboard } from 'react-native';
 import Styled from 'styled-components/native';
 import DaumMap from './DaumMapController';
 import Geolocation from 'react-native-geolocation-service';
 import { useIsFocused } from '@react-navigation/native';
 import Styles from '~/Style';
+import Icon from 'react-native-vector-icons/MaterialIcons';
+
+const SearchBarBox = Styled.View`
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
+`;
 
 const Input = Styled.TextInput`
-background-color: yellow;
-width: 60%;
-border-bottom-width: 3px;
+background-color: lightyellow;
+flex: 8;
+height: 50px;
+border-width: 3px;
+font-size: 20px;
+color: black;
 `;
 
 const SearchBtn = Styled.TouchableOpacity`
@@ -151,49 +161,22 @@ const SearchLocate = ({route, navigation})=>{
 
     return (
         <>
-            {location ?(
-                <>
-                    <Text style={Styles.default}> ============================== </Text>
-                    <Text style={Styles.default}>Latitude: {location.latitude}</Text>
-                    <Text style={Styles.default}>Longitude: {location.longitude}</Text>
-                    <Text style={Styles.default}> ============================== </Text>
-                </>
-            ) : (<Text style={Styles.default}>Loading...</Text>)}
-            
-            <ScrollView>
-            {searchRes ?(
-                <>
-                {
-                    searchRes.map((data, index) => (
-                        <SearchResultBtn onPress = {()=>{
-                            setRegion(data.place_name);
-                            setLocation({longitude: data.x, latitude: data.y});
-                            setSelectRegion(true);
-                        }}><Text style={Styles.default}>{data.place_name}</Text>
-                        </SearchResultBtn>
-                    ))
-                }
-                </>
-            ) : (<Text style={Styles.default}>장소를 검색하세요.</Text>)}
-            </ScrollView>
+            <SearchBarBox>
 
             <Input
                     autoFocus={false}
                     autoCapitalize="none"
                     autoCorrect={false}
-                    placeholder={serchRigion}
+                    placeholder={'장소를 검색하세요'}
                     returnKeyType="done"
                     onChangeText={(value) => {
                         console.log(value);
                         serchRigion = setSerchRigion(value);
                     }}
-                    style={Styles.default}
                 />
 
-            <View 
-                style={{flexDirection: "row"}}>
-                <SearchBtn onPress={
-                    () => {
+            <Icon name="search" color="black" size={40} style={{flex: 1}} onPress={() => {
+                        Keyboard.dismiss();
                         if (lastSerchRegion == serchRigion) {
                             setRegionIndex(regionIndex+1);
                             console.log("----------------------------------");
@@ -214,12 +197,8 @@ const SearchLocate = ({route, navigation})=>{
                             setLastSerchRigion(serchRigion);
                             console.log("======");
                         }
-                    }
-                } height = "30%">
-                    <Text> Search Locate </Text>
-                </SearchBtn>
-                
-                <ChangeBtn onPress={() => {
+            }} />
+            <Icon name="check" color="green" size={40} style={{flex: 1}} onPress={() => {
                     if(selectFlag == false)
                     {
                         alert('지역을 선택 해 주세요.');
@@ -233,9 +212,24 @@ const SearchLocate = ({route, navigation})=>{
                         route.params.setRegionProcess(region);
                         navigation.goBack();
                     }
-                }} height = "30%" >
-                </ChangeBtn>
-            </View>
+            }}/>
+            </SearchBarBox>
+            <ScrollView>
+                {searchRes ? (
+                    <>
+                        {
+                            searchRes.map((data, index) => (
+                                <SearchResultBtn onPress={() => {
+                                    setRegion(data.place_name);
+                                    setLocation({ longitude: data.x, latitude: data.y });
+                                    setSelectRegion(true);
+                                }}><Text style={Styles.default}>{data.place_name}</Text>
+                                </SearchResultBtn>
+                            ))
+                        }
+                    </>
+                ) : (<View/>)}
+            </ScrollView>
 
             {isFocused && <DaumMap currentRegion={{
                     latitude: parseFloat(location.latitude),
@@ -255,6 +249,15 @@ const SearchLocate = ({route, navigation})=>{
                         allClear: true,
                    }]}
                 />}
+
+                {location ?(
+                <>
+                    <Text style={Styles.default}> ============================== </Text>
+                    <Text style={Styles.default}>Latitude: {location.latitude}</Text>
+                    <Text style={Styles.default}>Longitude: {location.longitude}</Text>
+                    <Text style={Styles.default}> ============================== </Text>
+                </>
+            ) : (<Text style={Styles.default}>Loading...</Text>)}
         </>
     )
 }
