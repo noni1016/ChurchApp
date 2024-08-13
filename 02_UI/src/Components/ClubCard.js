@@ -56,6 +56,7 @@ const ClubLocation = Styled.Text`
     font-size: 15px;
     font-family: 'DoHyeon-Regular';
     text-align: left;
+    height: 20px;
 `;
 
 const MainImageBox = Styled.View`

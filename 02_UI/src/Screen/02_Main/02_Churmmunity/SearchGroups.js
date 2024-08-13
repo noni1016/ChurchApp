@@ -39,6 +39,7 @@ const Title = Styled.Text`
     font-family: 'DoHyeon-Regular';
     margin-bottom: 10px;
     width: 100%;
+    height: 50px;
 `;
 
 const Separator = Styled.View`
