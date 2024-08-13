@@ -17,7 +17,7 @@ import {VerticalMargin} from '~/Style';
 
 const OptionName = Styled.Text`
     margin: 20px 10px 10px 5px;
-    height: 30px;
+    height: 49px;
     color: black;
     font-size: 27px;
     font-family: 'DoHyeon-Regular';
@@ -74,7 +74,7 @@ const PlusText = Styled.Text`
     color: white;
     background-color: skyblue;
     width: 70px;
-    height: 50px;
+    height: 60px;
     font-size: 50px;
     font-family: 'DoHyeon-Regular';
     padding: 5px;
