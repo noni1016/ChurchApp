@@ -27,6 +27,7 @@ const GroupTitle = Styled.Text`
     height: 40px;
     /* align-items: flex-start; */
     text-align: left;
+    vertical-align: center;
     /* background-color: #0000FF; */
 `;
 
