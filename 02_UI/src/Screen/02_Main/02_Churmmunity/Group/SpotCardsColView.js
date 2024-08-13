@@ -36,7 +36,7 @@ const SpotCardsColView = ({route, navigation}) => {
                 }}
                 renderItem={({ item, index }) => (
                     <TouchableOpacity onPress = {() => {
-                        navigation.navigate('SpotPage', {spot : item, navigation: navigation, tabNavi: route.params.tabNavi});
+                        navigation.navigate('SpotPage', {group : item, navigation: navigation, tabNavi: route.params.tabNavi});
                     }}>
                         <SpotCard spot={item}></SpotCard>
                     </TouchableOpacity>

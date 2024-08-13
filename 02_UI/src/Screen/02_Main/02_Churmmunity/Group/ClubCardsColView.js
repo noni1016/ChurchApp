@@ -33,7 +33,7 @@ const ClubCardsColView = ({route, navigation}) => {
                 }}
                 renderItem={({ item, index }) => (
                     <TouchableOpacity onPress = {() => {
-                        navigation.navigate('ClubPage', {club : item, navigation: navigation, tabNavi: route.params.tabNavi});
+                        navigation.navigate('ClubPage', {group : item, navigation: navigation, tabNavi: route.params.tabNavi});
                     }}>
                         <ClubCard club={item}></ClubCard>
                     </TouchableOpacity>

@@ -177,9 +177,9 @@ const SearchGroups = ({route, navigation}) => {
                             <View style={{ height: 20, width: '100%', backgroundColor: 'transparent' }} />
                         </TouchableOpacity>))}
 
-                    <View style={{ width: "90%" }}>
+                    {clubs.length > 2 && (<View style={{ width: "90%" }}>
                         <Button title="더 보기" onPress={() => { navigation.navigate('ShowMoreClubs', { title: `공동체 검색 결과 ${clubs.length} 개`, clubs: clubs, navigation: navigation }); }} />
-                    </View>
+                    </View>)}
                 </>
                 }
                 <Separator />
@@ -193,9 +193,9 @@ const SearchGroups = ({route, navigation}) => {
                             <SpotCard spot={v} style={{ marginBottom: '10px' }} />
                             <View style={{ height: 20, width: '100%', backgroundColor: 'transparent' }} />
                         </TouchableOpacity>))}
-                <View style={{ width: "90%" }}>
+                {spots.length > 2 && <View style={{ width: "90%" }}>
                     <Button title="더 보기" onPress={() => { navigation.navigate('ShowMoreSpots', { title: `번개 검색 결과 ${spots.length} 개`, spots: spots, navigation: navigation }); }} />
-                </View>
+                </View>}
                 </>}
             </View>
         </ScrollView>
