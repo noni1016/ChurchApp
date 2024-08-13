@@ -151,7 +151,7 @@ const SearchGroups = ({route, navigation}) => {
                         )}
                         {...register("search")}
                     />
-                    <Icon2 name="filter-alt" size={26} flex={2} onPress={() => alert('Filter!')} />
+                    {/* <Icon2 name="filter-alt" size={26} flex={2} onPress={() => alert('Filter!')} /> */}
                     <Icon2 name="search" size={26} flex={2} onPress={handleSubmit(getSearchResult)} />
                 </Header>
                 
