@@ -20,7 +20,7 @@ const Header = Styled.View`
 `;
 
 const Title = Styled.Text`
-    height: 30px;
+    height: 40px;
     color: black;
     font-size: 27px;
     font-family: 'DoHyeon-Regular';
