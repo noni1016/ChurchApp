@@ -24,6 +24,7 @@ const GroupTitle = Styled.Text`
     color: white;
     font-size: 25px;
     font-family: 'DoHyeon-Regular';
+    height: 40px;
     /* align-items: flex-start; */
     text-align: left;
     /* background-color: #0000FF; */

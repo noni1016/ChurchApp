@@ -44,9 +44,9 @@ const SpotNumBox = Styled.View`
 const SpotNumMem = Styled.Text`
     color: black;
     font-size: 15px;
-    font-family: 'arial';
+    height: 30px;
+    font-family: 'DoHyeon-Regular';
     text-align: right;
-    font-weight: bold;
 `;
 
 const LocationBox = Styled.View`
@@ -59,11 +59,11 @@ const LocationBox = Styled.View`
 const SpotLocation = Styled.Text`
     color: black;
     font-size: 15px;
-    font-family: 'arial';
+    height: 20px;
+    font-family: 'DoHyeon-Regular';
     text-align: left;
     text-wrap: wrap;
     width: 90%;
-    font-weight: bold;
 `;
 
 const MainImageBox = Styled.View`
