@@ -75,7 +75,7 @@ const ClubCards = ({title, orgDatas, stackNavi}) => {
                 <Title>{title}</Title>
                 <ShowMore
                     onPress={() => {
-                        stackNavi.navigate('ShowMoreClubs', {title: '내 모임', clubs: datas});
+                        stackNavi.navigate('ShowMoreClubs', {title: title, clubs: datas});
                     }}>></ShowMore>
             </Header>
                 <ScrollView 

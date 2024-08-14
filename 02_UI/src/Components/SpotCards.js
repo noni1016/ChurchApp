@@ -101,7 +101,7 @@ const SpotCards = ({title, datas, stackNavi}) => {
                 <Title>{title}</Title>
                 <ShowMore
                     onPress={() => {
-                        stackNavi.navigate('ShowMoreClubs', {title: '내 모임', clubs: datas});
+                        stackNavi.navigate('ShowMoreSpots', {title: title, spots: datas});
                     }}>></ShowMore>
             </Header>
                 <ScrollView 
