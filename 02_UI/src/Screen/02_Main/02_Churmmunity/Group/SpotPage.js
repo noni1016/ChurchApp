@@ -133,6 +133,12 @@ const SpotPage = ({route, navigation}) => {
 
     /* 함께하기 버튼 누르면 버튼이 파란색으로 바뀜 */
     const onPressJoinBtn = () => {
+        console.log('함께하기 버튼 눌림')
+        console.log(data);
+        if (data.past) {
+            alert('종료된 모임입니다.');
+            return;
+        }
         if (isLeader) {
             alert('리더는 탈퇴할 수 없습니다. 먼저 리더를 변경해주세요.');
             return;
@@ -156,8 +162,9 @@ const SpotPage = ({route, navigation}) => {
         if ((isMember == false && curUserIsMemOfThisGroup == true) || (isMember == true && curUserIsMemOfThisGroup == false))
             fetch(`${domain}/Spot/${data.id}/Member`).then(res => res.json()).then(res => { console.log(res); setMembers(res); });
         setIsMember(curUserIsMemOfThisGroup);
-        if (curUserIsMemOfThisGroup) setJoinText('참가중!');
-        else setJoinText('함께하기');
+        if (curUserIsMemOfThisGroup && data.past == 0) setJoinText('참가중!');
+        else if (data.past == 0) setJoinText('함께하기');
+        else setJoinText('종료')
         updateUserSpot();
     };
 
@@ -168,7 +175,7 @@ const SpotPage = ({route, navigation}) => {
                     {data.name}
                 </Title>
                 <Side>
-                <Icon2 name="notification" size={26} onPress={() => navigation.navigate('GroupNotification', {club: data, isLeader: isLeader})} />
+                {/* <Icon2 name="notification" size={26} onPress={() => navigation.navigate('GroupNotification', {club: data, isLeader: isLeader})} /> */}
                 {isLeader && <Icon1 name="settings-outline" size={26} onPress={() => navigation.navigate('EditChurmmunity', {edit: 1, editData: data, createType: 2, navigation: navigation})} />}
                 </Side>          
             </Header>
@@ -185,7 +192,7 @@ const SpotPage = ({route, navigation}) => {
                             }}
                         />
                     ))}
-                    <JoinBtn state={isMember} onPress={() => {onPressJoinBtn()}}><Text style={{fontSize: 20, fontFamily: 'DoHyeon-Regular', color: 'white'}}>{joinText}</Text></JoinBtn>
+                    <JoinBtn state={isMember && data.past == 0} onPress={() => {onPressJoinBtn()}}><Text style={{fontSize: 20, fontFamily: 'DoHyeon-Regular', color: 'white'}}>{joinText}</Text></JoinBtn>
                 </TabContainer>
                 {tabIdx == 0 && <SpotPageHome data={data} members={members} isLeader={isLeader} leader={leader} stackNavi={navigation} />}
                 {tabIdx == 1 && <SpotMembersView data={data} members={members} isLeader={isLeader} leader={leader} updateMember={setUpdateMember} stackNavi={navigation} />}
