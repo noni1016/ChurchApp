@@ -64,7 +64,7 @@ const ChurchPage = ({route, navigation}) => {
     useEffect(() => {
         console.log(data.id);
         fetch(`${domain}/Church/${data.id}`).then(res => res.json()).then(res => {console.log(res); setData(res)});
-    }, [isFocused])
+    }, [isFocused, reload])
 
     /* 멤버 정보 불러오기 */
     useEffect(() => {        
@@ -120,7 +120,7 @@ const ChurchPage = ({route, navigation}) => {
                         />
                     ))}
                 </TabContainer>
-                {tabIdx == 0 && <ChurchPageHome data={data} members={members} isMember={isMember} isLeader={isLeader} updateMember={setUpdateMember} stackNavi={navigation}/>}
+                {tabIdx == 0 && <ChurchPageHome data={data} members={members} isMember={isMember} isLeader={isLeader} updateMember={setUpdateMember} reload={reload} setReload={setReload} stackNavi={navigation}/>}
                 {tabIdx == 1 && <Feeds church={data} reload={reload} setReload={setReload} isMember={isMember} navigation={navigation}/>}
                 {tabIdx == 2 && <Photos groupType='Church' group={data}/>}
                 <Footer/>
@@ -153,12 +153,14 @@ const NumGroupMemCont = Styled.View`
 `;
 
 
-const ChurchPageHome = ({data, members, isMember, isLeader, updateMember, stackNavi}) => {
+const ChurchPageHome = ({data, members, isMember, isLeader, updateMember, reload, setReload, stackNavi}) => {
     const domain = useContext(DomainContext);    
     const {tabNavi} = useContext(TabNavi);
     const {userData, setUserData, updateUserChurch} = useContext(UserData);
     const isFocused = useIsFocused();
     const [joinText, setJoinText] = useState('활동 교회로 등록');
+
+    
 
     useEffect(() => {
         console.log(`isMember: ${isMember}`)
@@ -171,12 +173,13 @@ const ChurchPageHome = ({data, members, isMember, isLeader, updateMember, stackN
 
     const onPressJoinBtn = () => {
         if (isMember && !isLeader) {
-            fetch(`${domain}/Church/Exit/${data.id}/${userData.id}`).then(updateUserChurch());
+            fetch(`${domain}/Church/Exit/${data.id}/${userData.id}`).then(() => {updateUserChurch(); setReload(!reload);});
         } else if (isLeader) {
             Alert.alert("리더 탈주 감지!", "리더는 탈퇴할 수 없습니다. 멤버 관리 페이지에서 먼저 리더를 변경하세요.");
         } else {
-            fetch(`${domain}/Church/Join/${data.id}/${userData.id}`).then(updateUserChurch());
+            fetch(`${domain}/Church/Join/${data.id}/${userData.id}`).then(() => {updateUserChurch(); setReload(!reload);});
         }
+        
     }
 
     return (
@@ -204,7 +207,7 @@ const ChurchPageHome = ({data, members, isMember, isLeader, updateMember, stackN
             <RectangleBtn text={joinText} color={isMember? 'gray' : 'skyblue'} onPress={() => onPressJoinBtn()} />
             
             <NumGroupMemCont>
-                <Text style={Styles.default}>멤버 {data.numMember} 명</Text>
+                <Text style={Styles.default}>멤버 {members.length} 명</Text>
                 {isLeader && <Icon1 name="settings-outline" size={18} color={'black'} onPress={() => stackNavi.navigate('EditMembers', {groupType: 'Church', group: data, members: members, updateMember: updateMember, navigation: stackNavi})} />}
             </NumGroupMemCont>
 
