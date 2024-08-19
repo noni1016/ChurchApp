@@ -76,6 +76,99 @@ router.get('/:clubId/NumMember/', function (req, res) {
     });
 })
 
+var returnTableValue;
+var clubId;
+const createClub = multer({
+    storage: multer.diskStorage({
+        destination: function (req, file, cb) {
+            cb(null, `public/ClubMainImg`);
+        },
+        async filename(req, file, cb) {
+            console.log(file.originalname);
+            console.log(req.params.name);
+            let sql1 = `INSERT INTO Club (name, location, location_ll, description, keyword, leader) VALUES ('${req.body.name}', '${req.body.location}', ST_GeomFromText('POINT(${req.body.location_ll_x} ${req.body.location_ll_y})', 4326), '${req.body.description}','${req.body.keyword}', '${req.body.userId}')`;
+            console.log(sql1);
+            var fileName = ``;
+            try {
+                await conn.beginTransaction();
+                await conn.query(sql1, (error, rows) => {
+                    clubId = rows.insertId;
+                    fileName = clubId + path.extname(file.originalname);
+                    cb(null, fileName);
+                    console.log(fileName);
+                    let sql2 = `INSERT INTO ClubUser (ClubId, userId, role) VALUES (${clubId}, ${req.body.userId}, 1)`;
+                    console.log(sql2);
+                    conn.query(sql2, (err, rows) => {
+                        if (err) console.log(err);
+                        else {
+                            let sql3 = `UPDATE Club SET mainImg = '${fileName}' WHERE id = ${clubId}`;
+                            console.log(sql3);
+                            conn.query(sql3, (err, rows) => {
+                                if (err) console.log(err);
+                                else {
+                                    let sql4 = `SELECT * FROM ClubView WHERE id = ${clubId}`;
+                                    console.log(sql4);
+                                    conn.query(sql4, (error, rows) => {
+                                        console.log(rows[0]);
+                                        conn.commit();
+                                        returnTableValue = rows[0];
+                                    })
+                                }
+                            })
+                        }
+                    })
+                })
+            } catch (err) {
+                console.log(err);
+                await conn.rollback();
+            }
+        }
+    })
+}).single('file');
+
+// Create Club Info
+router.post('/', async (req, res) => {
+    createClub(req, res, async (err) => {
+        if (err) res.send(false);
+        else res.json(returnTableValue);
+    })    
+})
+
+
+
+const storage = multer.diskStorage({
+    destination: 'public/ClubMainImg',
+    filename(req, file, cb) {
+        cb(null, `${req.params.id}${path.extname(file.originalname)}`);
+    }
+})
+const formData = multer({storage: storage});
+
+// Update Club Info
+router.put('/:id', formData.single('file'), async (req, res) => {
+    let sql1 = `UPDATE Club SET name = '${req.body.name}', location = '${req.body.location}', location_ll = ST_GeomFromText('POINT(${req.body.location_ll_x} ${req.body.location_ll_y})', 4326), description = '${req.body.description}', keyword = '${req.body.keyword}' WHERE id = ${req.params.id}`;
+
+    if (req.file) console.log(req.file.filename);
+
+    try {
+        await conn.beginTransaction();
+        await conn.query(sql1, (error, rows) => {
+            if (error) console.log(error);
+            console.log(rows);
+            let sql2 = `SELECT * FROM ClubView WHERE id = ${req.params.id}`; 
+            conn.query(sql2, (error, rows) => {
+                console.log(rows[0]);
+                conn.commit();
+                res.json(rows[0]);
+            })
+        })
+    } catch (err) {
+        console.log(err);
+        await conn.rollback();
+    }
+})
+
+
 // Join club
 router.get('/:clubId/Join/:userId', (req, res) => {
     let cnt = 0;
