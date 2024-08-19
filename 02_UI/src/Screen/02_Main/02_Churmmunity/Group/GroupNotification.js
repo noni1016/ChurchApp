@@ -1,16 +1,27 @@
 import React, {useState, useEffect, useContext} from 'react';
 import {View, Text, ScrollView} from 'react-native';
+import Styled from 'styled-components/native';
 import {DomainContext} from '~/Context/Domain';
 import {UserData} from '~/Context/User';
 import Feed from '~/Components/Feed';
 import AddBtn from '~/Components/AddBtn';
 import { useIsFocused } from '@react-navigation/native';
 
+const OptionName = Styled.Text`
+    margin: 20px 10px 10px 5px;
+    height: 49px;
+    color: black;
+    font-size: 27px;
+    font-family: 'DoHyeon-Regular';
+`;
+
 const GroupNotification = ({route, navigation}) => {
     const domain = useContext(DomainContext);
-    const club = route.params.club;
+    const group = route.params.group;
+    const groupType = route.params.groupType;
     const isLeader = route.params.isLeader;
-    let [clubNotices, setClubNotices] = useState([]);
+    const isMember = route.params.isMember;
+    let [groupNotices, setGroupNotices] = useState([]);
     let [reload, setReload] = useState(false);
     const {userData} = useContext(UserData);
     const isFocused = useIsFocused();
@@ -21,18 +32,19 @@ const GroupNotification = ({route, navigation}) => {
 
     /* 그룹의 공지사항을 불러옴 */
     useEffect(() => {
-        console.log(`${domain}/Club/${club.id}/Notices`);
-        fetch(`${domain}/Club/${club.id}/Notices`).then(res => res.json()).then(res => {setClubNotices(res);});
-    }, [club, reload, isFocused])
+        console.log(`${domain}/${groupType}/${group.id}/Notices`);
+        fetch(`${domain}/${groupType}/${group.id}/Notices`).then(res => res.json()).then(res => {setGroupNotices(res);});
+    }, [group, reload, isFocused])
 
     return (
         <>
             <ScrollView>
-            {clubNotices.map((data, index) => (
-                <Feed club={club} feed={data} key={index} onFeedChange={() => setReload(true)} navigation={navigation} />
-            ))}
+            {groupNotices.length > 0 ? (groupNotices.map((data, index) => (
+                <Feed groupType={groupType} group={group} feed={data} key={index} reload={reload} setReload={setReload} isMember={isMember} onFeedChange={() => setReload(true)} navigation={navigation} />
+            ))) : (<OptionName style>등록된 공지사항이 없습니다</OptionName>)}
+            
             </ScrollView>
-            {isLeader && <AddBtn OnPressMethod={() => {navigation.navigate('EditFeed', {edit: false, isNotice: true, club: club, navigation: navigation});}}/>}
+            {isLeader && <AddBtn OnPressMethod={() => {navigation.navigate('EditFeed', {edit: false, groupType: groupType, group: group, reload: reload, setReload: setReload, isNotice: true, navigation: navigation});}}/>}
         </>
     )
 }

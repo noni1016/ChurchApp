@@ -39,6 +39,7 @@ const Title = Styled.Text`
     font-family: 'DoHyeon-Regular';
     margin-bottom: 10px;
     width: 100%;
+    height: 50px;
 `;
 
 const Separator = Styled.View`
@@ -150,7 +151,7 @@ const SearchGroups = ({route, navigation}) => {
                         )}
                         {...register("search")}
                     />
-                    <Icon2 name="filter-alt" size={26} flex={2} onPress={() => alert('Filter!')} />
+                    {/* <Icon2 name="filter-alt" size={26} flex={2} onPress={() => alert('Filter!')} /> */}
                     <Icon2 name="search" size={26} flex={2} onPress={handleSubmit(getSearchResult)} />
                 </Header>
                 
@@ -170,15 +171,15 @@ const SearchGroups = ({route, navigation}) => {
 
                     {showingClubs.map((v, i) => (
                         <TouchableOpacity onPress = {() => {
-                            navigation.navigate('ClubPage', {club : v, navigation: navigation});
+                            navigation.navigate('ClubPage', {group : v, navigation: navigation});
                         }}>
                             <ClubCard club={v} style={{ marginBottom: '10px' }} />
                             <View style={{ height: 20, width: '100%', backgroundColor: 'transparent' }} />
                         </TouchableOpacity>))}
 
-                    <View style={{ width: "90%" }}>
+                    {clubs.length > 2 && (<View style={{ width: "90%" }}>
                         <Button title="더 보기" onPress={() => { navigation.navigate('ShowMoreClubs', { title: `공동체 검색 결과 ${clubs.length} 개`, clubs: clubs, navigation: navigation }); }} />
-                    </View>
+                    </View>)}
                 </>
                 }
                 <Separator />
@@ -187,14 +188,14 @@ const SearchGroups = ({route, navigation}) => {
 
                 {showingSpots.map((v, i) => (
                         <TouchableOpacity onPress = {() => {
-                            navigation.navigate('SpotPage', {spot : v, navigation: navigation});
+                            navigation.navigate('SpotPage', {group : v, navigation: navigation});
                         }}>
                             <SpotCard spot={v} style={{ marginBottom: '10px' }} />
                             <View style={{ height: 20, width: '100%', backgroundColor: 'transparent' }} />
                         </TouchableOpacity>))}
-                <View style={{ width: "90%" }}>
+                {spots.length > 2 && <View style={{ width: "90%" }}>
                     <Button title="더 보기" onPress={() => { navigation.navigate('ShowMoreSpots', { title: `번개 검색 결과 ${spots.length} 개`, spots: spots, navigation: navigation }); }} />
-                </View>
+                </View>}
                 </>}
             </View>
         </ScrollView>

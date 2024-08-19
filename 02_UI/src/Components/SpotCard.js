@@ -22,16 +22,19 @@ const SpotTitleAndNumMem = Styled.View`
     align-items: center;
     /* background-color: #FF0000;     */
     margin: 5px 0px 0px 0px; //상 우 하 좌
+    /* font-family: 'DoHyeon-Regular';  */
 `;
 
 const SpotTitle = Styled.Text`
     flex: 9;
     color: black;
-    font-size: 25px;
-    font-family: 'DoHyeon-Regular';
-    /* align-items: flex-start; */
-    text-align: left;
-    /* background-color: #0000FF; */
+    font-size: 18px;
+    font-family: 'arial';
+    font-weight: bold;
+    vertical-align: top;
+    align-items: flex-start;
+    /* background-color: yellow; */
+    margin-bottom: 2px;
 `;
 
 const SpotNumBox = Styled.View`
@@ -41,6 +44,7 @@ const SpotNumBox = Styled.View`
 const SpotNumMem = Styled.Text`
     color: black;
     font-size: 15px;
+    height: 30px;
     font-family: 'DoHyeon-Regular';
     text-align: right;
 `;
@@ -55,6 +59,7 @@ const LocationBox = Styled.View`
 const SpotLocation = Styled.Text`
     color: black;
     font-size: 15px;
+    height: 20px;
     font-family: 'DoHyeon-Regular';
     text-align: left;
     text-wrap: wrap;

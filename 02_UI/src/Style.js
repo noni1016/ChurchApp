@@ -5,9 +5,10 @@ import Styled from 'styled-components/native';
 const Styles = StyleSheet.create({
     header: {
         color: 'black',
-        fontWeight: 'bold',
+        // fontWeight: 'bold',
         fontSize: 30,
         fontFamily: 'DoHyeon-Regular',
+        height: 40,
     },
 
     text: {
@@ -32,7 +33,7 @@ const VerticalMargin = Styled.View`
 
 const DefaultText = Styled.Text`
     font-size: 20px;
-    font-family: 'DoHyeon-Regular';
+    /* font-family: 'DoHyeon-Regular'; */
     color: 'black';
 `;
 

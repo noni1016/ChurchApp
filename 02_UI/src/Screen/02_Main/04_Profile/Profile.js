@@ -26,6 +26,7 @@ import SearchChurchPage from '~/Screen/02_Main/03_Church/SearchChurchPage';
 import ChurchView from '~/Screen/02_Main/04_Profile/ChurchView'
 import AddChurchPage from '~/Screen/02_Main/03_Church/AddChurchPage';
 import ChurchPage from '../03_Church/ChurchPage';
+import GroupNotification from '../02_Churmmunity/Group/GroupNotification';
 
 const tempUser = {id: 4, name: "짱쎄", photo: 'Profile/짱쎄.jpg', role: 'user'};
 const Stack = createStackNavigator();
@@ -395,6 +396,10 @@ const ProfileStackNavi = ({tabNavi}) => {
                 headerBackTitleVisible: true,
                 title: '교회',
             }}
+        />
+        <Stack.Screen
+            name="GroupNotification"
+            component={GroupNotification}
         />
       </Stack.Navigator>  
     );

@@ -23,7 +23,7 @@ const Header = Styled.View`
 const Body = Styled.TouchableOpacity`
     height: 100%;
     flex: 1;
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
     justify-content: center;
     width: ${Dimensions.get('window').width}px;
@@ -41,6 +41,7 @@ const ShowMore = Styled.Text`
 
 const Title = Styled.Text`
     flex: 9;
+    height: 90%;
     color: black;
     font-size: 25px;
     font-family: 'DoHyeon-Regular';
@@ -74,7 +75,7 @@ const ClubCards = ({title, orgDatas, stackNavi}) => {
                 <Title>{title}</Title>
                 <ShowMore
                     onPress={() => {
-                        stackNavi.navigate('ShowMoreClubs', {title: '내 모임', clubs: datas});
+                        stackNavi.navigate('ShowMoreClubs', {title: title, clubs: datas});
                     }}>></ShowMore>
             </Header>
                 <ScrollView 

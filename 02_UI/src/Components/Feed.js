@@ -118,9 +118,9 @@ const Feed = ({groupType, group, feed, isMember, reload, setReload, navigation})
             ImageSize.getSize(feedImgUrl).then((size) => {
                 let width = size.width;
                 let height = size.height;
-                if (width > Dimensions.get('window').width) {
-                    setResizedWidth(Dimensions.get('window').width);
-                    setResizedHeight(Dimensions.get('window').width / width * height);
+                if (width > Dimensions.get('window').width * 0.97) {
+                    setResizedWidth(Dimensions.get('window').width * 0.97);
+                    setResizedHeight(Dimensions.get('window').width * 0.97 / width * height);
                 } else {
                     setResizedWidth(width);
                     setResizedHeight(height);

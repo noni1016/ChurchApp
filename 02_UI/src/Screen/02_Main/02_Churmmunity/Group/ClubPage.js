@@ -64,7 +64,8 @@ const ClubPage = ({route, navigation}) => {
     /* 첫 마운팅때 Group 상단 사진 url 설정 */
     useEffect(() => {
         console.log(data);
-        setUrl(`${domain}/ClubMainImg/${data.mainImg}`);
+        setUrl(`${domain}/ClubMainImg/${data.mainImg}` + "?cache="+Math.random());
+        console.log(url);
     }, []);    
 
     /* Group 상단 사진의 사이즈를 화면 사이즈에 맞게 설정 */
@@ -134,7 +135,7 @@ const ClubPage = ({route, navigation}) => {
                     {data.name}
                 </Title>
                 <Side>
-                <Icon2 name="notification" size={26} color={'black'} onPress={() => navigation.navigate('GroupNotification', {club: data, isLeader: isLeader})} />
+                <Icon2 name="notification" size={26} color={'black'} onPress={() => navigation.navigate('GroupNotification', {group: data, groupType: 'Club', isMember: isMember, isLeader: isLeader})} />
                 {isLeader && <Icon1 name="settings-outline" size={26} color={'black'} onPress={() => navigation.navigate('EditChurmmunity', {edit: 1, editData: data, createType: '1', navigation: navigation})} />}
                 </Side>          
             </Header>
