@@ -64,7 +64,8 @@ const ClubPage = ({route, navigation}) => {
     /* 첫 마운팅때 Group 상단 사진 url 설정 */
     useEffect(() => {
         console.log(data);
-        setUrl(`${domain}/ClubMainImg/${data.mainImg}`);
+        setUrl(`${domain}/ClubMainImg/${data.mainImg}` + "?cache="+Math.random());
+        console.log(url);
     }, []);    
 
     /* Group 상단 사진의 사이즈를 화면 사이즈에 맞게 설정 */

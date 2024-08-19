@@ -88,7 +88,7 @@ const SpotPage = ({route, navigation}) => {
     /* 첫 마운팅때 Group 상단 사진 url 설정 */
     useEffect(() => {
         if (data == null) return;
-        setUrl(`${domain}/SpotMainImg/${data.mainImg}`);
+        setUrl(`${domain}/SpotMainImg/${data.mainImg}` + "?cache="+Math.random());
         setIsLeader(false);
         if (data.leader === userData.id) {
             setIsLeader(true);

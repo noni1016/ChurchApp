@@ -138,6 +138,7 @@ const EditChurmmunity = ({route, navigation}) => {
     const edit = route.params.edit ? route.params.edit : 0;
     const editData = route.params.editData;
     const [createType, setCreateType] = useState(route.params.createType);
+    const [createTypeText, setCreateTypeText] = useState(route.params.createType == 1 ? 'Club' : 'Spot');
     const [imgSrc, setImgSrc] = useState(undefined);
     const [textInput, setTextInput] = useState('');
     const [content, setContent] = useState({name: '', mainImg: '', location: '', location_ll: {x: null, y: null}, description: '', keyword: [], time: ''});
@@ -146,6 +147,7 @@ const EditChurmmunity = ({route, navigation}) => {
     const [locate, setLocate] = useState([0,0]);
     const [region, setRegion] = useState('');
     const isFocused = useIsFocused();
+
 
     useEffect(() => {
         if(region != '')
@@ -260,10 +262,10 @@ const EditChurmmunity = ({route, navigation}) => {
         console.log(keywordString);
 
         if (edit == false) { // AddMode
-            fetchReq = `${domain}/Group/${createType}`;
+            fetchReq = `${domain}/${createTypeText}`;
             fetchMethod = `POST`;
         } else { // edit club, spot
-            fetchReq = `${domain}/Group/${createType}/${editData.id}`;
+            fetchReq = `${domain}/${createTypeText}/${editData.id}`;
             fetchMethod = `PUT`;
         }
 
@@ -319,23 +321,7 @@ const EditChurmmunity = ({route, navigation}) => {
 
 
     useEffect(() => {
-        if (edit && createType === 1 && route.params.editData) /* 클럽 모임 수정 모드 */
-        {
-            navigation.setOptions({title: '모임 정보 수정'});
-            setImgSrc({uri: domain + '/ClubMainImg/' + route.params.editData.mainImg});
-            //if (route.params.editData.location_ll == undefined) route.params.editData.location_ll = {x: 0, y: 0};
-            console.log("--------------------------------");
-            console.log(route.params.editData.location);
-            console.log(route.params.editData.location_ll);
-            console.log("--------------------------------");
-        }
-        else if (edit && createType === 2 && route.params.editData) /* 번개 모임 수정 모드 */
-        {
-            navigation.setOptions({title: '번개 모임 수정'});
-            setImgSrc({uri: domain + '/SpotMainImg/' + route.params.editData.mainImg});
-            console.log("Date Time!!!!!!!!!!!!")
-            console.log(content.time);
-        }
+
         if (edit)
         {
             setTextInput(route.params.editData.description);
@@ -346,6 +332,26 @@ const EditChurmmunity = ({route, navigation}) => {
                 route.params.editData.keyword = arr;
             }
             setContent(route.params.editData);
+        }
+
+        
+        if (edit && createType == 1 && route.params.editData) /* 클럽 모임 수정 모드 */
+        {
+            navigation.setOptions({title: '모임 정보 수정'});
+            setImgSrc({uri: domain + '/ClubMainImg/' + route.params.editData.mainImg});
+            console.log(domain + '/ClubMainImg/' + route.params.editData.mainImg)
+            //if (route.params.editData.location_ll == undefined) route.params.editData.location_ll = {x: 0, y: 0};
+            console.log("--------------------------------");
+            console.log(route.params.editData.location);
+            console.log(route.params.editData.location_ll);
+            console.log("--------------------------------");
+        }
+        else if (edit && createType == 2 && route.params.editData) /* 번개 모임 수정 모드 */
+        {
+            navigation.setOptions({title: '번개 모임 수정'});
+            setImgSrc({uri: domain + '/SpotMainImg/' + route.params.editData.mainImg});
+            console.log("Date Time!!!!!!!!!!!!")
+            console.log(content.time);
         }
     }, [edit, route.params.editData])
 
@@ -368,8 +374,8 @@ const EditChurmmunity = ({route, navigation}) => {
         <ScrollView>
             {!edit && <OptionName>모임 유형</OptionName>}
             {!edit && (<TypeSelectBtnsBox>
-                <TouchableOpacity onPress={() => setCreateType(1)}><TypeSelectBtn isSelected={createType == 1}>공동체</TypeSelectBtn></TouchableOpacity>
-                <TouchableOpacity onPress={() => setCreateType(2)}><TypeSelectBtn isSelected={createType == 2}>번개</TypeSelectBtn></TouchableOpacity>
+                <TouchableOpacity onPress={() => {setCreateType(1); setCreateTypeText('Club')}}><TypeSelectBtn isSelected={createType == 1}>공동체</TypeSelectBtn></TouchableOpacity>
+                <TouchableOpacity onPress={() => {setCreateType(2); setCreateTypeText('Spot')}}><TypeSelectBtn isSelected={createType == 2}>번개</TypeSelectBtn></TouchableOpacity>
             </TypeSelectBtnsBox>)}
             <OptionName>모임 이름</OptionName>
             <TitleInput color="black" placeholderTextColor="gray" maxLength={20} value={content.name} placeholder={'최대 20자'} onChangeText={(v)=>{setContent((current) => {let newContent = {...current}; newContent.name = v; return newContent})}} />

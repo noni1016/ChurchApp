@@ -28,6 +28,7 @@ import ChurchPage from '../03_Church/ChurchPage';
 import EditChurchPage from '../03_Church/EditChurchPage';
 import EditMembers from '../02_Churmmunity/Group/EditMembers';
 import GroupNotification from '../02_Churmmunity/Group/GroupNotification';
+import EditChurmmunity from '../02_Churmmunity/Group/EditChurmmunity';
 
 const Stack = createStackNavigator();
 
@@ -398,6 +399,15 @@ const HomeStackNavi = () => {
                 name="GroupNotification"
                 component={GroupNotification}
             />
+            <Stack.Screen
+                name="EditChurmmunity"
+                component={EditChurmmunity}
+                options={{
+                    headerShown: true,
+                    headerBackTitleVisible: false,
+                    title: '새 모임',
+                }}
+             />
         </Stack.Navigator>
     )
 }
