@@ -16,7 +16,7 @@ const path = require('path');
 router.get('/:type/:id', (req, res) => {
     let dbTbl = 'Club'
     if (req.params.type == '1' || req.params.type == 'Club') dbTbl = 'ClubView';
-    else if (req.params.type == '2' || req.params.type == 'Spot') dbTbl = 'Spot';
+    else if (req.params.type == '2' || req.params.type == 'Spot') dbTbl = 'SpotView';
 
     let sql = `SELECT * FROM ${dbTbl} where id=${req.params.id}`;
     console.log(sql);
@@ -125,67 +125,6 @@ router.post('/:type', async (req, res) => {
     })
 
 })
-
-// Update
-// router.put('/type/:type/id/:id', async (req, res) => {
-router.put('/:type/:id', async (req, res) => {
-    let imgSrc = '';
-    let sql1 = ``;
-    let sql2 = ``;
-    let sql3 = ``;
-    uploadGroupImg(req, res, async (err) => {
-        if (err) {
-            res.send({fileName : null});
-        }
-
-        if (req.file) console.log(req.file.filename);
-        console.log(req.body);
-
-        if (req.params.type == '1') // Club
-        {
-            console.log('Create Club');
-            sql1 = `SELECT mainImg from Club WHERE id=${req.params.id}`;
-            console.log(sql1);
-            try {
-                await conn.beginTransaction();
-                await conn.query(sql1, async (error, rows) => {
-                    imgSrc = rows[0].mainImg;
-                    if (req.file) {
-                        fs.unlink(`./public/${imgSrc}`, (err) => {
-                            err ? console.log(imgSrc) : console.log(`${imgSrc}ï¿?? ?ï¿½ï¿½?ï¿½ï¿½?ï¿½ï¿½?ï¿½ï¿½ï¿?? ?ï¿½ï¿½?ï¿½ï¿½?ï¿½ï¿½?ï¿½ï¿½?ï¿½ï¿½?ï¿½ï¿½`);
-                        });
-                        imgSrc = 'GroupImg/' + req.file.filename;
-                    }
-
-                    sql2 = `UPDATE Club SET name = '${req.body.name}', mainImg = '${imgSrc}', location = '${req.body.location}', location_ll = ST_GeomFromText('POINT(${req.body.location_ll_x} ${req.body.location_ll_y})', 4326), description = '${req.body.description}', keyword = '${req.body.keyword}' WHERE id = ${req.params.id}`;
-                    console.log(sql2);
-                    await conn.query(sql2, (error, rows) => {
-                        sql3 = `SELECT * FROM ClubView WHERE id = ${req.params.id}`;
-                        console.log(sql3);
-                        conn.query(sql3, (error, rows) => {
-                            // console.log(rows);
-                            console.log(rows[0]);
-                            conn.commit();
-                            res.json(rows[0]);
-                        });                    
-                    });
-                })
-
-            } catch (err) {
-                console.log(err)
-                await conn.rollback()
-                res.send({ result: false });
-            }
-               
-            
-        } else if (req.params.type == '2') // Spot
-        {
-            console.log('Create Spot');
-        }
-
-    });
-
-});
 
 router.delete('/:type/:groupId/', async (req, res) => {
     let table = '';

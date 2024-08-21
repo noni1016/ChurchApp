@@ -448,6 +448,21 @@ router.delete('/:churchId/Feed/:feedId', async (req, res) => {
     }    
 })
 
+// Get Notices
+router.get('/:churchId/Notices', (req, res) => {
+    let sql = `SELECT * FROM ChurchFeed WHERE churchId = ${req.params.churchId} AND notice = true ORDER BY time DESC`
+    console.log(sql);
+    conn.query(sql, function (error, rows, fields) { // sql ���� ����
+        if (!error) {
+            // console.log(rows);
+            res.send(rows);
+        } else {
+            console.log('query error : ' + error);
+        }
+    });
+})
+
+
 // Member
 router.put('/Leader/:churchId/:memberId', async (req, res) => {
     // 1. Change Group table's leader number
