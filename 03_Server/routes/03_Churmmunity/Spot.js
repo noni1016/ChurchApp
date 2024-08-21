@@ -161,4 +161,23 @@ router.delete('/Member/:spotId/:memberId', (req, res) => {
     })
 })
 
+
+// Exit Spot
+router.get('/Exit/:spotId/:userId', async (req, res) => {
+    let cnt = 0;
+    let sql = `DELETE FROM SpotUser 
+        WHERE SpotUser.spotId = ${req.params.spotId}
+        AND SpotUser.userId = ${req.params.userId}`;
+    console.log(sql);
+    conn.query(sql, function (error, rows, fields) {
+        if (!error) {
+            console.log(rows);
+            res.send('OK');
+        } else {
+            console.log('query error : ' + error);
+        }
+    });
+})
+
+
 module.exports = router;
