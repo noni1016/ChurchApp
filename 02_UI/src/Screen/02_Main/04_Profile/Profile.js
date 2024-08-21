@@ -44,8 +44,9 @@ const options = {
 
 const HeaderButtonsContainer = styled.View`
     flex-direction: row;
-    justify-content: space-evenly;
+    justify-content: flex-end;
     width: 120px;
+    margin: 10px;
 `;
 
 const HeaderBox = styled.View`
@@ -137,7 +138,7 @@ const ProfileMain = ({navigation, route}) => {
                 headerRight: () => (
                     <HeaderButtonsContainer>
                         {userData.id != member.id && <Icon2 name="notification" size={26} onPress={() => alert('신고하기')} />}
-                        <Icon2 name="message1" size={26} onPress={() => alert('채팅')} />
+                        {/* <Icon2 name="message1" size={26} onPress={() => alert('채팅')} /> */}
                         {userData.id == member.id && <Icon1 name="settings-outline" size={26} onPress={() => {navigation.navigate('EditProfile', {navigation: navigation})}} />}
                     </HeaderButtonsContainer>
                 )
@@ -157,12 +158,12 @@ const ProfileMain = ({navigation, route}) => {
             }
             
             // console.log(member.church);
-            if (member.church)
-            {
-                fetch(`${domain}/Church/${member.church}`).then(res => res.json()).then(res => {setChurchName(res.name);});
-            }
+            // if (member.church)
+            // {
+            //     fetch(`${domain}/Church/${member.church}`).then(res => res.json()).then(res => {setChurchName(res.name);});
+            // }
         }
-    }, [member])
+    }, [userClub, userSpot, userChurch, member])
 
     useEffect(() => {
         // console.log(imgSrc)
@@ -219,7 +220,7 @@ const ProfileMain = ({navigation, route}) => {
                 <HeaderTextArea style={{ flex: 3 }}>
                         <Text style={{ fontWeight: 'bold'}}>{member.name}</Text>
                         {member.description ? <Text>{member.description}</Text> : <Text>자기소개 없음</Text>}
-                        <Text>{churchName}</Text>
+                        {/* <Text>{churchName}</Text> */}
                     </HeaderTextArea>
                 </HeaderBox>
 

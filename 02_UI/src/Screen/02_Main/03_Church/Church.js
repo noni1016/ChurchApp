@@ -70,6 +70,9 @@ const ChurchMain = ({navigation}) => {
     const [churches, setChurches] = useState([]);
     const [isRefreshing, setIsRefreshing] = useState(false);
     const [userChurchTopList, setUserChurchTopList] = useState([]);
+    const [churchTopList, setChurchTopList] = useState([]);
+    const N_USER_TOP_CHURCH = 3;
+    const N_TOP_CHURCH = 5;
 
     useEffect(() => {
         fetch(`${domain}/Church`).then(res => res.json()).then(res => {setChurches(res)});
@@ -77,12 +80,23 @@ const ChurchMain = ({navigation}) => {
 
     useEffect(() => {
         let temp = [];
-        for (i = 0; i < 3; i++) {
+        let tempIterIdx = userChurch.length > N_USER_TOP_CHURCH ? N_USER_TOP_CHURCH : userChurch.length;
+        for (i = 0; i < tempIterIdx; i++) {
             temp.push(userChurch[i]);
         }
         console.log(temp);
         setUserChurchTopList(temp);
     }, [userChurch])
+
+    useEffect(() => {
+        let temp = [];
+        let tempIterIdx = churches.length > N_TOP_CHURCH ? N_TOP_CHURCH : churches.length;
+        for (i = 0; i < tempIterIdx; i++) {
+            temp.push(churches[i]);
+        }
+        console.log(temp);
+        setChurchTopList(temp);
+    }, [churches])
 
     const handleRefresh = async () => {
         console.log('handleRefreshStore');
@@ -103,7 +117,7 @@ const ChurchMain = ({navigation}) => {
             </SearchArea>
             <View>
                 <View style={{flexDirection: 'row', justifyContent: 'space-between', alignContent: 'center'}}>
-                    <InfoTextBold>내가 활동 중인 교회 Top 3</InfoTextBold>
+                    <InfoTextBold>내가 활동 중인 교회 Top {userChurch.length > N_USER_TOP_CHURCH ? N_USER_TOP_CHURCH : userChurch.length}</InfoTextBold>
                     <TouchableOpacity onPress={() => {navigation.navigate('ShowMoreChurches', {title: '더보기', churches: userChurch, refreshDataFetch: updateUserChurch})}}>
                         <InfoText>모두 보기</InfoText>
                     </TouchableOpacity>
@@ -113,12 +127,12 @@ const ChurchMain = ({navigation}) => {
 
             <View>
                 <View style={{flexDirection: 'row', justifyContent: 'space-between', alignContent: 'center'}}>
-                    <InfoTextBold>전국 교회 Top 10</InfoTextBold>
+                    <InfoTextBold>전국 교회 Top {churches.length > N_TOP_CHURCH ? N_TOP_CHURCH : churches.length}</InfoTextBold>
                     <TouchableOpacity onPress={() => {navigation.navigate('ShowMoreChurches', {title: '더보기', churches: churches, refreshDataFetch: handleRefresh})}}>
                         <InfoText>모두 보기</InfoText>
                     </TouchableOpacity>
                 </View>
-                {churches.length > 0 && churches.map((data, index) => (<ChurchCard key={index} church={data} navigation={navigation}/>))}
+                {churchTopList.length > 0 && churchTopList.map((data, index) => (<ChurchCard key={index} church={data} navigation={navigation}/>))}
             </View>
 
             <View style={{height: 300}}/>

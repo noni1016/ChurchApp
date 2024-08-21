@@ -35,8 +35,8 @@ const CtrlArea = styled.View`
 // type: (Club, Spot)
 const GroupTile = ({group, type, isCurrentUser, stackNavi}) => {
     const domain = useContext(DomainContext);
-    const {userData, updateUserChurch} = useContext(UserData);
-    const [imgUrl, setImgUrl] = useState(`${domain}/${type}MainImg/${group.mainImg}`);
+    const {userData, updateUserClub, updateUserSpot, updateUserChurch} = useContext(UserData);
+    const [imgUrl, setImgUrl] = useState(`${domain}/${type}MainImg/${group.mainImg}` + "?cache="+Math.random());
     const [isLeader, setIsLeader] = useState(false);
 
     useEffect(() => {
@@ -54,7 +54,11 @@ const GroupTile = ({group, type, isCurrentUser, stackNavi}) => {
             {
                 text: "네",
                 onPress: () => {
-                    fetch(`${domain}/${type}/Exit/${group.id}/${userData.id}`).then(updateUserChurch());
+                    fetch(`${domain}/${type}/Exit/${group.id}/${userData.id}`).then(() => {
+                        if (type == 'Club') updateUserClub();
+                        if (type == 'Spot') updateUserSpot();
+                        if (type == 'Church') updateUserChurch();
+                    });
                 }
             }
         ]);
