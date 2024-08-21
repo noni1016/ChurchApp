@@ -149,7 +149,7 @@ const fd = new FormData(); //사진도 추가할거임
  fd.append('description', churchData.description);
  fd.append('location_ll_x', churchData.location_ll.x);
  fd.append('location_ll_y', churchData.location_ll.y);
- fd.append('name', "church!!!");
+ fd.append('name', churchData.name);
  if (imgSrc.fileSize)
  {
      fd.append('file', {
@@ -240,6 +240,7 @@ const ChurchPageHome = ({data, members, isMember, isLeader, navigator}) => {
                     autoCapitalize="none"
                     autoCorrect={false}
                     placeholder={data.description}
+                    defaultValue={data.description}
                     returnKeyType="done"
                     onChangeText={(value) => {
                         data.description = value;
