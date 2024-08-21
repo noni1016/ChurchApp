@@ -170,7 +170,7 @@ router.put('/:id', formData.single('file'), async (req, res) => {
 
 
 // Join club
-router.get('/:clubId/Join/:userId', (req, res) => {
+router.get('/Join/:clubId/:userId', (req, res) => {
     let cnt = 0;
     let sql = `INSERT INTO ClubUser (clubId, userId, role) VALUES (${req.params.clubId}, ${req.params.userId}, 'user')`;
     console.log(sql);
@@ -187,7 +187,7 @@ router.get('/:clubId/Join/:userId', (req, res) => {
 
 
 // Exit club
-router.get('/:clubId/Exit/:userId', async (req, res) => {
+router.get('/Exit/:clubId/:userId', async (req, res) => {
     let cnt = 0;
     let sql = `DELETE FROM ClubUser 
         WHERE ClubUser.clubId = ${req.params.clubId}
