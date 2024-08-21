@@ -82,9 +82,9 @@ const createChurch = multer({
         async filename(req, file, cb) {
             console.log(file.originalname);
             console.log(req.params.name);
-            var sql2 = `INSERT INTO Church (name, pastor, location, location_ll, description) VALUES ('${req.params.name}', '${req.params.pastorName}', '${req.body.location}', ST_GeomFromText('POINT(${req.params.long} ${req.params.lat})', 4326), '${req.body.description}' )`;
+            let sql2 = `INSERT INTO Church (name, pastor, location, location_ll, description, leader) VALUES ('${req.params.name}', '${req.params.pastorName}', '${req.body.location}', ST_GeomFromText('POINT(${req.params.long} ${req.params.lat})', 4326), '${req.body.description}', '${req.body.userId}' )`;
             console.log(sql2);
-            var fileName = '';
+            let fileName = '';
             try {
                 await conn.beginTransaction();
                 await conn.query(sql2, (error, rows) => {
@@ -122,7 +122,7 @@ const createChurch = multer({
     })
 }).single('file');
 
-router.post('New/:name/:long/:lat/:pastorName', async (req, res) => {
+router.post('/New/:name/:long/:lat/:pastorName', async (req, res) => {
     let long = req.params.long ? Number(req.params.long) : 127;
     let lat = req.params.lat ? Number(req.params.lat) : 37;
 
