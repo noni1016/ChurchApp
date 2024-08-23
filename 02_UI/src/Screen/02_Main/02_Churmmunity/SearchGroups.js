@@ -5,7 +5,6 @@ import { useForm, Controller, useFieldArray } from "react-hook-form";
 import ClubCard from '~/Components/ClubCard';
 import SpotCard from '~/Components/SpotCard';
 import TagBox from '~/Components/TagBox';
-import AsyncStorage from '@react-native-community/async-storage';
 
 import Icon from 'react-native-vector-icons/Ionicons';
 import Icon2 from 'react-native-vector-icons/MaterialIcons';
