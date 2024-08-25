@@ -183,9 +183,9 @@ const Feed = ({groupType, group, feed, isMember, reload, setReload, navigation})
                     {feed.location} - {feed.time}
                     </Text>
                 </HeaderInfo>
-                <HeaderOptionBtnContainer>
+                {feedAuthorData && feedAuthorData.id == userData.id && (<HeaderOptionBtnContainer>
                     <Icon name="dots-three-vertical" size={30} onPress={() => {actionSheetRef.current?.setModalVisible(1); }} />
-                </HeaderOptionBtnContainer>
+                </HeaderOptionBtnContainer>)}
             </FeedHeader>
             <FeedBody>
                 <FeedImgContainer>

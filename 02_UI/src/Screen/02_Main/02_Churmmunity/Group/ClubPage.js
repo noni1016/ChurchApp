@@ -66,7 +66,7 @@ const ClubPage = ({route, navigation}) => {
         console.log(data);
         setUrl(`${domain}/ClubMainImg/${data.mainImg}` + "?cache="+Math.random());
         console.log(url);
-    }, []);    
+    }, [data]);    
 
     /* Group 상단 사진의 사이즈를 화면 사이즈에 맞게 설정 */
     useEffect(() => {
@@ -140,7 +140,7 @@ const ClubPage = ({route, navigation}) => {
                 </Side>          
             </Header>
             <ScrollView>
-                <Image style={{ backgroundColor: '#000000', width: resizedWidth, height: resizedHeight, resizeMode: 'contain' }} source={url ? {uri: url } : null} />
+                <Image style={{ backgroundColor: 'transparent', width: resizedWidth, height: resizedHeight, resizeMode: 'contain' }} source={url ? {uri: url } : null} />
                 {/* Sub navigation. 실제 네비게이션은 아니지만 버튼 선택을 통해 네비처럼 동작하도록 구현 */}
                 <TabContainer>
                     {tabs.map((label, index) => (
