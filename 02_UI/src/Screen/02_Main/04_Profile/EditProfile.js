@@ -101,7 +101,8 @@ const EditProfile = ({navigation}) => {
     const [imgSrc, setImgSrc] = useState('');
     const [imgUrl, setImgUrl] = useState('');
     const [reload, setReload] = useState(false);
-    const [content, setContent] = useState({...userData, location_ll: {x: null, y: null}});
+    // const [content, setContent] = useState({...userData, location_ll: {x: null, y: null}});
+    const [content, setContent] = useState(userData);
     const [locate, setLocate] = useState([0,0]);
     const [region, setRegion] = useState('');
     let fetchHeader = {
