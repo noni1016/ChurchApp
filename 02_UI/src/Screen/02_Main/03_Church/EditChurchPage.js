@@ -136,7 +136,7 @@ const EditChurchPage = ({route, navigation}) => {
                     />
                 <ChurchPageHome data={churchData} members={members} isMember={isMember} isLeader={isLeader} navigator={navigation}/>
 
-                <SearchBtn onPress={()=>{alert('취소')}}>
+                <SearchBtn onPress={()=>{navigation.goBack();}}>
                     <Text>취소</Text>
                 </SearchBtn>
 
